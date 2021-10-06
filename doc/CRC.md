@@ -12,7 +12,7 @@
 | Responsibilities                       | Collaborators   |
 | -------------------------------------- | --------------- |
 | know the habit that it did             | [Habit](#habit) |
-| know the date that this event happened |                 |
+| know the date that this event happened | [Habit](#habit) |
 | have an optional comment               |                 |
 | have an optional photograph            |                 |
 

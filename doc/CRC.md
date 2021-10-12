@@ -15,6 +15,7 @@
 | know the date that this event happened | [Habit](#habit) |
 | have an optional comment               |                 |
 | have an optional photograph            |                 |
+| have an geolocation where it take place|                 |
 
 # <a name="profile"></a>Class: Profile
 
@@ -22,3 +23,4 @@
 | ---------------------------------- | -------------------------- |
 | know the habits that it owns       | [Habit](#habit)            |
 | know the habit events that it owns | [HabitEvent](#habit-event) |
+| know the habit events that it follows | [HabitEvent](#habit-event) |

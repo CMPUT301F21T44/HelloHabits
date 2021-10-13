@@ -9,18 +9,31 @@
 
 # <a name="habit-event"></a>Class: HabitEvent
 
-| Responsibilities                       | Collaborators   |
-| -------------------------------------- | --------------- |
-| know the habit that it did             | [Habit](#habit) |
-| know the date that this event happened | [Habit](#habit) |
-| have an optional comment               |                 |
-| have an optional photograph            |                 |
-| have an geolocation where it take place|                 |
+| Responsibilities                        | Collaborators               |
+| --------------------------------------- | --------------------------- |
+| know the habit that it did              | [Habit](#habit)             |
+| know the date that this event happened  | [Habit](#habit)             |
+| have an optional comment                |                             |
+| have an optional photograph             |                             |
+| have an geolocation where it take place | [Geolocation](#geolocation) |
 
 # <a name="profile"></a>Class: Profile
 
-| Responsibilities                   | Collaborators              |
-| ---------------------------------- | -------------------------- |
-| know the habits that it owns       | [Habit](#habit)            |
-| know the habit events that it owns | [HabitEvent](#habit-event) |
+| Responsibilities                      | Collaborators              |
+| ------------------------------------- | -------------------------- |
+| know the habits that it owns          | [Habit](#habit)            |
+| know the habit events that it owns    | [HabitEvent](#habit-event) |
 | know the habit events that it follows | [HabitEvent](#habit-event) |
+
+# <a name="social"></a>Class: Social
+| Responsibilities                         | Collaborators                                                    |
+| ---------------------------------------- | ---------------------------------------------------------------- |
+| request to follow another users habits   | [Profile](#profile), [Habit](#habit)                             |
+| grant or deny follow requests            | [Profile](#profile)                                              |
+| view others habits and visual indicators | [Profile](#profile), [Habit](#habit), [HabitEvent](#habit-event) |
+
+# <a name="geolocation"></a>Class: Geolocation
+
+| Responsibilities          | Collaborators |
+| ------------------------- | ------------- |
+| have an optional location |               |

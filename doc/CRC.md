@@ -15,7 +15,7 @@
 | know the date that this event happened  | [Habit](#habit)             |
 | have an optional comment                |                             |
 | have an optional photograph             |                             |
-| have an geolocation where it take place | [Geolocation](#geolocation) |
+| have an geolocation where it take place |                |
 
 # <a name="profile"></a>Class: Profile
 
@@ -31,9 +31,3 @@
 | request to follow another users habits   | [Profile](#profile), [Habit](#habit)                             |
 | grant or deny follow requests            | [Profile](#profile)                                              |
 | view others habits and visual indicators | [Profile](#profile), [Habit](#habit), [HabitEvent](#habit-event) |
-
-# <a name="geolocation"></a>Class: Geolocation
-
-| Responsibilities          | Collaborators |
-| ------------------------- | ------------- |
-| have an optional location |               |

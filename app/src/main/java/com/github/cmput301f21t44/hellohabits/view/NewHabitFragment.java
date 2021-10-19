@@ -54,7 +54,7 @@ public class NewHabitFragment extends Fragment {
                     mInstant);
             NavHostFragment
                     .findNavController(NewHabitFragment.this)
-                    .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment);
+                    .navigate(R.id.action_newHabitFragment_to_todaysHabitsFragment);
         });
 
         binding.textDateStarted.setOnClickListener(v -> {
@@ -71,7 +71,7 @@ public class NewHabitFragment extends Fragment {
         binding.buttonBack.setOnClickListener(view1 ->
                 NavHostFragment
                         .findNavController(NewHabitFragment.this)
-                        .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment));
+                        .navigate(R.id.action_newHabitFragment_to_todaysHabitsFragment));
     }
 
     @Override

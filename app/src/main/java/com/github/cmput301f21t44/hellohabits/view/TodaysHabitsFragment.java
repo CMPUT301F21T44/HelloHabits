@@ -26,7 +26,9 @@ public class TodaysHabitsFragment extends Fragment {
     private HabitAdapter adapter;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentTodaysHabitsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -40,7 +42,8 @@ public class TodaysHabitsFragment extends Fragment {
 
 
         binding.buttonNewHabit.setOnClickListener(view1 ->
-                NavHostFragment.findNavController(TodaysHabitsFragment.this)
+                NavHostFragment
+                        .findNavController(TodaysHabitsFragment.this)
                         .navigate(R.id.action_TodaysHabitsFragment_to_NewHabitFragment));
     }
 

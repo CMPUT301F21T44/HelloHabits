@@ -9,7 +9,6 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import java.time.Instant;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,10 +34,15 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            // ensure only one instance is created by wrapping instantiation in a monitor lock (CMPUT 379 wink wink)
+            // ensure only one instance is created
+            // by wrapping instantiation in a monitor lock (CMPUT 379 wink wink)
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "hello_habit_database")
+                    INSTANCE = Room
+                            .databaseBuilder(
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "hello_habit_database")
                             .addCallback(sAppDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();

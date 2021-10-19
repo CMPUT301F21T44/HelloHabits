@@ -12,7 +12,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
-import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {

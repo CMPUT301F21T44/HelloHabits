@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/TodaysHabitsFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/TodaysHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.TodaysHabitsFragment"
+        android:label="@string/todays_habits_fragment_label"
+        tools:layout="@layout/fragment_todays_habits">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_TodaysHabitsFragment_to_NewHabitFragment"
+            app:destination="@id/NewHabitFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/NewHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.NewHabitFragment"
+        android:label="@string/new_habit_fragment_label"
+        tools:layout="@layout/fragment_new_habit">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_NewHabitFragment_to_TodaysHabitsFragment"
+            app:destination="@id/TodaysHabitsFragment" />
     </fragment>
 </navigation>

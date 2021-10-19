@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.databinding.FragmentSecondBinding;
+import com.github.cmput301f21t44.hellohabits.databinding.FragmentNewHabitBinding;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import java.time.Instant;
@@ -20,9 +20,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class SecondFragment extends Fragment {
+public class NewHabitFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentNewHabitBinding binding;
     private HabitViewModel mHabitViewModel;
     private Instant mInstant;
 
@@ -32,7 +32,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentNewHabitBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -54,8 +54,8 @@ public class SecondFragment extends Fragment {
                     binding.editTextTitle.getText().toString(),
                     binding.editTextReason.getText().toString(),
                     mInstant);
-            NavHostFragment.findNavController(SecondFragment.this)
-                    .navigate(R.id.action_SecondFragment_to_FirstFragment);
+            NavHostFragment.findNavController(NewHabitFragment.this)
+                    .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment);
         });
 
         binding.textDateStarted.setOnClickListener(v -> {
@@ -69,9 +69,9 @@ public class SecondFragment extends Fragment {
             newFragment.show(requireActivity().getSupportFragmentManager(), "datePicker");
         });
 
-        binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment
-                .findNavController(SecondFragment.this)
-                .navigate(R.id.action_SecondFragment_to_FirstFragment));
+        binding.buttonBack.setOnClickListener(view1 -> NavHostFragment
+                .findNavController(NewHabitFragment.this)
+                .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment));
     }
 
     @Override

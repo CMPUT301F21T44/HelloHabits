@@ -15,8 +15,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
-    protected HabitAdapter(@NonNull DiffUtil.ItemCallback<Habit> diffCallback) {
+    private final OnItemClickListener<Habit> listener;
+    protected HabitAdapter(@NonNull DiffUtil.ItemCallback<Habit> diffCallback, OnItemClickListener<Habit> listener) {
         super(diffCallback);
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +32,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
     @Override
     public void onBindViewHolder(@NonNull HabitHolder holder, int position) {
         Habit current = getItem(position);
-        holder.bind(current);
+        holder.bind(current, listener);
     }
 
     public static class HabitDiff extends DiffUtil.ItemCallback<Habit> {
@@ -57,11 +59,12 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
             this.mItemBinding = itemBinding;
         }
 
-        void bind(@NonNull Habit habit) {
+        void bind(@NonNull final Habit habit, final OnItemClickListener<Habit> listener) {
             mItemBinding.titleView.setText(habit.getTitle());
             mItemBinding.reasonView.setText(habit.getReason());
             String date = formatter.format(habit.getDateStarted());
             mItemBinding.dateStartedView.setText(date);
+            mItemBinding.getRoot().setOnClickListener(v-> listener.onItemClick(habit));
         }
 
     }

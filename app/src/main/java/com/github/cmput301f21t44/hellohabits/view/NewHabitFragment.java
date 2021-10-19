@@ -27,11 +27,9 @@ public class NewHabitFragment extends Fragment {
     private Instant mInstant;
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentNewHabitBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
@@ -54,24 +52,26 @@ public class NewHabitFragment extends Fragment {
                     binding.editTextTitle.getText().toString(),
                     binding.editTextReason.getText().toString(),
                     mInstant);
-            NavHostFragment.findNavController(NewHabitFragment.this)
-                    .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment);
+            NavHostFragment
+                    .findNavController(NewHabitFragment.this)
+                    .navigate(R.id.action_newHabitFragment_to_todaysHabitsFragment);
         });
 
         binding.textDateStarted.setOnClickListener(v -> {
             DialogFragment newFragment = DatePickerFragment.newInstance(
-                    (datePicker, year, month, day) -> updateInstant(
-                            LocalDate.of(year, month + 1, day)
-                                    .atStartOfDay(ZoneId.systemDefault()).toInstant()
-                    )
-            );
+                    (datePicker, year, month, day) ->
+                            updateInstant(
+                                LocalDate
+                                        .of(year, month + 1, day)
+                                        .atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
             newFragment.show(requireActivity().getSupportFragmentManager(), "datePicker");
         });
 
-        binding.buttonBack.setOnClickListener(view1 -> NavHostFragment
-                .findNavController(NewHabitFragment.this)
-                .navigate(R.id.action_NewHabitFragment_to_TodaysHabitsFragment));
+        binding.buttonBack.setOnClickListener(view1 ->
+                NavHostFragment
+                        .findNavController(NewHabitFragment.this)
+                        .navigate(R.id.action_newHabitFragment_to_todaysHabitsFragment));
     }
 
     @Override

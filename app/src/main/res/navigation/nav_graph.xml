@@ -12,8 +12,11 @@
         tools:layout="@layout/fragment_todays_habits">
 
         <action
-            android:id="@+id/action_TodaysHabitsFragment_to_NewHabitFragment"
+            android:id="@+id/action_todaysHabitsFragment_to_newHabitFragment"
             app:destination="@id/NewHabitFragment" />
+        <action
+            android:id="@+id/action_todaysHabitsFragment_to_viewHabitFragment"
+            app:destination="@id/viewHabitFragment" />
     </fragment>
     <fragment
         android:id="@+id/NewHabitFragment"
@@ -22,7 +25,16 @@
         tools:layout="@layout/fragment_new_habit">
 
         <action
-            android:id="@+id/action_NewHabitFragment_to_TodaysHabitsFragment"
+            android:id="@+id/action_newHabitFragment_to_todaysHabitsFragment"
+            app:destination="@id/TodaysHabitsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.ViewHabitFragment"
+        android:label="fragment_view_habit"
+        tools:layout="@layout/fragment_view_habit" >
+        <action
+            android:id="@+id/action_viewHabitFragment_to_todaysHabitsFragment"
             app:destination="@id/TodaysHabitsFragment" />
     </fragment>
 </navigation>

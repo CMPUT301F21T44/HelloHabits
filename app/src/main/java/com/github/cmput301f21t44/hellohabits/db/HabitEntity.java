@@ -71,4 +71,12 @@ public class HabitEntity implements Habit {
     public Instant getDateStarted() {
         return mDateStarted;
     }
+
+    public static HabitEntity from(Habit habit) {
+        return new HabitEntity(
+                habit.getId(),
+                habit.getTitle(),
+                habit.getReason(),
+                habit.getDateStarted());
+    }
 }

@@ -31,7 +31,11 @@ public class HabitViewModel extends AndroidViewModel {
     }
 
     public void delete(Habit habit) {
-        mRepository.delete(habit);
+        /*
+          This ViewModel depends on HabitEntity right now, but shouldn't.
+          We'll make sure that the repository will be implementation-agnostic in the future.
+         */
+        mRepository.delete(HabitEntity.from(habit));
     }
 
 }

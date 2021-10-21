@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 import java.time.Instant;
@@ -16,7 +17,7 @@ public class HabitEntityRepository implements HabitRepository<HabitEntity> {
     public HabitEntityRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         mHabitDao = db.habitDao();
-        mAllHabits= mHabitDao.getAllHabits();
+        mAllHabits = mHabitDao.getAllHabits();
     }
 
     public LiveData<List<HabitEntity>> getAllHabits() {
@@ -28,4 +29,10 @@ public class HabitEntityRepository implements HabitRepository<HabitEntity> {
         HabitEntity habit = new HabitEntity(title, reason, dateStarted);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.insert(habit));
     }
+
+    @Override
+    public void delete(Habit habit) {
+        AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.delete((HabitEntity) habit));
+    }
+
 }

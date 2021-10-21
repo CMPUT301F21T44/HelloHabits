@@ -12,6 +12,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
+import com.github.cmput301f21t44.hellohabits.db.HabitEntity;
+import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
 import java.time.ZoneId;
@@ -20,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 public class ViewHabitFragment extends Fragment {
     private FragmentViewHabitBinding binding;
     private SelectedHabitViewModel mViewModel;
+    private HabitViewModel mHabitViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -35,19 +38,32 @@ public class ViewHabitFragment extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity())
                 .get(SelectedHabitViewModel.class);
 
-        binding.buttonBackToList.setOnClickListener(v->
+        mHabitViewModel = new ViewModelProvider(requireActivity())
+                .get(HabitViewModel.class);
+
+        binding.buttonBackToList.setOnClickListener(v ->
                 NavHostFragment
                         .findNavController(ViewHabitFragment.this)
                         .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment));
+
+        binding.buttonDeleteHabit.setOnClickListener(v -> {
+            mViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
+                mHabitViewModel.delete(habit);
+                NavHostFragment
+                        .findNavController(ViewHabitFragment.this)
+                        .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment);
+
+            });
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mViewModel.getSelected().observe(getViewLifecycleOwner(), habit-> {
+        mViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
             // update UI
             binding.viewTitle.setText(habit.getTitle());
-            binding.viewReason.setText( habit.getReason());
+            binding.viewReason.setText(habit.getReason());
             String date = DateTimeFormatter
                     .ofPattern("eeee d MMMM, y")
                     .withZone(ZoneId.systemDefault())

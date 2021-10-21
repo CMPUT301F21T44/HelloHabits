@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.github.cmput301f21t44.hellohabits.db.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.db.HabitEntityRepository;
+import com.github.cmput301f21t44.hellohabits.model.Habit;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,4 +29,9 @@ public class HabitViewModel extends AndroidViewModel {
     public void insert(String name, String reason, Instant dateStarted) {
         mRepository.insert(name, reason, dateStarted);
     }
+
+    public void delete(Habit habit) {
+        mRepository.delete(habit);
+    }
+
 }

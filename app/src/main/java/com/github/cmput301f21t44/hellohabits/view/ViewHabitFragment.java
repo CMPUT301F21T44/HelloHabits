@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
-import com.github.cmput301f21t44.hellohabits.db.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
@@ -46,15 +46,22 @@ public class ViewHabitFragment extends Fragment {
                         .findNavController(ViewHabitFragment.this)
                         .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment));
 
-        binding.buttonDeleteHabit.setOnClickListener(v -> {
-            mViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
-                mHabitViewModel.delete(habit);
-                NavHostFragment
-                        .findNavController(ViewHabitFragment.this)
-                        .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment);
+        binding.buttonDeleteHabit.setOnClickListener(v ->
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Delete Habit")
+                        .setMessage("Are you sure you want to delete this habit?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteHabit())
+                        .setNegativeButton(android.R.string.no, null).show()
+        );
+    }
 
-            });
-        });
+    private void deleteHabit() {
+        mHabitViewModel.delete(mViewModel.getSelected().getValue());
+        NavHostFragment
+                .findNavController(ViewHabitFragment.this)
+                .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment);
+
     }
 
     @Override

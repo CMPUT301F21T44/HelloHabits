@@ -21,13 +21,13 @@ public class HabitEntity implements Habit {
     private String hid;
 
     @ColumnInfo(name = "title")
-    private final String mTitle;
+    private String mTitle;
 
     @ColumnInfo(name = "reason")
-    private final String mReason;
+    private String mReason;
 
     @ColumnInfo(name = "date_started")
-    private final Instant mDateStarted;
+    private Instant mDateStarted;
 
     public HabitEntity(@NonNull String id, String title, String reason, Instant dateStarted) {
         this.hid = id;
@@ -72,6 +72,22 @@ public class HabitEntity implements Habit {
         return mDateStarted;
     }
 
+    @Override
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
+    @Override
+    public void setReason(String reason) {
+        this.mReason = reason;
+    }
+
+    @Override
+    public void setDateStarted(Instant dateStarted) {
+        this.mDateStarted = dateStarted;
+    }
+
+
     public static HabitEntity from(Habit habit) {
         return new HabitEntity(
                 habit.getId(),
@@ -79,4 +95,6 @@ public class HabitEntity implements Habit {
                 habit.getReason(),
                 habit.getDateStarted());
     }
+
+
 }

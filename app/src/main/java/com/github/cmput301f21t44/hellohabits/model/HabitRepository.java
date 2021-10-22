@@ -11,4 +11,7 @@ public interface HabitRepository<T extends Habit> {
     void insert(String title, String reason, Instant dateStarted);
 
     void delete(T habit);
+
+    void update(T habit);
+
 }

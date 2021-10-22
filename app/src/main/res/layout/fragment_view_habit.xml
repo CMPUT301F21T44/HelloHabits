@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".view.ViewHabitFragment">
 
-    <TextView
+    <EditText
         android:id="@+id/view_title"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:text="TextView"
+        android:hint="What habit do you want to add?"
         android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/view_reason"
@@ -19,11 +19,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <EditText
         android:id="@+id/view_reason"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="TextView"
+        android:hint="Why are you keeping it?"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/view_date_started"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,17 @@
         android:text="DELETE"
         app:layout_constraintBottom_toTopOf="@+id/button_back_to_list"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toEndOf="@+id/button_save_changes"
         app:layout_constraintTop_toBottomOf="@+id/view_date_started" />
+
+    <Button
+        android:id="@+id/button_save_changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="SAVE CHANGES"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_delete_habit"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 
@@ -24,4 +25,6 @@ public interface HabitDao {
     @Delete
     void delete(HabitEntity habit);
 
+    @Update
+    void update(HabitEntity habit);
 }

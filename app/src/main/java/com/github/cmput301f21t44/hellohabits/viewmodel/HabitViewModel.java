@@ -30,6 +30,10 @@ public class HabitViewModel extends AndroidViewModel {
         mRepository.insert(name, reason, dateStarted);
     }
 
+    public void update(Habit habit) {
+        mRepository.update(HabitEntity.from(habit));
+    }
+
     public void delete(Habit habit) {
         /*
           This ViewModel depends on HabitEntity right now, but shouldn't.
@@ -37,5 +41,6 @@ public class HabitViewModel extends AndroidViewModel {
          */
         mRepository.delete(HabitEntity.from(habit));
     }
+
 
 }

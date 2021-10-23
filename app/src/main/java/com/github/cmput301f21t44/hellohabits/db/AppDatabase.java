@@ -15,19 +15,24 @@ import java.util.concurrent.Executors;
 
 /**
  * RoomDatabase class to be used by the whole app
- *
+ * <p>
  * Make sure to increment the version number when adding new entities
  * or updating the schema of existing ones!
  */
-@Database(entities = {HabitEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {HabitEntity.class, HabitEventEntity.class},
+        version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract HabitDao habitDao();
 
-    /** Singleton Instance for AppDatabase **/
+    /**
+     * Singleton Instance for AppDatabase
+     **/
     private static volatile AppDatabase INSTANCE;
 
-    /** Thread pool for executing database functions (keeps it off the main thread) **/
+    /**
+     * Thread pool for executing database functions (keeps it off the main thread)
+     **/
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -52,7 +57,9 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /** Callback for initializing database, use for populating with existing data. **/
+    /**
+     * Callback for initializing database, use for populating with existing data.
+     **/
     private static final AppDatabase.Callback sAppDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {

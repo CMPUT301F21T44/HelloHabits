@@ -52,9 +52,9 @@ public class ViewHabitFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Delete Habit")
                         .setMessage("Are you sure you want to delete this habit?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, (dialog, b) -> deleteHabit())
-                        .setNegativeButton(android.R.string.no, null).show()
+                        .setIcon(R.drawable.ic_launcher_foreground)
+                        .setPositiveButton("YES", (dialog, b) -> deleteHabit())
+                        .setNegativeButton("NO", null).show()
         );
     }
 

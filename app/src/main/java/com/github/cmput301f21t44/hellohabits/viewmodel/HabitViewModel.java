@@ -30,8 +30,8 @@ public class HabitViewModel extends AndroidViewModel {
         mRepository.insert(name, reason, dateStarted);
     }
 
-    public void update(Habit habit) {
-        mRepository.update(HabitEntity.from(habit));
+    public Habit update(String id, String name, String reason, Instant dateStarted) {
+        return mRepository.update(id, name, reason, dateStarted);
     }
 
     public void delete(Habit habit) {
@@ -41,6 +41,4 @@ public class HabitViewModel extends AndroidViewModel {
          */
         mRepository.delete(HabitEntity.from(habit));
     }
-
-
 }

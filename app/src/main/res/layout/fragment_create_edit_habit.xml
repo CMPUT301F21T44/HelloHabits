@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.NewHabitFragment">
+    tools:context=".view.CreateEditHabitFragment">
 
     <Button
         android:id="@+id/button_back"
@@ -32,7 +32,7 @@
         android:id="@+id/button_add_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Habit"
+        android:text="@string/add_habit"
         app:layout_constraintBottom_toTopOf="@+id/button_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -44,8 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/reason"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/text_date_started"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -57,8 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/title"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/edit_text_reason"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

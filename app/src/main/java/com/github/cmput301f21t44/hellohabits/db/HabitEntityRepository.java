@@ -36,8 +36,9 @@ public class HabitEntityRepository implements HabitRepository<HabitEntity> {
     }
 
     @Override
-    public void update(HabitEntity habit) {
-        AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.update(habit));
-
+    public HabitEntity update(String id, String title, String reason, Instant dateStarted) {
+        HabitEntity updatedEntity = new HabitEntity(id, title, reason, dateStarted);
+        AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.update(updatedEntity));
+        return updatedEntity;
     }
 }

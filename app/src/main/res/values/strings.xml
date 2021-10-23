@@ -2,11 +2,14 @@
     <string name="app_name">HelloHabits</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="todays_habits_fragment_label">Today\'s Habits Fragment</string>
-    <string name="new_habit_fragment_label">New Habit Fragment</string>
+    <string name="todays_habits_fragment_label">Today\'s Habits</string>
+    <string name="create_edit_habit_fragment_label">Habit</string>
     <string name="new_habit">New Habit</string>
+    <string name="edit_habit">Edit Habit</string>
     <string name="back">Back</string>
 
     <string name="title">Title</string>
     <string name="reason">Reason</string>
+    <string name="delete">DELETE</string>
+    <string name="add_habit">Add Habit</string>
 </resources>

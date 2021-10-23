@@ -13,28 +13,34 @@
 
         <action
             android:id="@+id/action_todaysHabitsFragment_to_newHabitFragment"
-            app:destination="@id/NewHabitFragment" />
+            app:destination="@id/CreateEditHabitFragment" />
         <action
             android:id="@+id/action_todaysHabitsFragment_to_viewHabitFragment"
             app:destination="@id/viewHabitFragment" />
     </fragment>
     <fragment
-        android:id="@+id/NewHabitFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.NewHabitFragment"
-        android:label="@string/new_habit_fragment_label"
-        tools:layout="@layout/fragment_new_habit">
+        android:id="@+id/CreateEditHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.CreateEditHabitFragment"
+        android:label="@string/create_edit_habit_fragment_label"
+        tools:layout="@layout/fragment_create_edit_habit">
 
         <action
-            android:id="@+id/action_newHabitFragment_to_todaysHabitsFragment"
+            android:id="@+id/action_createEditHabitFragment_to_todaysHabitsFragment"
             app:destination="@id/TodaysHabitsFragment" />
+        <action
+            android:id="@+id/action_createEditHabitFragment_to_viewHabitFragment"
+            app:destination="@id/viewHabitFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewHabitFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.ViewHabitFragment"
-        android:label="fragment_view_habit"
+        android:label="View Habit"
         tools:layout="@layout/fragment_view_habit" >
         <action
             android:id="@+id/action_viewHabitFragment_to_todaysHabitsFragment"
             app:destination="@id/TodaysHabitsFragment" />
+        <action
+            android:id="@+id/action_viewHabitFragment_to_createEditHabitFragment"
+            app:destination="@id/CreateEditHabitFragment" />
     </fragment>
 </navigation>

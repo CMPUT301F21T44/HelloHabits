@@ -7,8 +7,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-
 import java.util.List;
 
 @Dao

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -26,6 +27,7 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
     private HabitViewModel mHabitViewModel;
     private SelectedHabitViewModel mSelectedViewModel;
     private HabitAdapter adapter;
+    private NavController mNavController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,6 +40,7 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mNavController = NavHostFragment.findNavController(this);
         mHabitViewModel = new ViewModelProvider(this).get(HabitViewModel.class);
         // attach the provider to activity instead of fragment so the fragments can share data
         mSelectedViewModel = new ViewModelProvider(requireActivity())
@@ -46,11 +49,10 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
         binding.habitRecyclerView.setAdapter(adapter);
         binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        binding.buttonNewHabit.setOnClickListener(view1 ->
-                NavHostFragment
-                        .findNavController(TodaysHabitsFragment.this)
-                        .navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment));
+        binding.buttonNewHabit.setOnClickListener(view1 -> {
+            mSelectedViewModel.select(null);
+            mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
+        });
     }
 
     @Override
@@ -72,8 +74,6 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
     @Override
     public void onItemClick(Habit habit) {
         mSelectedViewModel.select(habit);
-        NavHostFragment
-                .findNavController(TodaysHabitsFragment.this)
-                .navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
+        mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
     }
 }

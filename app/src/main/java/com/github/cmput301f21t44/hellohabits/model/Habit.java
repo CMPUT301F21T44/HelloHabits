@@ -7,8 +7,4 @@ public interface Habit {
     String getTitle();
     String getReason();
     Instant getDateStarted();
-
-    void setTitle(String title);
-    void setReason(String reason);
-    void setDateStarted(Instant dateStarted);
 }

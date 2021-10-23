@@ -16,45 +16,50 @@ import java.util.UUID;
  */
 @Entity(tableName = "habits")
 public class HabitEntity implements Habit {
+    /**
+     * All fields should be final except for the primary key, because the
+     * Room decorator functions need to be able to modify the id for some reason.
+     */
     @PrimaryKey
     @NonNull
-    private String hid;
+    @ColumnInfo(name = "habit_id")
+    private String mHabitId;
 
     @ColumnInfo(name = "title")
-    private String mTitle;
+    @NonNull
+    private final String mTitle;
 
     @ColumnInfo(name = "reason")
-    private String mReason;
+    @NonNull
+    private final String mReason;
 
     @ColumnInfo(name = "date_started")
-    private Instant mDateStarted;
+    @NonNull
+    private final Instant mDateStarted;
 
-    public HabitEntity(@NonNull String id, String title, String reason, Instant dateStarted) {
-        this.hid = id;
+    public HabitEntity(@NonNull String id, @NonNull String title, @NonNull String reason, @NonNull Instant dateStarted) {
+        this.mHabitId = id;
         this.mTitle = title;
         this.mReason = reason;
         this.mDateStarted = dateStarted;
     }
 
     public HabitEntity(String title, String reason, Instant dateStarted) {
-        this.hid = UUID.randomUUID().toString();
-        this.mTitle = title;
-        this.mReason = reason;
-        this.mDateStarted = dateStarted;
+        this(UUID.randomUUID().toString(), title, reason, dateStarted);
+    }
+
+    public String getHabitId() {
+        return mHabitId;
+    }
+
+    public void setHabitId(@NonNull String hid) {
+        this.mHabitId = hid;
     }
 
     @NonNull
-    public String getHid() {
-        return hid;
-    }
-
-    public void setHid(@NonNull String hid) {
-        this.hid = hid;
-    }
-
     @Override
     public String getId() {
-        return hid;
+        return mHabitId;
     }
 
     @Override
@@ -72,22 +77,6 @@ public class HabitEntity implements Habit {
         return mDateStarted;
     }
 
-    @Override
-    public void setTitle(String title) {
-        this.mTitle = title;
-    }
-
-    @Override
-    public void setReason(String reason) {
-        this.mReason = reason;
-    }
-
-    @Override
-    public void setDateStarted(Instant dateStarted) {
-        this.mDateStarted = dateStarted;
-    }
-
-
     public static HabitEntity from(Habit habit) {
         return new HabitEntity(
                 habit.getId(),
@@ -95,6 +84,4 @@ public class HabitEntity implements Habit {
                 habit.getReason(),
                 habit.getDateStarted());
     }
-
-
 }

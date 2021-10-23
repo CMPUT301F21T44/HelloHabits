@@ -12,4 +12,5 @@
     <string name="reason">Reason</string>
     <string name="delete">DELETE</string>
     <string name="add_habit">Add Habit</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

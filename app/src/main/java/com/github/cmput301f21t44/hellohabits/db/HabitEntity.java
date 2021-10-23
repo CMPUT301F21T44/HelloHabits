@@ -15,7 +15,7 @@ import java.util.UUID;
  * Immutable model class for a Habit
  */
 @Entity(tableName = "habits")
-public class HabitEntity implements Habit {
+public class HabitEntity {
     /**
      * All fields should be final except for the primary key, because the
      * Room decorator functions need to be able to modify the id for some reason.
@@ -57,22 +57,18 @@ public class HabitEntity implements Habit {
     }
 
     @NonNull
-    @Override
     public String getId() {
         return mHabitId;
     }
 
-    @Override
     public String getTitle() {
         return mTitle;
     }
 
-    @Override
     public String getReason() {
         return mReason;
     }
 
-    @Override
     public Instant getDateStarted() {
         return mDateStarted;
     }

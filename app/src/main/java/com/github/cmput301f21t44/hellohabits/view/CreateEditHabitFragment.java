@@ -100,7 +100,7 @@ public class CreateEditHabitFragment extends Fragment {
                 updateInstant(Instant.now());
             } else {
                 isEdit = true;
-                binding.buttonAddHabit.setText("Save Changes");
+                binding.buttonAddHabit.setText(R.string.save_changes);
                 // update UI
                 mHabit = habit;
                 binding.editTextTitle.setText(habit.getTitle());

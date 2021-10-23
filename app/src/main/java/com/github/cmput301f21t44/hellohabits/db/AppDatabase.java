@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract HabitDao habitDao();
+    public abstract HabitEventDao habitEventDao();
 
     /**
      * Singleton Instance for AppDatabase

@@ -15,14 +15,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class ViewHabitFragment extends Fragment {
     private FragmentViewHabitBinding binding;
-    private SelectedHabitViewModel mViewModel;
     private HabitViewModel mHabitViewModel;
     private NavController mNavController;
 
@@ -37,7 +35,6 @@ public class ViewHabitFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // attach the provider to activity instead of fragment so the fragments can share data
-        mViewModel = new ViewModelProvider(requireActivity()).get(SelectedHabitViewModel.class);
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
@@ -59,14 +56,14 @@ public class ViewHabitFragment extends Fragment {
     }
 
     private void deleteHabit() {
-        mHabitViewModel.delete(mViewModel.getSelected().getValue());
+        mHabitViewModel.delete(mHabitViewModel.getSelected().getValue());
         mNavController.navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
+        mHabitViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
             // update UI
             binding.viewTitle.setText(habit.getTitle());
             binding.viewReason.setText(habit.getReason());

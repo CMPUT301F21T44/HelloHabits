@@ -16,7 +16,6 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 public class CreateEditHabitFragment extends Fragment {
     private FragmentCreateEditHabitBinding binding;
     private HabitViewModel mHabitViewModel;
-    private SelectedHabitViewModel mSelectedViewModel;
     private Habit mHabit;
     private Instant mInstant;
     private boolean isEdit;
@@ -50,8 +48,7 @@ public class CreateEditHabitFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mHabitViewModel = new ViewModelProvider(this).get(HabitViewModel.class);
-        mSelectedViewModel = new ViewModelProvider(requireActivity()).get(SelectedHabitViewModel.class);
+        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
         binding.buttonAddHabit.setOnClickListener(v -> {
@@ -61,7 +58,7 @@ public class CreateEditHabitFragment extends Fragment {
                         binding.editTextTitle.getText().toString(),
                         binding.editTextReason.getText().toString(),
                         mInstant);
-                mSelectedViewModel.select(updatedHabit);
+                mHabitViewModel.select(updatedHabit);
             } else {
                 mHabitViewModel.insert(
                         binding.editTextTitle.getText().toString(),
@@ -94,13 +91,12 @@ public class CreateEditHabitFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mSelectedViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
+        mHabitViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
             if (habit == null) {
                 isEdit = false;
                 updateInstant(Instant.now());
             } else {
                 isEdit = true;
-                binding.buttonAddHabit.setText(R.string.save_changes);
                 // update UI
                 mHabit = habit;
                 binding.editTextTitle.setText(habit.getTitle());

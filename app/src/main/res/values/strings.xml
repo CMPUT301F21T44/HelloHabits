@@ -11,6 +11,11 @@
     <string name="title">Title</string>
     <string name="reason">Reason</string>
     <string name="delete">DELETE</string>
-    <string name="add_habit">Add Habit</string>
-    <string name="save_changes">Save Changes</string>
+    <string name="add_habit">Save Habit</string>
+    <string name="add_habit_event">Save Habit Event</string>
+    <string name="comment">Comment</string>
+    <string name="add_location">Add Location</string>
+    <string name="remove_location">Remove Location</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="remove_photo">Remove Photo</string>
 </resources>

@@ -12,5 +12,5 @@ public interface HabitRepository<T extends Habit> {
 
     void delete(T habit);
 
-    T update(String id, String title, String reason, Instant dateStarted);
+    T update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek);
 }

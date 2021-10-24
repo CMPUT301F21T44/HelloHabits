@@ -8,7 +8,6 @@ import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 public class HabitEntityRepository implements HabitRepository<HabitWithEvents> {
     private final HabitDao mHabitDao;
@@ -38,16 +37,11 @@ public class HabitEntityRepository implements HabitRepository<HabitWithEvents> {
 
 
     @Override
-    public HabitWithEvents update(String id, String title, String reason, Instant dateStarted) {
-        HabitEntity updatedEntity = new HabitEntity(id, title, reason, dateStarted);
+    public HabitWithEvents update(String id, String title, String reason, Instant dateStarted,
+                                  boolean[] daysOfWeek) {
+        HabitEntity updatedEntity = new HabitEntity(id, title, reason, dateStarted, daysOfWeek);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.update(updatedEntity));
-        for (HabitWithEvents h : Objects.requireNonNull(mAllHabits.getValue())) {
-            if (h.getId().equals(updatedEntity.getId())) {
-                return h;
-            }
-        }
 
-        // shouldn't get here
-        return null;
+        return new HabitWithEvents(updatedEntity);
     }
 }

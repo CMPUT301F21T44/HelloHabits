@@ -17,17 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_add_habit" />
 
-    <TextView
-        android:id="@+id/text_date_started"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@id/days_of_week"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_reason" />
-
     <Button
         android:id="@+id/button_add_habit"
         android:layout_width="wrap_content"
@@ -68,12 +57,43 @@
         android:id="@+id/days_of_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/days_of_week"
         app:layout_constraintBottom_toTopOf="@+id/button_add_habit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/reminder_label"
         app:layout_constraintTop_toBottomOf="@+id/text_date_started"
-        app:layout_constraintVertical_bias="0.188" />
+        app:layout_constraintVertical_bias="0.188"
+        tools:text="Mon Wed Fri" />
+
+    <TextView
+        android:id="@+id/date_started_label"
+        android:layout_width="99dp"
+        android:layout_height="23dp"
+        android:text="@string/date_started"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_date_started"
+        app:layout_constraintEnd_toStartOf="@+id/text_date_started"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_date_started"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/days_of_week"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/date_started_label"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_reason"
+        tools:text="October 23, 2021" />
+
+    <TextView
+        android:id="@+id/reminder_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/days_of_week"
+        app:layout_constraintBaseline_toBaselineOf="@+id/days_of_week"
+        app:layout_constraintEnd_toStartOf="@+id/days_of_week"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

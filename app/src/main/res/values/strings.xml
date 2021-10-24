@@ -12,7 +12,6 @@
     <string name="title">Title</string>
     <string name="reason">Reason</string>
     <string name="delete">DELETE</string>
-    <string name="add_habit">Save Habit</string>
     <string name="add_habit_event">Save Habit Event</string>
     <string name="comment">Comment</string>
     <string name="add_location">Add Location</string>
@@ -22,6 +21,17 @@
     <string name="add_habit">Add Habit</string>
     <string name="save_changes">Save Changes</string>
     <string name="days_of_week">Reminder</string>
+    <string name="date_started">Date started:</string>
+    <string name="new_event">New Event</string>
+    <string name="view_events">View Events</string>
+    <string name="reminder_label">Reminder:</string>
+    <string name="monday">Monday</string>
+    <string name="sunday">Sunday</string>
+    <string name="saturday">Saturday</string>
+    <string name="friday">Friday</string>
+    <string name="thursday">Thursday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="tuesday">Tuesday</string>
     <string-array name="days_in_week">
         <item>Monday</item>
         <item>Tuesday</item>

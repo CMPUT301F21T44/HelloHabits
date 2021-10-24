@@ -2,60 +2,48 @@ package com.github.cmput301f21t44.hellohabits.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DaysOfWeekFragment extends DialogFragment {
 
     private boolean[] mSelectedItems;
+    OnConfirmCallback callback;
 
-
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        mSelectedItems = new boolean[getResources().getStringArray(R.array.days_in_week).length];
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Set Reminders");
 
-        builder.setMultiChoiceItems(R.array.days_in_week, null, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+        builder.setMultiChoiceItems(R.array.days_in_week, mSelectedItems,
+                (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        mSelectedItems[which] = true;
+                    } else if (mSelectedItems[which]) {
+                        mSelectedItems[which] = false;
+                    }
+                });
 
-                String[] items = getActivity().getResources().getStringArray(R.array.days_in_week);
+        builder.setPositiveButton("OK", (dialog, which) -> callback.onConfirm(mSelectedItems));
 
-                if (isChecked) {
-                    mSelectedItems[which] = true;
-                }
-                else if(mSelectedItems[which] == true){
-                    mSelectedItems[which] = false;
-                }
-            }
-        });
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which){
-
-            }
-        });
+        builder.setNegativeButton("Cancel", null);
 
         return builder.create();
     }
 
+    public static DaysOfWeekFragment newInstance(boolean[] days, OnConfirmCallback callback) {
+        DaysOfWeekFragment newFragment = new DaysOfWeekFragment();
+        newFragment.mSelectedItems = days;
+        newFragment.callback = callback;
+        return newFragment;
+    }
+
+    interface OnConfirmCallback {
+        void onConfirm(boolean[] days);
+    }
 }

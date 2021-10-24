@@ -14,6 +14,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
+import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import java.time.ZoneId;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class ViewHabitFragment extends Fragment {
     private FragmentViewHabitBinding binding;
     private HabitViewModel mHabitViewModel;
+    private HabitEventViewModel mHabitEventViewModel;
     private NavController mNavController;
 
     @Override
@@ -36,13 +39,25 @@ public class ViewHabitFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // attach the provider to activity instead of fragment so the fragments can share data
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        mHabitEventViewModel = new ViewModelProvider(requireActivity())
+                .get(HabitEventViewModel.class);
+
         mNavController = NavHostFragment.findNavController(this);
 
-        binding.buttonBackToList.setOnClickListener(v ->
-                mNavController.navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment));
+        binding.buttonBackToList.setOnClickListener(v -> mNavController
+                .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment));
 
-        binding.buttonEditHabit.setOnClickListener(v ->
-                mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));
+        binding.buttonEditHabit.setOnClickListener(v -> mNavController
+                .navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));
+
+        binding.buttonNewHabitEvent.setOnClickListener(v -> mNavController
+                .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment));
+
+        binding.buttonNewHabitEvent.setOnClickListener(v -> {
+            mHabitEventViewModel.select(null);
+            mNavController
+                    .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+        });
 
 
         binding.buttonDeleteHabit.setOnClickListener(v ->
@@ -72,6 +87,7 @@ public class ViewHabitFragment extends Fragment {
                     .withZone(ZoneId.systemDefault())
                     .format(habit.getDateStarted());
             binding.viewDateStarted.setText(date);
+            binding.viewReminder.setText(DaysOfWeek.toString(habit.getDaysOfWeek()));
         });
     }
 

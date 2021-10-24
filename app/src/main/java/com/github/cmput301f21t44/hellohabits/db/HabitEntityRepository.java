@@ -24,9 +24,10 @@ public class HabitEntityRepository implements HabitRepository<HabitWithEvents> {
         return mAllHabits;
     }
 
+
     @Override
-    public void insert(String title, String reason, Instant dateStarted) {
-        HabitEntity habit = new HabitEntity(title, reason, dateStarted);
+    public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+        HabitEntity habit = new HabitEntity(title, reason, dateStarted, daysOfWeek);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.insert(habit));
     }
 

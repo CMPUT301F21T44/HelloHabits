@@ -8,6 +8,7 @@
     <string name="edit_habit">Edit Habit</string>
     <string name="back">Back</string>
 
+
     <string name="title">Title</string>
     <string name="reason">Reason</string>
     <string name="delete">DELETE</string>
@@ -18,4 +19,17 @@
     <string name="remove_location">Remove Location</string>
     <string name="add_photo">Add Photo</string>
     <string name="remove_photo">Remove Photo</string>
+    <string name="add_habit">Add Habit</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="days_of_week">Reminder</string>
+    <string-array name="days_in_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
 </resources>

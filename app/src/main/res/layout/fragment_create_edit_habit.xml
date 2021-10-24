@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_habit"
+        app:layout_constraintBottom_toTopOf="@id/days_of_week"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,9 +35,8 @@
         android:text="@string/add_habit"
         app:layout_constraintBottom_toTopOf="@+id/button_back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_date_started" />
+        app:layout_constraintTop_toBottomOf="@id/days_of_week" />
 
     <EditText
         android:id="@+id/edit_text_reason"
@@ -64,5 +63,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/days_of_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/days_of_week"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_habit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_date_started"
+        app:layout_constraintVertical_bias="0.188" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

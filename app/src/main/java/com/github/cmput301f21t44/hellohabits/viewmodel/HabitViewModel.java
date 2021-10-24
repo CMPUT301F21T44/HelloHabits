@@ -38,8 +38,8 @@ public class HabitViewModel extends AndroidViewModel {
         return mAllHabits;
     }
 
-    public void insert(String name, String reason, Instant dateStarted) {
-        mRepository.insert(name, reason, dateStarted);
+    public void insert(String name, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+        mRepository.insert(name, reason, dateStarted, daysOfWeek);
     }
 
     public Habit update(String id, String name, String reason, Instant dateStarted) {

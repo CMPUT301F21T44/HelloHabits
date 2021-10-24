@@ -8,7 +8,7 @@ import java.util.List;
 public interface HabitRepository<T extends Habit> {
     LiveData<List<T>> getAllHabits();
 
-    void insert(String title, String reason, Instant dateStarted);
+    void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek);
 
     void delete(T habit);
 

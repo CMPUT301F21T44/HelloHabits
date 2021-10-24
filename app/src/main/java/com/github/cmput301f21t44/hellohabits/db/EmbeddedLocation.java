@@ -37,6 +37,7 @@ public class EmbeddedLocation implements Location {
     }
 
     public static EmbeddedLocation from(Location l) {
+        if (l == null) return null;
         return new EmbeddedLocation(l.getLongitude(), l.getLatitude(), l.getAccuracy());
     }
 }

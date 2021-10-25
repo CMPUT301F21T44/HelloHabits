@@ -4,13 +4,6 @@ import java.time.Instant;
 import java.util.List;
 
 public interface Habit {
-    static final int MONDAY = 1;
-    static final int TUESDAY = 2;
-    static final int WEDNESDAY = 3;
-    static final int THURSDAY = 4;
-    static final int FRIDAY = 5;
-    static final int SATURDAY = 6;
-    static final int SUNDAY = 0;
 
     String getId();
 

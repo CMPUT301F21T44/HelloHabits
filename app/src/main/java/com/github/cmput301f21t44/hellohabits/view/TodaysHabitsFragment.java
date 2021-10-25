@@ -54,10 +54,17 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
     @Override
     public void onStart() {
         super.onStart();
-        mHabitViewModel.getAllHabits().observe(this, list -> {
-            // need to cast List<HabitEntity> to List<Habit>
-            List<Habit> habits = new ArrayList<>(list);
-            adapter.submitList(habits);
+        mHabitViewModel.getAllHabits().observe(this, habitList -> {
+            List<Habit> todaysHabits = new ArrayList<>();
+            Instant today = Instant.now();
+            // traverse all h in habitList, and only masks in those who matches the checkBox
+            // checkBox implementation can be seen in isInDay() from Habit.java
+            for (Habit h : habitList) {
+                if (Habit.isInDay(today, h.getDaysOfWeek())) {
+                    todaysHabits.add(h);
+                }
+            }
+            adapter.submitList(todaysHabits);
         });
     }
 

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.github.cmput301f21t44.hellohabits.db.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.db.HabitEntityRepository;
@@ -17,6 +18,16 @@ public class HabitViewModel extends AndroidViewModel {
     private final HabitEntityRepository mRepository;
     private final LiveData<List<HabitWithEvents>> mAllHabits;
 
+    private final MutableLiveData<Habit> selected = new MutableLiveData<>();
+
+    public void select(Habit habit) {
+        selected.setValue(habit);
+    }
+
+    public LiveData<Habit> getSelected() {
+        return selected;
+    }
+
     public HabitViewModel(Application application) {
         super(application);
         mRepository = new HabitEntityRepository(application);
@@ -27,12 +38,12 @@ public class HabitViewModel extends AndroidViewModel {
         return mAllHabits;
     }
 
-    public void insert(String name, String reason, Instant dateStarted) {
-        mRepository.insert(name, reason, dateStarted);
+    public void insert(String name, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+        mRepository.insert(name, reason, dateStarted, daysOfWeek);
     }
 
-    public Habit update(String id, String name, String reason, Instant dateStarted) {
-        return mRepository.update(id, name, reason, dateStarted);
+    public Habit update(String id, String name, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+        return mRepository.update(id, name, reason, dateStarted, daysOfWeek);
     }
 
     public void delete(Habit habit) {

@@ -16,7 +16,6 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
 
     private FragmentTodaysHabitsBinding binding;
     private HabitViewModel mHabitViewModel;
-    private SelectedHabitViewModel mSelectedViewModel;
     private HabitAdapter adapter;
     private NavController mNavController;
 
@@ -41,16 +39,14 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
-        mHabitViewModel = new ViewModelProvider(this).get(HabitViewModel.class);
         // attach the provider to activity instead of fragment so the fragments can share data
-        mSelectedViewModel = new ViewModelProvider(requireActivity())
-                .get(SelectedHabitViewModel.class);
+        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
         adapter = new HabitAdapter(new HabitAdapter.HabitDiff(), this);
         binding.habitRecyclerView.setAdapter(adapter);
         binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.buttonNewHabit.setOnClickListener(view1 -> {
-            mSelectedViewModel.select(null);
+            mHabitViewModel.select(null);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
         });
     }
@@ -73,7 +69,7 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onItemClick(Habit habit) {
-        mSelectedViewModel.select(habit);
+        mHabitViewModel.select(habit);
         mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
     }
 }

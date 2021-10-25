@@ -16,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Habit Title" />
 
     <TextView
         android:id="@+id/view_reason"
@@ -27,18 +28,73 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_title" />
+        app:layout_constraintTop_toBottomOf="@+id/view_title"
+        tools:text="Habit Reason" />
 
     <TextView
         android:id="@+id/view_date_started"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_delete_habit"
+        app:layout_constraintBottom_toTopOf="@+id/view_reminder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_reason" />
+        app:layout_constraintStart_toEndOf="@+id/view_date_started_label"
+        app:layout_constraintTop_toBottomOf="@+id/view_reason"
+        tools:text="October 23, 2021" />
+
+    <TextView
+        android:id="@+id/view_date_started_label"
+        android:layout_width="103dp"
+        android:layout_height="30dp"
+        android:text="@string/date_started"
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/view_date_started"
+        app:layout_constraintEnd_toStartOf="@+id/view_date_started"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_edit_habit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_habit"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_delete_habit"
+        app:layout_constraintEnd_toStartOf="@+id/button_delete_habit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_new_habit_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_event"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_view_habit_events"
+        app:layout_constraintEnd_toStartOf="@+id/button_view_habit_events"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_view_habit_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_events"
+        app:layout_constraintBottom_toTopOf="@+id/button_back_to_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_new_habit_event"
+        app:layout_constraintTop_toBottomOf="@+id/button_delete_habit" />
+
+    <Button
+        android:id="@+id/button_delete_habit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        app:layout_constraintBottom_toTopOf="@+id/button_view_habit_events"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_edit_habit"
+        app:layout_constraintTop_toBottomOf="@+id/view_reminder" />
 
     <Button
         android:id="@+id/button_back_to_list"
@@ -49,26 +105,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_delete_habit" />
+        app:layout_constraintTop_toBottomOf="@+id/button_view_habit_events" />
 
-    <Button
-        android:id="@+id/button_delete_habit"
+    <TextView
+        android:id="@+id/view_reminder_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/delete"
-        app:layout_constraintBottom_toTopOf="@+id/button_back_to_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toEndOf="@+id/button_edit_habit"
-        app:layout_constraintTop_toBottomOf="@+id/view_date_started" />
-
-    <Button
-        android:id="@+id/button_edit_habit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="@string/edit_habit"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button_delete_habit"
+        android:text="@string/reminder_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder"
+        app:layout_constraintEnd_toStartOf="@+id/view_reminder"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/view_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/button_delete_habit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view_reminder_label"
+        app:layout_constraintTop_toBottomOf="@+id/view_date_started"
+        tools:text="Mon Wed Fri" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

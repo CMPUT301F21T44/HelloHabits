@@ -14,9 +14,9 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitBinding;
+import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.SelectedHabitViewModel;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,10 +26,10 @@ import java.time.format.DateTimeFormatter;
 public class CreateEditHabitFragment extends Fragment {
     private FragmentCreateEditHabitBinding binding;
     private HabitViewModel mHabitViewModel;
-    private SelectedHabitViewModel mSelectedViewModel;
     private Habit mHabit;
     private Instant mInstant;
     private boolean isEdit;
+    private boolean[] mDaysOfWeek;
     private NavController mNavController;
 
     @Override
@@ -38,7 +38,6 @@ public class CreateEditHabitFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateEditHabitBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     private void updateInstant(Instant instant) {
@@ -48,64 +47,75 @@ public class CreateEditHabitFragment extends Fragment {
         binding.textDateStarted.setText(date);
     }
 
+    private void updateDaysOfWeek(boolean[] daysOfWeek) {
+        mDaysOfWeek = daysOfWeek;
+        binding.daysOfWeek.setText(DaysOfWeek.toString(daysOfWeek));
+    }
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mHabitViewModel = new ViewModelProvider(this).get(HabitViewModel.class);
-        mSelectedViewModel = new ViewModelProvider(requireActivity()).get(SelectedHabitViewModel.class);
+        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
         binding.buttonAddHabit.setOnClickListener(v -> {
             if (isEdit) {
-                Habit updatedHabit = mHabitViewModel.update(
-                        mHabit.getId(),
+                Habit updatedHabit = mHabitViewModel.update(mHabit.getId(),
                         binding.editTextTitle.getText().toString(),
-                        binding.editTextReason.getText().toString(),
-                        mInstant);
-                mSelectedViewModel.select(updatedHabit);
+                        binding.editTextReason.getText().toString(), mInstant, mDaysOfWeek);
+                mHabitViewModel.select(updatedHabit);
             } else {
-                mHabitViewModel.insert(
-                        binding.editTextTitle.getText().toString(),
-                        binding.editTextReason.getText().toString(),
-                        mInstant);
+                mHabitViewModel.insert(binding.editTextTitle.getText().toString(),
+                        binding.editTextReason.getText().toString(), mInstant, mDaysOfWeek);
             }
             mNavController.navigate(isEdit
                     ? R.id.action_createEditHabitFragment_to_viewHabitFragment
                     : R.id.action_createEditHabitFragment_to_todaysHabitsFragment);
         });
 
-        binding.textDateStarted.setOnClickListener(v -> {
-            DialogFragment newFragment = DatePickerFragment.newInstance(
-                    (datePicker, year, month, day) ->
-                            updateInstant(
-                                    LocalDate
-                                            .of(year, month + 1, day)
-                                            .atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
-            newFragment.show(requireActivity().getSupportFragmentManager(), "datePicker");
-        });
+        binding.textDateStarted.setOnClickListener(v -> startDatePickerFragment());
+        binding.dateStartedLabel.setOnClickListener(v -> startDatePickerFragment());
 
         binding.buttonBack.setOnClickListener(v ->
                 mNavController.navigate(isEdit
                         ? R.id.action_createEditHabitFragment_to_viewHabitFragment
                         : R.id.action_createEditHabitFragment_to_todaysHabitsFragment)
         );
+
+        binding.reminderLabel.setOnClickListener(v -> startDaysOfWeekFragment());
+        binding.daysOfWeek.setOnClickListener(v -> startDaysOfWeekFragment());
+    }
+
+    private void startDatePickerFragment() {
+        DialogFragment newFragment = DatePickerFragment.newInstance(
+                (datePicker, year, month, day) ->
+                        updateInstant(LocalDate.of(year, month + 1, day)
+                                .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newFragment.show(requireActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    private void startDaysOfWeekFragment() {
+        DialogFragment newFragment = DaysOfWeekFragment
+                .newInstance(mDaysOfWeek, this::updateDaysOfWeek);
+        newFragment.show(getParentFragmentManager(), "daysOfWeek");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mSelectedViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
-            if (habit == null) {
-                isEdit = false;
-                updateInstant(Instant.now());
-            } else {
-                isEdit = true;
-                binding.buttonAddHabit.setText(R.string.save_changes);
-                // update UI
+        mHabitViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
+            isEdit = habit != null;
+            if (isEdit) {
+                // populate fields with habit data
                 mHabit = habit;
                 binding.editTextTitle.setText(habit.getTitle());
                 binding.editTextReason.setText(habit.getReason());
                 updateInstant(habit.getDateStarted());
+                updateDaysOfWeek(habit.getDaysOfWeek());
+
+                binding.buttonAddHabit.setText(R.string.save_changes);
+            } else {
+                updateInstant(Instant.now());
+                updateDaysOfWeek(DaysOfWeek.emptyArray());
             }
         });
     }

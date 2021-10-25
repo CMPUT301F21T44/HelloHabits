@@ -12,18 +12,18 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * RoomDatabase class to be used by the whole app
  * <p>
  * Make sure to increment the version number when adding new entities
  * or updating the schema of existing ones!
  */
-@Database(entities = {HabitEntity.class, HabitEventEntity.class},
-        version = 3, exportSchema = false)
+@Database(entities = {HabitEntity.class, HabitEventEntity.class}, version = 5, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract HabitDao habitDao();
+
+    public abstract HabitEventDao habitEventDao();
 
     /**
      * Singleton Instance for AppDatabase
@@ -43,11 +43,8 @@ public abstract class AppDatabase extends RoomDatabase {
             // by wrapping instantiation in a monitor lock (CMPUT 379 wink wink)
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room
-                            .databaseBuilder(
-                                    context.getApplicationContext(),
-                                    AppDatabase.class,
-                                    "hello_habit_database")
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class,
+                            "hello_habit_database")
                             .addCallback(sAppDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();

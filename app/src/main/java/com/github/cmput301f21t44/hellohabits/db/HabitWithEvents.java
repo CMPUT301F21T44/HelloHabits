@@ -51,6 +51,11 @@ public class HabitWithEvents implements Habit {
     }
 
     @Override
+    public boolean[] getDaysOfWeek() {
+        return mHabitEntity.getDaysOfWeek();
+    }
+
+    @Override
     public List<HabitEvent> getEvents() {
         return new ArrayList<>(mHabitEventList);
     }

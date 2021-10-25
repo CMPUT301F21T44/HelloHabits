@@ -42,5 +42,16 @@
         <action
             android:id="@+id/action_viewHabitFragment_to_createEditHabitFragment"
             app:destination="@id/CreateEditHabitFragment" />
+        <action
+            android:id="@+id/action_viewHabitFragment_to_createEditHabitEventFragment"
+            app:destination="@id/createEditHabitEventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditHabitEventFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.CreateEditHabitEventFragment"
+        android:label="CreateEditHabitEventFragment" >
+        <action
+            android:id="@+id/action_createEditHabitEventFragment_to_viewHabitFragment"
+            app:destination="@id/viewHabitFragment" />
     </fragment>
 </navigation>

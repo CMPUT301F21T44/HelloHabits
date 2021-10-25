@@ -1,6 +1,5 @@
 package com.github.cmput301f21t44.hellohabits.db;
 
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -37,15 +36,20 @@ public class HabitEntity {
     @NonNull
     private final Instant mDateStarted;
 
-    public HabitEntity(@NonNull String id, @NonNull String title, @NonNull String reason, @NonNull Instant dateStarted) {
+    @ColumnInfo(name = "days_of_week")
+    private final boolean[] mDaysOfWeek;
+
+    public HabitEntity(@NonNull String id, @NonNull String title, @NonNull String reason,
+                       @NonNull Instant dateStarted, @NonNull boolean[] daysOfWeek) {
         this.mHabitId = id;
         this.mTitle = title;
         this.mReason = reason;
         this.mDateStarted = dateStarted;
+        this.mDaysOfWeek = daysOfWeek;
     }
 
-    public HabitEntity(String title, String reason, Instant dateStarted) {
-        this(UUID.randomUUID().toString(), title, reason, dateStarted);
+    public HabitEntity(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+        this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek);
     }
 
     public String getHabitId() {
@@ -73,11 +77,12 @@ public class HabitEntity {
         return mDateStarted;
     }
 
+    public boolean[] getDaysOfWeek() {
+        return mDaysOfWeek;
+    }
+
     public static HabitEntity from(Habit habit) {
-        return new HabitEntity(
-                habit.getId(),
-                habit.getTitle(),
-                habit.getReason(),
-                habit.getDateStarted());
+        return new HabitEntity(habit.getId(), habit.getTitle(), habit.getReason(),
+                habit.getDateStarted(), habit.getDaysOfWeek());
     }
 }

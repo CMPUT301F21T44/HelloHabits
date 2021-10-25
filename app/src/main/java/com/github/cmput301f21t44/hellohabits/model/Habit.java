@@ -10,7 +10,7 @@ public interface Habit {
     static final int THURSDAY = 4;
     static final int FRIDAY = 5;
     static final int SATURDAY = 6;
-    static final int SUNDAY = ;0
+    static final int SUNDAY = 0;
 
     String getId();
 

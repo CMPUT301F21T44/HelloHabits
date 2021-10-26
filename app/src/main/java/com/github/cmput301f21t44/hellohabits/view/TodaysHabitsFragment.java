@@ -17,6 +17,9 @@ import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBin
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +59,7 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
         super.onStart();
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> todaysHabits = new ArrayList<>();
-            Instant today = Instant.now();
+            ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
             // traverse all h in habitList, and only masks in those who matches the checkBox
             // checkBox implementation can be seen in isInDay() from Habit.java
             for (Habit h : habitList) {

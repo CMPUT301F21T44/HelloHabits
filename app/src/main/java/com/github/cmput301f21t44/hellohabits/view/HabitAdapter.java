@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.cmput301f21t44.hellohabits.databinding.HabitItemBinding;
+import com.github.cmput301f21t44.hellohabits.R;
+import com.github.cmput301f21t44.hellohabits.databinding.LlistHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 
 import java.time.ZoneId;
@@ -24,7 +25,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
     @NonNull
     @Override
     public HabitHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HabitItemBinding itemBinding = HabitItemBinding.inflate(
+        LlistHabitItemBinding itemBinding = LlistHabitItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
         return new HabitHolder(itemBinding);
     }
@@ -50,11 +51,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
     }
 
     protected static class HabitHolder extends RecyclerView.ViewHolder {
-        private final HabitItemBinding mItemBinding;
+        private final LlistHabitItemBinding mItemBinding;
         private static final DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("d MMMM, y").withZone(ZoneId.systemDefault());
 
-        HabitHolder(@NonNull HabitItemBinding itemBinding) {
+        HabitHolder(@NonNull LlistHabitItemBinding itemBinding) {
             super(itemBinding.getRoot());
             this.mItemBinding = itemBinding;
         }
@@ -62,8 +63,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
         void bind(@NonNull final Habit habit, final OnItemClickListener<Habit> listener) {
             mItemBinding.titleView.setText(habit.getTitle());
             mItemBinding.reasonView.setText(habit.getReason());
-            String date = formatter.format(habit.getDateStarted());
-            mItemBinding.dateStartedView.setText(date);
+            mItemBinding.imageView.setImageResource(R.mipmap.green_logo_round);
             mItemBinding.getRoot().setOnClickListener(v-> listener.onItemClick(habit));
         }
 

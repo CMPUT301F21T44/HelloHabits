@@ -15,19 +15,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="Title"
             android:padding="8dp"
             android:textColor="#000000"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/message_text"
+            android:id="@+id/reason_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="message"
+            android:hint="Reason"
             android:padding="8dp"
             android:textSize="15sp" />
     </LinearLayout>

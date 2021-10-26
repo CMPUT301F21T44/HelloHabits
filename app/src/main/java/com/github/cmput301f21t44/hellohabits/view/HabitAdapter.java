@@ -102,7 +102,8 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
                 consistency = habit.getEvents().size() / totalDays;
             }
             // if consistency <50% red logo, if between 50 and 75%, yellow logo,
-            // if greater than 75% green logo
+            // if greater than 75% green logo.
+            // if habit is non repetitive or hasnt started yet, consistency = 100%
             if(consistency<0.5){
                 mItemBinding.imageView.setImageResource(R.mipmap.red_logo_round);
             }

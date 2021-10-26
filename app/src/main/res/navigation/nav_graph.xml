@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_todaysHabitsFragment_to_viewHabitFragment"
             app:destination="@id/viewHabitFragment" />
+        <action
+            android:id="@+id/action_TodaysHabitsFragment_to_allHabitsFragment"
+            app:destination="@id/allHabitsFragment" />
     </fragment>
     <fragment
         android:id="@+id/CreateEditHabitFragment"
@@ -54,4 +57,9 @@
             android:id="@+id/action_createEditHabitEventFragment_to_viewHabitFragment"
             app:destination="@id/viewHabitFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/allHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.AllHabitsFragment"
+        android:label="All Habits"
+        tools:layout="@layout/fragment_all_habits" />
 </navigation>

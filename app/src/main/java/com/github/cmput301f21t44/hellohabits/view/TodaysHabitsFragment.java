@@ -52,6 +52,10 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
             mHabitViewModel.select(null);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
         });
+        binding.viewAllHabits.setOnClickListener(view1 -> {
+            mHabitViewModel.select(null);
+            mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
+        });
     }
 
     @Override

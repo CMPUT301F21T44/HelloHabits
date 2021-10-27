@@ -9,34 +9,33 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.databinding.LlistHabitItemBinding;
+import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
+    private OnItemClickListener<Habit> listener;
 
-public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
-    private final OnItemClickListener<Habit> listener;
-
-    public HabitAdapter(@NonNull DiffUtil.ItemCallback<Habit> diffCallback, OnItemClickListener<Habit> listener) {
+    public HabitAdapter(@NonNull DiffUtil.ItemCallback<Habit> diffCallback) {
         super(diffCallback);
-        this.listener = listener;
+    }
+
+    public static HabitAdapter newInstance(OnItemClickListener<Habit> listener) {
+        HabitAdapter adapter = new HabitAdapter(new HabitDiff());
+        adapter.listener = listener;
+        return adapter;
     }
 
     @NonNull
     @Override
-    public HabitHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LlistHabitItemBinding itemBinding = LlistHabitItemBinding.inflate(
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ListHabitItemBinding itemBinding = ListHabitItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
-        return new HabitHolder(itemBinding);
+        return new ViewHolder(itemBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HabitHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Habit current = getItem(position);
         holder.bind(current, listener);
     }
@@ -55,10 +54,10 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.HabitHolder> {
         }
     }
 
-    protected static class HabitHolder extends RecyclerView.ViewHolder {
-        private final LlistHabitItemBinding mItemBinding;
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
+        private final ListHabitItemBinding mItemBinding;
 
-        HabitHolder(@NonNull LlistHabitItemBinding itemBinding) {
+        ViewHolder(@NonNull ListHabitItemBinding itemBinding) {
             super(itemBinding.getRoot());
             this.mItemBinding = itemBinding;
         }

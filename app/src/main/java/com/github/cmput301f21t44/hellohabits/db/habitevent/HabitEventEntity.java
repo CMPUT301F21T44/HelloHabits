@@ -61,9 +61,15 @@ public class HabitEventEntity implements HabitEvent {
         this.mEmbeddedLocation = embeddedLocation;
     }
 
+    public HabitEventEntity(@NonNull String habitEventId, @NonNull String habitId,
+                            @NonNull Instant date, String comment, String photoPath,
+                            Location location) {
+        this(habitEventId, habitId, date, comment, photoPath, EmbeddedLocation.from(location));
+    }
+
     public HabitEventEntity(@NonNull String habitId, @NonNull Instant date, String comment,
                             String photoPath, Location location) {
-        this(UUID.randomUUID().toString(), habitId, date, comment, photoPath, EmbeddedLocation.from(location));
+        this(UUID.randomUUID().toString(), habitId, date, comment, photoPath, location);
     }
 
     public static HabitEventEntity from(HabitEvent habitEvent) {

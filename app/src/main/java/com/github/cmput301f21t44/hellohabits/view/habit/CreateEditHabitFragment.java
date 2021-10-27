@@ -24,7 +24,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class CreateEditHabitFragment extends Fragment {
-    private static final String ERROR_MESSAGE = "Input is too long";
+    public static final String ERROR_MESSAGE = "Input is too long";
     private static final int MAX_TITLE_LEN = 20;
     private static final int MAX_REASON_LEN = 30;
 

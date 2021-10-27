@@ -32,6 +32,8 @@
     <string name="thursday">Thursday</string>
     <string name="wednesday">Wednesday</string>
     <string name="tuesday">Tuesday</string>
+    <string name="view_all_habits">View All Habits</string>
+    <string name="new_habit_event">New Event</string>
     <string-array name="days_in_week">
         <item>Monday</item>
         <item>Tuesday</item>

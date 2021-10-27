@@ -7,5 +7,5 @@ public interface HabitEventRepository<T extends HabitEvent> {
 
     void delete(T habitEvent);
 
-    T update(String id, Instant date, String comment, String photoPath, Location location);
+    T update(String id, String habitId, Instant date, String comment, String photoPath, Location location);
 }

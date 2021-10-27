@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentAllHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllHabitsFragment extends Fragment implements OnItemClickListener<Habit> {
+public class AllHabitsFragment extends Fragment {
     private FragmentAllHabitsBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitAdapter adapter;
@@ -35,13 +34,16 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
         return binding.getRoot();
     }
 
-
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
         // attach the provider to activity instead of fragment so the fragments can share data
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-        adapter = new HabitAdapter(new HabitAdapter.HabitDiff(), this);
+        adapter = HabitAdapter.newInstance((habit) -> {
+            mHabitViewModel.select(habit);
+            mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
+        });
         binding.habitRecyclerView.setAdapter(adapter);
         binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -64,11 +66,5 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onItemClick(Habit habit) {
-        mHabitViewModel.select(habit);
-        mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
     }
 }

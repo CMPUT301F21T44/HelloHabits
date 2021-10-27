@@ -14,12 +14,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitEventBinding;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import java.util.Objects;
 
 public class CreateEditHabitEventFragment extends Fragment {
+    private static final int MAX_COMMENT_LEN = 20;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
@@ -36,6 +38,29 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    private void submitHabitEvent() {
+        String comment = binding.editTextComment.getText().toString();
+        if (comment.length() > MAX_COMMENT_LEN) {
+            binding.editTextComment.setError(CreateEditHabitFragment.ERROR_MESSAGE);
+            binding.editTextComment.requestFocus();
+            return;
+        }
+        if (isEdit) {
+            HabitEvent updatedHabitEvent = mHabitEventViewModel.update(mHabitEvent.getId(),
+                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment, null, null);
+            mHabitEventViewModel.select(updatedHabitEvent);
+        } else {
+            String habitId = Objects.requireNonNull(mHabitViewModel.getSelected().getValue())
+                    .getId();
+            mHabitEventViewModel.insert(habitId, comment);
+        }
+        mNavController
+                .navigate(isEdit ?
+                        R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment :
+                        R.id.action_createEditHabitEventFragment_to_viewHabitFragment);
+
+    }
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
@@ -43,22 +68,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                 .get(HabitEventViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
-        binding.buttonAddHabitEvent.setOnClickListener(v -> {
-            if (isEdit) {
-                HabitEvent updatedHabitEvent = mHabitEventViewModel.update(mHabitEvent.getId(),
-                        mHabitEvent.getHabitId(), mHabitEvent.getDate(),
-                        binding.editTextComment.getText().toString(), null, null);
-                mHabitEventViewModel.select(updatedHabitEvent);
-            } else {
-                mHabitEventViewModel.insert(
-                        Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getId(),
-                        binding.editTextComment.getText().toString());
-            }
-            mNavController
-                    .navigate(isEdit ?
-                            R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment :
-                            R.id.action_createEditHabitEventFragment_to_viewHabitFragment);
-        });
+        binding.buttonAddHabitEvent.setOnClickListener(v -> submitHabitEvent());
 
         binding.buttonBack.setOnClickListener(v ->
                 mNavController

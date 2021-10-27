@@ -5,8 +5,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface Habit {
-
-
     String getId();
 
     String getTitle();
@@ -30,6 +28,4 @@ public interface Habit {
         // [true, false , false, false, false, false, true] = for monday and sunday 
         return daysOfWeek[dayOfWeek - 1];
     }
-
-
 }

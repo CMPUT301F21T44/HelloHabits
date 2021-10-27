@@ -1,6 +1,5 @@
 package com.github.cmput301f21t44.hellohabits.view;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class CreateEditHabitFragment extends Fragment {
+    private static final String ERROR_MESSAGE = "Input is too long";
+    private static final int MAX_TITLE_LEN = 20;
+    private static final int MAX_REASON_LEN = 30;
+
     private FragmentCreateEditHabitBinding binding;
     private HabitViewModel mHabitViewModel;
     private Habit mHabit;
@@ -32,9 +35,6 @@ public class CreateEditHabitFragment extends Fragment {
     private boolean isEdit;
     private boolean[] mDaysOfWeek;
     private NavController mNavController;
-    private String errorMessage = "Input is too long";
-    private boolean titlePass = true;
-    private boolean reasonPass = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,65 +56,44 @@ public class CreateEditHabitFragment extends Fragment {
         binding.daysOfWeek.setText(DaysOfWeek.toString(daysOfWeek));
     }
 
+    private void submitHabit() {
+        boolean validTitle = true, validReason = true;
+
+        String title = binding.editTextTitle.getText().toString();
+        if (title.length() > MAX_TITLE_LEN) {
+            binding.editTextTitle.setError(ERROR_MESSAGE);
+            binding.editTextTitle.requestFocus();
+            validTitle = false;
+        }
+
+        String reason = binding.editTextReason.getText().toString();
+        if (reason.length() > MAX_REASON_LEN) {
+            binding.editTextReason.setError(ERROR_MESSAGE);
+            binding.editTextReason.requestFocus();
+            validReason = false;
+        }
+
+        if (!validTitle || !validReason) return;
+
+        if (isEdit) {
+            Habit updatedHabit = mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
+                    mDaysOfWeek);
+            mHabitViewModel.select(updatedHabit);
+        } else {
+            mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek);
+        }
+
+        mNavController.navigate(isEdit
+                ? R.id.action_createEditHabitFragment_to_viewHabitFragment
+                : R.id.action_createEditHabitFragment_to_todaysHabitsFragment);
+    }
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
-        binding.buttonAddHabit.setOnClickListener(v -> {
-            if (isEdit) {
-                titlePass = true;
-                reasonPass = true;
-                //make sure title length is less than 20 characters
-                if (binding.editTextTitle.getText().length() > 20){
-                    binding.editTextTitle.setError(errorMessage);
-                    binding.editTextTitle.requestFocus();
-                    titlePass = false;
-                }
-                //make sure reason length is less than 30 characters
-                if (binding.editTextReason.getText().length() > 30){
-                    binding.editTextReason.setError(errorMessage);
-                    binding.editTextReason.requestFocus();
-                    reasonPass = false;
-                }
-                if (titlePass && reasonPass){
-                    Habit updatedHabit = mHabitViewModel.update(mHabit.getId(),
-                            binding.editTextTitle.getText().toString(),
-                            binding.editTextReason.getText().toString(), mInstant, mDaysOfWeek);
-                    mHabitViewModel.select(updatedHabit);
-                }
-
-
-            } else {
-                titlePass = true;
-                reasonPass = true;
-                //make sure title length is less than 20 characters
-                if (binding.editTextTitle.getText().length() > 20){
-                    binding.editTextTitle.setError(errorMessage);
-                    binding.editTextTitle.requestFocus();
-                    titlePass = false;
-                }
-                //make sure reason length is less than 30 characters
-                if (binding.editTextReason.getText().length() > 30){
-                    binding.editTextReason.setError(errorMessage);
-                    binding.editTextReason.requestFocus();
-                    reasonPass = false;
-                }
-                if (titlePass && reasonPass){
-                    mHabitViewModel.insert(binding.editTextTitle.getText().toString(),
-                            binding.editTextReason.getText().toString(), mInstant, mDaysOfWeek);
-                }
-
-
-
-            }
-            if (titlePass && reasonPass) {
-                mNavController.navigate(isEdit
-                        ? R.id.action_createEditHabitFragment_to_viewHabitFragment
-                        : R.id.action_createEditHabitFragment_to_todaysHabitsFragment);
-            }
-
-        });
+        binding.buttonAddHabit.setOnClickListener(v -> submitHabit());
 
         binding.textDateStarted.setOnClickListener(v -> startDatePickerFragment());
         binding.dateStartedLabel.setOnClickListener(v -> startDatePickerFragment());

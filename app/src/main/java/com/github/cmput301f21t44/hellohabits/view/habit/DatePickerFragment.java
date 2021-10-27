@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.view;
+package com.github.cmput301f21t44.hellohabits.view.habit;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

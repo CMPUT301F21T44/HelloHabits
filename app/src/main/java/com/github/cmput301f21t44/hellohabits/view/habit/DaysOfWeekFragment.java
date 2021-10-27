@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.view;
+package com.github.cmput301f21t44.hellohabits.view.habit;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -43,7 +43,7 @@ public class DaysOfWeekFragment extends DialogFragment {
         return newFragment;
     }
 
-    interface OnConfirmCallback {
+    public interface OnConfirmCallback {
         void onConfirm(boolean[] days);
     }
 }

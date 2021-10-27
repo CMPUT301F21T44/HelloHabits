@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.view;
+package com.github.cmput301f21t44.hellohabits.view.habit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,15 +13,19 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.databinding.FragmentAllHabitsBinding;
+import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllHabitsFragment extends Fragment implements OnItemClickListener<Habit>{
-    private FragmentAllHabitsBinding binding;
+public class TodaysHabitsFragment extends Fragment implements OnItemClickListener<Habit> {
+    private FragmentTodaysHabitsBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitAdapter adapter;
     private NavController mNavController;
@@ -30,7 +34,7 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAllHabitsBinding.inflate(inflater, container, false);
+        binding = FragmentTodaysHabitsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -46,7 +50,11 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
 
         binding.buttonNewHabit.setOnClickListener(view1 -> {
             mHabitViewModel.select(null);
-            mNavController.navigate(R.id.action_allHabitsFragment_to_newHabitFragment);
+            mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
+        });
+        binding.viewAllHabits.setOnClickListener(view1 -> {
+            mHabitViewModel.select(null);
+            mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
     }
 
@@ -54,11 +62,16 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
     public void onStart() {
         super.onStart();
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
-            List<Habit> allHabits = new ArrayList<>();
+            List<Habit> todaysHabits = new ArrayList<>();
+            ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
+            // traverse all h in habitList, and only masks in those who matches the checkBox
+            // checkBox implementation can be seen in isInDay() from Habit.java
             for (Habit h : habitList) {
-                    allHabits.add(h);
+                if (Habit.isInDay(today, h.getDaysOfWeek())) {
+                    todaysHabits.add(h);
+                }
             }
-            adapter.submitList(allHabits);
+            adapter.submitList(todaysHabits);
         });
     }
 
@@ -71,6 +84,6 @@ public class AllHabitsFragment extends Fragment implements OnItemClickListener<H
     @Override
     public void onItemClick(Habit habit) {
         mHabitViewModel.select(habit);
-        mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
+        mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
     }
 }

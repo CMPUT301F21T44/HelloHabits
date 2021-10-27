@@ -1,7 +1,8 @@
-package com.github.cmput301f21t44.hellohabits.db;
+package com.github.cmput301f21t44.hellohabits.db.habitevent;
 
 import android.app.Application;
 
+import com.github.cmput301f21t44.hellohabits.db.AppDatabase;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.Location;
 

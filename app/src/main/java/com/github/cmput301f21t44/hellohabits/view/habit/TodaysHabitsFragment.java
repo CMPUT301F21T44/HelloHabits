@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import java.time.Instant;
@@ -24,7 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodaysHabitsFragment extends Fragment implements OnItemClickListener<Habit> {
+public class TodaysHabitsFragment extends Fragment {
     private FragmentTodaysHabitsBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitAdapter adapter;
@@ -44,7 +43,10 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
         mNavController = NavHostFragment.findNavController(this);
         // attach the provider to activity instead of fragment so the fragments can share data
         mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-        adapter = new HabitAdapter(new HabitAdapter.HabitDiff(), this);
+        adapter = HabitAdapter.newInstance((habit) -> {
+            mHabitViewModel.select(habit);
+            mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
+        });
         binding.habitRecyclerView.setAdapter(adapter);
         binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -79,11 +81,5 @@ public class TodaysHabitsFragment extends Fragment implements OnItemClickListene
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onItemClick(Habit habit) {
-        mHabitViewModel.select(habit);
-        mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
     }
 }

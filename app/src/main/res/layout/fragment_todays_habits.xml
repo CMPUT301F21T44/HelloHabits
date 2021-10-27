@@ -33,7 +33,7 @@
         android:id="@+id/view_all_habits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="view all habits"
+        android:text="@string/view_all_habits"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_new_habit"

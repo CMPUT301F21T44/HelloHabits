@@ -6,4 +6,10 @@ public interface Location {
     double getLatitude();
 
     double getAccuracy();
+
+    default boolean equals(Location other) {
+        return this.getAccuracy() == other.getAccuracy()
+                && this.getLatitude() == other.getLatitude()
+                && this.getLongitude() == this.getLongitude();
+    }
 }

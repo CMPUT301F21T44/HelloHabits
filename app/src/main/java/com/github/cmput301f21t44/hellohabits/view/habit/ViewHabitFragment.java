@@ -59,6 +59,9 @@ public class ViewHabitFragment extends Fragment {
                     .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
         });
 
+        binding.buttonViewHabitEvents.setOnClickListener(v -> mNavController
+                .navigate(R.id.action_viewHabitFragment_to_viewHabitEventListFragment));
+
 
         binding.buttonDeleteHabit.setOnClickListener(v ->
                 new AlertDialog.Builder(requireContext())

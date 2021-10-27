@@ -48,14 +48,20 @@
         <action
             android:id="@+id/action_viewHabitFragment_to_createEditHabitEventFragment"
             app:destination="@id/createEditHabitEventFragment" />
+        <action
+            android:id="@+id/action_viewHabitFragment_to_viewHabitEventListFragment"
+            app:destination="@id/viewHabitEventListFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEditHabitEventFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment"
-        android:label="CreateEditHabitEventFragment" >
+        android:label="Habit Event" >
         <action
             android:id="@+id/action_createEditHabitEventFragment_to_viewHabitFragment"
             app:destination="@id/viewHabitFragment" />
+        <action
+            android:id="@+id/action_createEditHabitEventFragment_to_viewHabitEventListFragment"
+            app:destination="@id/viewHabitEventListFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHabitsFragment"
@@ -68,5 +74,17 @@
         <action
             android:id="@+id/action_allHabitsFragment_to_newHabitFragment"
             app:destination="@id/CreateEditHabitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewHabitEventListFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventListFragment"
+        android:label="Habit Event List"
+        tools:layout="@layout/fragment_habit_event_list" >
+        <action
+            android:id="@+id/action_habitEventListFragment_to_viewHabitFragment"
+            app:destination="@id/viewHabitFragment" />
+        <action
+            android:id="@+id/action_habitEventListFragment_to_createEditHabitEventFragment"
+            app:destination="@id/createEditHabitEventFragment" />
     </fragment>
 </navigation>

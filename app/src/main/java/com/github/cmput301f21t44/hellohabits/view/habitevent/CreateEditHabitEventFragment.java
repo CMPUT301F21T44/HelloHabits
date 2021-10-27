@@ -46,15 +46,18 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.buttonAddHabitEvent.setOnClickListener(v -> {
             if (isEdit) {
                 HabitEvent updatedHabitEvent = mHabitEventViewModel.update(mHabitEvent.getId(),
-                        mHabitEvent.getDate(), binding.editTextComment.getText().toString(), null,
-                        null);
+                        mHabitEvent.getHabitId(), mHabitEvent.getDate(),
+                        binding.editTextComment.getText().toString(), null, null);
                 mHabitEventViewModel.select(updatedHabitEvent);
             } else {
                 mHabitEventViewModel.insert(
                         Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getId(),
                         binding.editTextComment.getText().toString());
             }
-            mNavController.navigate(R.id.action_createEditHabitEventFragment_to_viewHabitFragment);
+            mNavController
+                    .navigate(isEdit ?
+                            R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment :
+                            R.id.action_createEditHabitEventFragment_to_viewHabitFragment);
         });
 
         binding.buttonBack.setOnClickListener(v ->

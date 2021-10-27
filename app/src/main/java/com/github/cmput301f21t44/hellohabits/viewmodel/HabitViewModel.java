@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.db.HabitEntity;
-import com.github.cmput301f21t44.hellohabits.db.HabitEntityRepository;
-import com.github.cmput301f21t44.hellohabits.db.HabitWithEvents;
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntity;
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntityRepository;
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitWithEvents;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 
 import java.time.Instant;

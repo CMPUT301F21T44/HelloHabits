@@ -1,9 +1,10 @@
-package com.github.cmput301f21t44.hellohabits.db;
+package com.github.cmput301f21t44.hellohabits.db.habit;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.github.cmput301f21t44.hellohabits.db.AppDatabase;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 import java.time.Instant;

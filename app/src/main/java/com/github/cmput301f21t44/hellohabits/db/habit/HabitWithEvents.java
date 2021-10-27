@@ -1,8 +1,9 @@
-package com.github.cmput301f21t44.hellohabits.db;
+package com.github.cmput301f21t44.hellohabits.db.habit;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntity;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 

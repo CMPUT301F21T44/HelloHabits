@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/TodaysHabitsFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.TodaysHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.TodaysHabitsFragment"
         android:label="@string/todays_habits_fragment_label"
         tools:layout="@layout/fragment_todays_habits">
 
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/CreateEditHabitFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.CreateEditHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment"
         android:label="@string/create_edit_habit_fragment_label"
         tools:layout="@layout/fragment_create_edit_habit">
 
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewHabitFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.ViewHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.ViewHabitFragment"
         android:label="View Habit"
         tools:layout="@layout/fragment_view_habit" >
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/createEditHabitEventFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.CreateEditHabitEventFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment"
         android:label="CreateEditHabitEventFragment" >
         <action
             android:id="@+id/action_createEditHabitEventFragment_to_viewHabitFragment"
@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/allHabitsFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.AllHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.AllHabitsFragment"
         android:label="All Habits"
         tools:layout="@layout/fragment_all_habits" >
         <action

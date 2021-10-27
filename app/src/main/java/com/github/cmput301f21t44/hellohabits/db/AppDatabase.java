@@ -9,6 +9,11 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitDao;
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntity;
+import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventDao;
+import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntity;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

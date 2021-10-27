@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.db;
+package com.github.cmput301f21t44.hellohabits.db.habitevent;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -10,6 +10,7 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.Location;
 

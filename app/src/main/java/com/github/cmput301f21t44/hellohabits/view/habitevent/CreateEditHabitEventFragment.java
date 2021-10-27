@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.view;
+package com.github.cmput301f21t44.hellohabits.view.habitevent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

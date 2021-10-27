@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.db;
+package com.github.cmput301f21t44.hellohabits.db.habit;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

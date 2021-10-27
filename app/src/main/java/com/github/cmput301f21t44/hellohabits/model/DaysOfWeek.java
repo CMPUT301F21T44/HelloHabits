@@ -2,8 +2,8 @@ package com.github.cmput301f21t44.hellohabits.model;
 
 import androidx.annotation.NonNull;
 
-public class DaysOfWeek {
-    public static String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+public final class DaysOfWeek {
+    public static final String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
     public static boolean[] emptyArray() {
         return new boolean[]{false, false, false, false, false, false, false};

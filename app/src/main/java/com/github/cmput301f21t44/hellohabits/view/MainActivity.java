@@ -15,7 +15,6 @@ import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
-
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 

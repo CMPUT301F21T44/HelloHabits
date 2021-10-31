@@ -16,6 +16,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentAllHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,8 @@ public class AllHabitsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
         // attach the provider to activity instead of fragment so the fragments can share data
-        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mHabitViewModel = provider.get(HabitViewModel.class);
         adapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
             mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);

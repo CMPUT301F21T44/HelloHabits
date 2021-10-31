@@ -1,12 +1,9 @@
 package com.github.cmput301f21t44.hellohabits.viewmodel;
 
-import android.app.Application;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntityRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.Location;
@@ -14,13 +11,12 @@ import com.github.cmput301f21t44.hellohabits.model.Location;
 import java.time.Instant;
 import java.util.List;
 
-public class HabitEventViewModel extends AndroidViewModel {
+public class HabitEventViewModel extends ViewModel {
     private final HabitEventRepository mRepository;
     private final MutableLiveData<HabitEvent> selected = new MutableLiveData<>();
 
-    public HabitEventViewModel(Application application) {
-        super(application);
-        mRepository = new HabitEventEntityRepository(application);
+    public HabitEventViewModel(HabitEventRepository habitEventRepository) {
+        mRepository = habitEventRepository;
     }
 
     public LiveData<List<HabitEvent>> getHabitEventsById(String habitId) {

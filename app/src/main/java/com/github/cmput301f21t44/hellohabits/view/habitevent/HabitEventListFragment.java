@@ -16,6 +16,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentHabitEventListBinding;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.Objects;
 
@@ -53,9 +54,9 @@ public class HabitEventListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
-        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-        mHabitEventViewModel = new ViewModelProvider(requireActivity())
-                .get(HabitEventViewModel.class);
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mHabitViewModel = provider.get(HabitViewModel.class);
+        mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         adapter = HabitEventAdapter.newInstance(habitEvent -> {
             mHabitEventViewModel.select(habitEvent);
             mNavController.navigate(R.id.action_habitEventListFragment_to_createEditHabitEventFragment);

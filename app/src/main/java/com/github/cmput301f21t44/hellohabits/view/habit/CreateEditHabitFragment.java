@@ -17,6 +17,7 @@ import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabit
 import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -90,7 +91,8 @@ public class CreateEditHabitFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mHabitViewModel = provider.get(HabitViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
         binding.buttonAddHabit.setOnClickListener(v -> submitHabit());

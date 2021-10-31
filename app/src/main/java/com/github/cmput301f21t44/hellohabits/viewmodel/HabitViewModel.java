@@ -1,27 +1,23 @@
 package com.github.cmput301f21t44.hellohabits.viewmodel;
 
-import android.app.Application;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntityRepository;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 import java.time.Instant;
 import java.util.List;
 
-public class HabitViewModel extends AndroidViewModel {
+public class HabitViewModel extends ViewModel {
     private final HabitRepository mRepository;
     private final LiveData<List<Habit>> mAllHabits;
 
     private final MutableLiveData<Habit> selected = new MutableLiveData<>();
 
-    public HabitViewModel(Application application) {
-        super(application);
-        mRepository = new HabitEntityRepository(application);
+    public HabitViewModel(HabitRepository habitRepository) {
+        mRepository = habitRepository;
         mAllHabits = mRepository.getAllHabits();
     }
 

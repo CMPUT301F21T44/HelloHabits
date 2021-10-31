@@ -26,21 +26,32 @@ import java.util.concurrent.Executors;
 @Database(entities = {HabitEntity.class, HabitEventEntity.class}, version = 5, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract HabitDao habitDao();
-
-    public abstract HabitEventDao habitEventDao();
-
-    /**
-     * Singleton Instance for AppDatabase
-     **/
-    private static volatile AppDatabase INSTANCE;
-
     /**
      * Thread pool for executing database functions (keeps it off the main thread)
      **/
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    /**
+     * Singleton Instance for AppDatabase
+     **/
+    private static volatile AppDatabase INSTANCE;
+
+    /**
+     * Callback for initializing database, use for populating with existing data.
+     **/
+    private static final AppDatabase.Callback sAppDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            databaseWriteExecutor.execute(() -> {
+                HabitDao dao = INSTANCE.habitDao();
+                dao.deleteAll();
+                // pre-populate DB here
+            });
+        }
+    };
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -59,19 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /**
-     * Callback for initializing database, use for populating with existing data.
-     **/
-    private static final AppDatabase.Callback sAppDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
+    public abstract HabitDao habitDao();
 
-            databaseWriteExecutor.execute(() -> {
-                HabitDao dao = INSTANCE.habitDao();
-                dao.deleteAll();
-                // pre-populate DB here
-            });
-        }
-    };
+    public abstract HabitEventDao habitEventDao();
 }

@@ -12,6 +12,12 @@ import java.time.ZonedDateTime;
 public class DatePickerFragment extends DialogFragment {
     private DatePickerDialog.OnDateSetListener listener;
 
+    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener) {
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.listener = listener;
+        return fragment;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.systemDefault());
@@ -20,11 +26,5 @@ public class DatePickerFragment extends DialogFragment {
         int day = dateTime.getDayOfMonth();
 
         return new DatePickerDialog(getActivity(), listener, year, month, day);
-    }
-
-    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener) {
-        DatePickerFragment fragment = new DatePickerFragment();
-        fragment.listener = listener;
-        return fragment;
     }
 }

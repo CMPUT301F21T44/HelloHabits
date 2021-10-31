@@ -85,7 +85,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                         .navigate(R.id.action_createEditHabitEventFragment_to_viewHabitFragment));
     }
 
-    private void deleteHabitEvent(){
+    private void deleteHabitEvent() {
         mHabitEventViewModel.delete(mHabitEventViewModel.getSelected().getValue());
         mNavController.navigate(R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment);
     }

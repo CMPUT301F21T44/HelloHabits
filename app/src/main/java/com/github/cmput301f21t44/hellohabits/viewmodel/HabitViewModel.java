@@ -20,18 +20,18 @@ public class HabitViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Habit> selected = new MutableLiveData<>();
 
+    public HabitViewModel(Application application) {
+        super(application);
+        mRepository = new HabitEntityRepository(application);
+        mAllHabits = mRepository.getAllHabits();
+    }
+
     public void select(Habit habit) {
         selected.setValue(habit);
     }
 
     public LiveData<Habit> getSelected() {
         return selected;
-    }
-
-    public HabitViewModel(Application application) {
-        super(application);
-        mRepository = new HabitEntityRepository(application);
-        mAllHabits = mRepository.getAllHabits();
     }
 
     public LiveData<List<HabitWithEvents>> getAllHabits() {

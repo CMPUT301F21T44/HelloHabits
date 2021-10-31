@@ -36,8 +36,8 @@ public class HabitEventEntityRepository implements HabitEventRepository<HabitEve
     }
 
     @Override
-    public HabitEventEntity update(String id,String habitId, Instant date, String comment, String photoPath, Location location) {
-        HabitEventEntity updatedEvent = new HabitEventEntity(id,habitId, date, comment, photoPath, location);
+    public HabitEventEntity update(String id, String habitId, Instant date, String comment, String photoPath, Location location) {
+        HabitEventEntity updatedEvent = new HabitEventEntity(id, habitId, date, comment, photoPath, location);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitEventDao.update(updatedEvent));
         return updatedEvent;
     }

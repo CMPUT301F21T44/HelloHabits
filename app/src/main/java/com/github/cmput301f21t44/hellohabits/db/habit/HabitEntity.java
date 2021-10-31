@@ -15,15 +15,6 @@ import java.util.UUID;
  */
 @Entity(tableName = "habits")
 public class HabitEntity {
-    /**
-     * All fields should be final except for the primary key, because the
-     * Room decorator functions need to be able to modify the id for some reason.
-     */
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "habit_id")
-    private String mHabitId;
-
     @ColumnInfo(name = "title")
     @NonNull
     private final String mTitle;
@@ -39,6 +30,15 @@ public class HabitEntity {
     @ColumnInfo(name = "days_of_week")
     private final boolean[] mDaysOfWeek;
 
+    /**
+     * All fields should be final except for the primary key, because the
+     * Room decorator functions need to be able to modify the id for some reason.
+     */
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "habit_id")
+    private String mHabitId;
+
     public HabitEntity(@NonNull String id, @NonNull String title, @NonNull String reason,
                        @NonNull Instant dateStarted, @NonNull boolean[] daysOfWeek) {
         this.mHabitId = id;
@@ -50,6 +50,11 @@ public class HabitEntity {
 
     public HabitEntity(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
         this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek);
+    }
+
+    public static HabitEntity from(Habit habit) {
+        return new HabitEntity(habit.getId(), habit.getTitle(), habit.getReason(),
+                habit.getDateStarted(), habit.getDaysOfWeek());
     }
 
     public String getHabitId() {
@@ -79,10 +84,5 @@ public class HabitEntity {
 
     public boolean[] getDaysOfWeek() {
         return mDaysOfWeek;
-    }
-
-    public static HabitEntity from(Habit habit) {
-        return new HabitEntity(habit.getId(), habit.getTitle(), habit.getReason(),
-                habit.getDateStarted(), habit.getDaysOfWeek());
     }
 }

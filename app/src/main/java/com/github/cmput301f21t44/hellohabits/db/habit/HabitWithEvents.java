@@ -20,15 +20,19 @@ public class HabitWithEvents implements Habit {
     )
     private List<HabitEventEntity> mHabitEventList;
 
-    public HabitEntity getHabitEntity() {
-        return mHabitEntity;
-    }
-
     public HabitWithEvents() {
     }
 
     public HabitWithEvents(HabitEntity habit) {
         this.mHabitEntity = habit;
+    }
+
+    public HabitEntity getHabitEntity() {
+        return mHabitEntity;
+    }
+
+    public void setHabitEntity(HabitEntity mHabitEntity) {
+        this.mHabitEntity = mHabitEntity;
     }
 
     @Override
@@ -63,9 +67,5 @@ public class HabitWithEvents implements Habit {
 
     public void setHabitEventList(List<HabitEventEntity> mHabitEventList) {
         this.mHabitEventList = mHabitEventList;
-    }
-
-    public void setHabitEntity(HabitEntity mHabitEntity) {
-        this.mHabitEntity = mHabitEntity;
     }
 }

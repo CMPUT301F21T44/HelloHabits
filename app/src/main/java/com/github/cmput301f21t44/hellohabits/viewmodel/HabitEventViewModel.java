@@ -4,20 +4,18 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntity;
 import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntityRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.Location;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HabitEventViewModel extends AndroidViewModel {
-    private final HabitEventEntityRepository mRepository;
+    private final HabitEventRepository mRepository;
     private final MutableLiveData<HabitEvent> selected = new MutableLiveData<>();
 
     public HabitEventViewModel(Application application) {
@@ -26,13 +24,7 @@ public class HabitEventViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<HabitEvent>> getHabitEventsById(String habitId) {
-        MediatorLiveData<List<HabitEvent>> habitEvents = new MediatorLiveData<>();
-        habitEvents.addSource(mRepository.getEventsByHabitId(habitId), v -> {
-            List<HabitEvent> list = new ArrayList<>(v);
-            habitEvents.setValue(list);
-        });
-
-        return habitEvents;
+        return mRepository.getEventsByHabitId(habitId);
     }
 
     public void insert(String habitId, String comment) {
@@ -44,7 +36,7 @@ public class HabitEventViewModel extends AndroidViewModel {
     }
 
     public void delete(HabitEvent habitEvent) {
-        mRepository.delete(HabitEventEntity.from(habitEvent));
+        mRepository.delete(habitEvent);
     }
 
     public void select(HabitEvent habit) {

@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData;
 import java.time.Instant;
 import java.util.List;
 
-public interface HabitRepository<T extends Habit> {
-    LiveData<List<T>> getAllHabits();
+public interface HabitRepository {
+    LiveData<List<Habit>> getAllHabits();
 
     void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek);
 
-    void delete(T habit);
+    void delete(Habit habit);
 
-    T update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek);
+    Habit update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek);
 }

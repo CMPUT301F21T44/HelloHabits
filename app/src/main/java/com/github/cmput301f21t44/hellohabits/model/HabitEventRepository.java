@@ -1,11 +1,16 @@
 package com.github.cmput301f21t44.hellohabits.model;
 
-import java.time.Instant;
+import androidx.lifecycle.LiveData;
 
-public interface HabitEventRepository<T extends HabitEvent> {
+import java.time.Instant;
+import java.util.List;
+
+public interface HabitEventRepository {
     void insert(String habitId, String comment);
 
-    void delete(T habitEvent);
+    void delete(HabitEvent habitEvent);
 
-    T update(String id, String habitId, Instant date, String comment, String photoPath, Location location);
+    LiveData<List<HabitEvent>> getEventsByHabitId(String habitId);
+
+    HabitEvent update(String id, String habitId, Instant date, String comment, String photoPath, Location location);
 }

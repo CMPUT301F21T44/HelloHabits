@@ -12,18 +12,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -35,15 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI
                 .setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab
-                .setOnClickListener(view ->
-                        Snackbar
-                                .make(view,
-                                        "Replace with your own action",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Action", null)
-                                .show());
     }
 
     @Override

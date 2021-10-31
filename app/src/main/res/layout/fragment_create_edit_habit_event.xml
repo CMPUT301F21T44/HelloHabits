@@ -35,11 +35,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_habit_event"
-        app:layout_constraintBottom_toTopOf="@+id/button_back"
+        app:layout_constraintBottom_toTopOf="@+id/button_delete_habit_event"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_add_location" />
+
+    <Button
+        android:id="@+id/button_delete_habit_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_habit_event"
+        app:layout_constraintBottom_toTopOf="@+id/button_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_add_habit_event" />
 
     <EditText
         android:id="@+id/edit_text_comment"

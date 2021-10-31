@@ -10,10 +10,8 @@ import com.github.cmput301f21t44.hellohabits.model.Location;
 public class EmbeddedLocation implements Location {
     @ColumnInfo(name = "longitude")
     public double mLongitude;
-
     @ColumnInfo(name = "latitude")
     public double mLatitude;
-
     @ColumnInfo(name = "accuracy")
     public double mAccuracy;
 

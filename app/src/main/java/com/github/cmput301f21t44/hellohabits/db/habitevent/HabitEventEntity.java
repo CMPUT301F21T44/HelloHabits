@@ -27,27 +27,22 @@ import java.util.UUID;
                         parentColumns = "habit_id", childColumns = "habit_id")},
         indices = {@Index("habit_id")})
 public class HabitEventEntity implements HabitEvent {
+    @ColumnInfo(name = "habit_id")
+    @NonNull
+    private final String mHabitId;
+    @ColumnInfo(name = "date_denoted")
+    @NonNull
+    private final Instant mDate;
+    @ColumnInfo(name = "comment")
+    private final String mComment;
+    @ColumnInfo(name = "photo_path")
+    private final String mPhotoPath;
+    @Embedded
+    private final EmbeddedLocation mEmbeddedLocation;
     @PrimaryKey
     @ColumnInfo(name = "habit_event_id")
     @NonNull
     private String mHabitEventId;
-
-    @ColumnInfo(name = "habit_id")
-    @NonNull
-    private final String mHabitId;
-
-    @ColumnInfo(name = "date_denoted")
-    @NonNull
-    private final Instant mDate;
-
-    @ColumnInfo(name = "comment")
-    private final String mComment;
-
-    @ColumnInfo(name = "photo_path")
-    private final String mPhotoPath;
-
-    @Embedded
-    private final EmbeddedLocation mEmbeddedLocation;
 
 
     public HabitEventEntity(@NonNull String habitEventId, @NonNull String habitId,

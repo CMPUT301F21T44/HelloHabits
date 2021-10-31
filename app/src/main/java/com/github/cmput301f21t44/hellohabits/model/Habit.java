@@ -8,18 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public interface Habit {
-    String getId();
-
-    String getTitle();
-
-    String getReason();
-
-    Instant getDateStarted();
-
-    List<HabitEvent> getEvents();
-
-    boolean[] getDaysOfWeek();
-
     static boolean isInDay(ZonedDateTime today, boolean[] daysOfWeek) {
         // dayOfWeek goes from 1-7 (Monday-Sunday)
         int dayOfWeek = today.getDayOfWeek().getValue();
@@ -28,7 +16,7 @@ public interface Habit {
         // in case today is Monday:
         // [true, true ,true, true, true, true, true] = every day
         // [true, false , false, false, false, false, false] = only on monday
-        // [true, false , false, false, false, false, true] = for monday and sunday 
+        // [true, false , false, false, false, false, true] = for monday and sunday
         return daysOfWeek[dayOfWeek - 1];
     }
 
@@ -72,4 +60,16 @@ public interface Habit {
         totalDays = totalDays + numRecurrenceDays * days / 7;
         return totalDays != 0 ? (double) habit.getEvents().size() / totalDays : 1;
     }
+
+    String getId();
+
+    String getTitle();
+
+    String getReason();
+
+    Instant getDateStarted();
+
+    List<HabitEvent> getEvents();
+
+    boolean[] getDaysOfWeek();
 }

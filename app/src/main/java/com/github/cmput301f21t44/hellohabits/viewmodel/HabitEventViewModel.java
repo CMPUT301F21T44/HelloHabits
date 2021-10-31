@@ -40,7 +40,7 @@ public class HabitEventViewModel extends AndroidViewModel {
     }
 
     public HabitEvent update(String id, String habitId, Instant date, String comment, String photoPath, Location location) {
-        return mRepository.update(id,habitId, date, comment, photoPath, location);
+        return mRepository.update(id, habitId, date, comment, photoPath, location);
     }
 
     public void delete(HabitEvent habitEvent) {

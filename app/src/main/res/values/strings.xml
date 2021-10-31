@@ -13,6 +13,7 @@
     <string name="reason">Reason</string>
     <string name="delete">DELETE</string>
     <string name="add_habit_event">Save Habit Event</string>
+    <string name="delete_habit_event">Delete Habit Event</string>
     <string name="comment">Comment</string>
     <string name="add_location">Add Location</string>
     <string name="remove_location">Remove Location</string>

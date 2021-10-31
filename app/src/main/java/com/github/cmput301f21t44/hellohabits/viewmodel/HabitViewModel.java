@@ -6,17 +6,16 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntityRepository;
-import com.github.cmput301f21t44.hellohabits.db.habit.HabitWithEvents;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 import java.time.Instant;
 import java.util.List;
 
 public class HabitViewModel extends AndroidViewModel {
-    private final HabitEntityRepository mRepository;
-    private final LiveData<List<HabitWithEvents>> mAllHabits;
+    private final HabitRepository mRepository;
+    private final LiveData<List<Habit>> mAllHabits;
 
     private final MutableLiveData<Habit> selected = new MutableLiveData<>();
 
@@ -34,7 +33,7 @@ public class HabitViewModel extends AndroidViewModel {
         return selected;
     }
 
-    public LiveData<List<HabitWithEvents>> getAllHabits() {
+    public LiveData<List<Habit>> getAllHabits() {
         return mAllHabits;
     }
 
@@ -47,10 +46,6 @@ public class HabitViewModel extends AndroidViewModel {
     }
 
     public void delete(Habit habit) {
-        /*
-          This ViewModel depends on HabitEntity right now, but shouldn't.
-          We'll make sure that the repository will be implementation-agnostic in the future.
-         */
-        mRepository.delete(new HabitWithEvents(HabitEntity.from(habit)));
+        mRepository.delete(habit);
     }
 }

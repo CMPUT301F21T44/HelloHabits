@@ -1,5 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -8,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
@@ -68,12 +68,13 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             // check level of consistency
             double consistency = Habit.getConsistency(habit);
 
+
             if (consistency < 0.5) {
-                mItemBinding.imageView.setImageResource(R.mipmap.red_logo_round);
+                mItemBinding.imageView.setColorFilter(Color.parseColor("#D12D2D"));
             } else if (consistency < 0.75) {
-                mItemBinding.imageView.setImageResource(R.mipmap.yellow_logo_round);
+                mItemBinding.imageView.setColorFilter(Color.parseColor("#EFB112"));
             } else {
-                mItemBinding.imageView.setImageResource(R.mipmap.green_logo_round);
+                mItemBinding.imageView.setColorFilter(Color.parseColor("#329548"));
             }
 
             mItemBinding.getRoot().setOnClickListener(v -> listener.onItemClick(habit));

@@ -18,6 +18,7 @@ import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.Objects;
 
@@ -64,9 +65,9 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mHabitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-        mHabitEventViewModel = new ViewModelProvider(requireActivity())
-                .get(HabitEventViewModel.class);
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mHabitViewModel = provider.get(HabitViewModel.class);
+        mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
 
         binding.buttonAddHabitEvent.setOnClickListener(v -> submitHabitEvent());

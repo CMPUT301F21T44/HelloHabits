@@ -11,15 +11,15 @@ import java.util.List;
 
 @Dao
 public interface HabitEventDao {
-    @Query("SELECT * FROM habit_event WHERE habit_id=:id")
-    LiveData<List<HabitEventEntity>> getEventsByHabitId(String id);
+    @Query("SELECT * FROM habits WHERE habit_id=:id")
+    LiveData<List<DBHabitEvent>> getEventsByHabitId(String id);
 
     @Insert
-    void insert(HabitEventEntity habitEvent);
+    void insert(DBHabitEvent habitEvent);
 
     @Delete
-    void delete(HabitEventEntity habitEvent);
+    void delete(DBHabitEvent habitEvent);
 
     @Update
-    void update(HabitEventEntity habitEvent);
+    void update(DBHabitEvent habitEvent);
 }

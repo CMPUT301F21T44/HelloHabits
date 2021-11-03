@@ -14,10 +14,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HabitEventEntityRepository implements HabitEventRepository {
+public class DBHabitEventRepository implements HabitEventRepository {
     private final HabitEventDao mHabitEventDao;
 
-    public HabitEventEntityRepository(Application application) {
+    public DBHabitEventRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         mHabitEventDao = db.habitEventDao();
     }
@@ -32,7 +32,7 @@ public class HabitEventEntityRepository implements HabitEventRepository {
 
     @Override
     public void insert(String habitId, String comment) {
-        HabitEventEntity newHabitEvent = new HabitEventEntity(habitId, Instant.now(), comment, null,
+        DBHabitEvent newHabitEvent = new DBHabitEvent(habitId, Instant.now(), comment, null,
                 null);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitEventDao.insert(newHabitEvent));
     }
@@ -40,12 +40,12 @@ public class HabitEventEntityRepository implements HabitEventRepository {
     @Override
     public void delete(HabitEvent habitEvent) {
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitEventDao
-                .delete(HabitEventEntity.from(habitEvent)));
+                .delete(DBHabitEvent.from(habitEvent)));
     }
 
     @Override
     public HabitEvent update(String id, String habitId, Instant date, String comment, String photoPath, Location location) {
-        HabitEventEntity updatedEvent = new HabitEventEntity(id, habitId, date, comment, photoPath, location);
+        DBHabitEvent updatedEvent = new DBHabitEvent(id, habitId, date, comment, photoPath, location);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitEventDao.update(updatedEvent));
         return updatedEvent;
     }

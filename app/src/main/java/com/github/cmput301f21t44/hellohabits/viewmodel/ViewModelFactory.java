@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntityRepository;
-import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntityRepository;
+import com.github.cmput301f21t44.hellohabits.db.habit.DBHabitRepository;
+import com.github.cmput301f21t44.hellohabits.db.habitevent.DBHabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
@@ -19,8 +19,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final HabitEventRepository mHabitEventRepository;
 
     private ViewModelFactory(Application application) {
-        mHabitRepository = new HabitEntityRepository(application);
-        mHabitEventRepository = new HabitEventEntityRepository(application);
+        mHabitRepository = new DBHabitRepository(application);
+        mHabitEventRepository = new DBHabitEventRepository(application);
     }
 
     public static ViewModelProvider getProvider(FragmentActivity activity) {

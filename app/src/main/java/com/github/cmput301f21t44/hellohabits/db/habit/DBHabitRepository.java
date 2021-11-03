@@ -13,11 +13,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HabitEntityRepository implements HabitRepository {
+public class DBHabitRepository implements HabitRepository {
     private final HabitDao mHabitDao;
     private final MediatorLiveData<List<Habit>> mAllHabits;
 
-    public HabitEntityRepository(Application application) {
+    public DBHabitRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         mHabitDao = db.habitDao();
         mAllHabits = new MediatorLiveData<>();
@@ -47,6 +47,6 @@ public class HabitEntityRepository implements HabitRepository {
         HabitEntity updatedEntity = new HabitEntity(id, title, reason, dateStarted, daysOfWeek);
         AppDatabase.databaseWriteExecutor.execute(() -> mHabitDao.update(updatedEntity));
 
-        return new HabitWithEvents(updatedEntity);
+        return new DBHabit(updatedEntity);
     }
 }

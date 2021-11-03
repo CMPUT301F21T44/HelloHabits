@@ -14,7 +14,7 @@ import java.util.List;
 public interface HabitDao {
     @Transaction
     @Query("SELECT * FROM habits")
-    LiveData<List<HabitWithEvents>> getAllHabits();
+    LiveData<List<DBHabit>> getAllHabits();
 
     @Insert
     void insert(HabitEntity habit);

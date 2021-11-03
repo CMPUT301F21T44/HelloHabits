@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.github.cmput301f21t44.hellohabits.db.habit.HabitDao;
 import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntity;
 import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventDao;
-import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntity;
+import com.github.cmput301f21t44.hellohabits.db.habitevent.DBHabitEvent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
  * Make sure to increment the version number when adding new entities
  * or updating the schema of existing ones!
  */
-@Database(entities = {HabitEntity.class, HabitEventEntity.class}, version = 5, exportSchema = false)
+@Database(entities = {HabitEntity.class, DBHabitEvent.class}, version = 5, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**

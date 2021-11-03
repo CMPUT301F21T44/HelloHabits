@@ -26,7 +26,7 @@ import java.util.UUID;
                 @ForeignKey(onDelete = CASCADE, entity = HabitEntity.class,
                         parentColumns = "habit_id", childColumns = "habit_id")},
         indices = {@Index("habit_id")})
-public class HabitEventEntity implements HabitEvent {
+public class DBHabitEvent implements HabitEvent {
     @ColumnInfo(name = "habit_id")
     @NonNull
     private final String mHabitId;
@@ -38,16 +38,16 @@ public class HabitEventEntity implements HabitEvent {
     @ColumnInfo(name = "photo_path")
     private final String mPhotoPath;
     @Embedded
-    private final EmbeddedLocation mEmbeddedLocation;
+    private final DBLocation mEmbeddedLocation;
     @PrimaryKey
     @ColumnInfo(name = "habit_event_id")
     @NonNull
     private String mHabitEventId;
 
 
-    public HabitEventEntity(@NonNull String habitEventId, @NonNull String habitId,
-                            @NonNull Instant date, String comment, String photoPath,
-                            EmbeddedLocation embeddedLocation) {
+    public DBHabitEvent(@NonNull String habitEventId, @NonNull String habitId,
+                        @NonNull Instant date, String comment, String photoPath,
+                        DBLocation embeddedLocation) {
         this.mHabitEventId = habitEventId;
         this.mHabitId = habitId;
         this.mDate = date;
@@ -56,25 +56,25 @@ public class HabitEventEntity implements HabitEvent {
         this.mEmbeddedLocation = embeddedLocation;
     }
 
-    public HabitEventEntity(@NonNull String habitEventId, @NonNull String habitId,
-                            @NonNull Instant date, String comment, String photoPath,
-                            Location location) {
-        this(habitEventId, habitId, date, comment, photoPath, EmbeddedLocation.from(location));
+    public DBHabitEvent(@NonNull String habitEventId, @NonNull String habitId,
+                        @NonNull Instant date, String comment, String photoPath,
+                        Location location) {
+        this(habitEventId, habitId, date, comment, photoPath, DBLocation.from(location));
     }
 
-    public HabitEventEntity(@NonNull String habitId, @NonNull Instant date, String comment,
-                            String photoPath, Location location) {
+    public DBHabitEvent(@NonNull String habitId, @NonNull Instant date, String comment,
+                        String photoPath, Location location) {
         this(UUID.randomUUID().toString(), habitId, date, comment, photoPath, location);
     }
 
-    public static HabitEventEntity from(HabitEvent habitEvent) {
-        return new HabitEventEntity(
+    public static DBHabitEvent from(HabitEvent habitEvent) {
+        return new DBHabitEvent(
                 habitEvent.getId(),
                 habitEvent.getHabitId(),
                 habitEvent.getDate(),
                 habitEvent.getComment(),
                 habitEvent.getPhotoPath(),
-                EmbeddedLocation.from(habitEvent.getLocation()));
+                DBLocation.from(habitEvent.getLocation()));
     }
 
 
@@ -120,7 +120,7 @@ public class HabitEventEntity implements HabitEvent {
         this.mHabitEventId = habitEventId;
     }
 
-    public EmbeddedLocation getEmbeddedLocation() {
+    public DBLocation getEmbeddedLocation() {
         return mEmbeddedLocation;
     }
 }

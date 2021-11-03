@@ -7,7 +7,7 @@ import com.github.cmput301f21t44.hellohabits.model.Location;
 /**
  * Location class embedded into HabitEventEntity
  */
-public class EmbeddedLocation implements Location {
+public class DBLocation implements Location {
     @ColumnInfo(name = "longitude")
     public double mLongitude;
     @ColumnInfo(name = "latitude")
@@ -15,7 +15,7 @@ public class EmbeddedLocation implements Location {
     @ColumnInfo(name = "accuracy")
     public double mAccuracy;
 
-    public EmbeddedLocation(double longitude, double latitude, double accuracy) {
+    public DBLocation(double longitude, double latitude, double accuracy) {
         this.mLongitude = longitude;
         this.mLatitude = latitude;
         this.mAccuracy = accuracy;
@@ -34,8 +34,8 @@ public class EmbeddedLocation implements Location {
         return mAccuracy;
     }
 
-    public static EmbeddedLocation from(Location l) {
+    public static DBLocation from(Location l) {
         if (l == null) return null;
-        return new EmbeddedLocation(l.getLongitude(), l.getLatitude(), l.getAccuracy());
+        return new DBLocation(l.getLongitude(), l.getLatitude(), l.getAccuracy());
     }
 }

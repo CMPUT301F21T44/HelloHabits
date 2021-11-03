@@ -4,41 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/fragment_vertical_margin"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="check box"
+        app:srcCompat="@drawable/ic_check" />
+
+    <LinearLayout
+        android:id="@+id/text_habit_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/date_denoted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5sp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="Wed Oct 27, 2021" />
+            android:textSize="20sp"
+            tools:text="11/3/21" />
 
         <TextView
             android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5sp"
             android:textAppearance="?attr/textAppearanceListItem"
             tools:text="This is an optional comment." />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image_view_location"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
 
     <ImageView
-        android:id="@+id/image_view_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_photo_24" />
+        android:id="@+id/button_edit"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:contentDescription="Edit button"
+        app:srcCompat="@drawable/ic_baseline_edit_24" />
+
+    <ImageView
+        android:id="@+id/button_delete"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:contentDescription="Delete button"
+        app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+
 </LinearLayout>

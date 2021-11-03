@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginRight="14dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="@dimen/fragment_horizontal_margin"
         android:contentDescription="@string/todo"
         app:srcCompat="@drawable/ic_check" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textSize="12sp"
+            android:textSize="16sp"
             tools:text="Reason" />
 
     </LinearLayout>

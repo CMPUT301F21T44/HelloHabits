@@ -48,7 +48,7 @@ public class CreateEditHabitFragment extends Fragment {
     private void updateInstant(Instant instant) {
         mInstant = instant;
         String date = DateTimeFormatter
-                .ofPattern("eeee d MMMM, y").withZone(ZoneId.systemDefault()).format(mInstant);
+                .ofPattern("MMMM d, y").withZone(ZoneId.systemDefault()).format(mInstant);
         binding.textDateStarted.setText(date);
     }
 
@@ -97,17 +97,9 @@ public class CreateEditHabitFragment extends Fragment {
 
         binding.buttonAddHabit.setOnClickListener(v -> submitHabit());
 
-        binding.textDateStarted.setOnClickListener(v -> startDatePickerFragment());
-        binding.dateStartedLabel.setOnClickListener(v -> startDatePickerFragment());
+        binding.dateStartedLayout.setOnClickListener(v -> startDatePickerFragment());
 
-        binding.buttonBack.setOnClickListener(v ->
-                mNavController.navigate(isEdit
-                        ? R.id.action_createEditHabitFragment_to_viewHabitFragment
-                        : R.id.action_createEditHabitFragment_to_todaysHabitsFragment)
-        );
-
-        binding.reminderLabel.setOnClickListener(v -> startDaysOfWeekFragment());
-        binding.daysOfWeek.setOnClickListener(v -> startDaysOfWeekFragment());
+        binding.reminderLayout.setOnClickListener(v -> startDaysOfWeekFragment());
     }
 
     private void startDatePickerFragment() {

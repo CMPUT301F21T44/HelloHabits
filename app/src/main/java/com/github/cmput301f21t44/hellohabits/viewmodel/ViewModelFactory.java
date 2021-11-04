@@ -1,14 +1,11 @@
 package com.github.cmput301f21t44.hellohabits.viewmodel;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.github.cmput301f21t44.hellohabits.db.habit.HabitEntityRepository;
-import com.github.cmput301f21t44.hellohabits.db.habitevent.HabitEventEntityRepository;
+import com.github.cmput301f21t44.hellohabits.firestore.FirestoreRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
@@ -18,20 +15,21 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final HabitRepository mHabitRepository;
     private final HabitEventRepository mHabitEventRepository;
 
-    private ViewModelFactory(Application application) {
-        mHabitRepository = new HabitEntityRepository(application);
-        mHabitEventRepository = new HabitEventEntityRepository(application);
+    private ViewModelFactory() {
+        FirestoreRepository repo = new FirestoreRepository();
+        mHabitRepository = repo;
+        mHabitEventRepository = repo;
     }
 
     public static ViewModelProvider getProvider(FragmentActivity activity) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         return new ViewModelProvider(activity, factory);
     }
 
-    public static ViewModelFactory getInstance(Application application) {
+    public static ViewModelFactory getInstance() {
         synchronized (ViewModelFactory.class) {
             if (INSTANCE == null) {
-                INSTANCE = new ViewModelFactory(application);
+                INSTANCE = new ViewModelFactory();
             }
         }
         return INSTANCE;

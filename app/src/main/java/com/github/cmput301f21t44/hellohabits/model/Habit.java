@@ -20,6 +20,10 @@ public interface Habit {
         return daysOfWeek[dayOfWeek - 1];
     }
 
+    static double getConsistency(Habit habit) {
+        return getConsistency(habit, habit.getEvents());
+    }
+
     /**
      * Check level of consistency
      * <p>
@@ -30,7 +34,7 @@ public interface Habit {
      * @param habit Habit to get consistency of
      * @return Percentage of consistency
      */
-    static double getConsistency(Habit habit) {
+    static double getConsistency(Habit habit, List<HabitEvent> events) {
         Instant instant = habit.getDateStarted();
         LocalDate startDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDate = LocalDate.now();
@@ -58,7 +62,7 @@ public interface Habit {
             days--;
         }
         totalDays = totalDays + numRecurrenceDays * days / 7;
-        return totalDays != 0 ? (double) habit.getEvents().size() / totalDays : 1;
+        return totalDays != 0 ? (double) events.size() / totalDays : 1;
     }
 
     String getId();

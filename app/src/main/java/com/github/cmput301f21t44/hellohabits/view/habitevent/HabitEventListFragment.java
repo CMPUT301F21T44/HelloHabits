@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -58,9 +59,17 @@ public class HabitEventListFragment extends Fragment {
         mHabitViewModel = provider.get(HabitViewModel.class);
         mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         adapter = HabitEventAdapter.newInstance(habitEvent -> {
-            mHabitEventViewModel.select(habitEvent);
-            mNavController.navigate(R.id.action_habitEventListFragment_to_createEditHabitEventFragment);
-        });
+                    mHabitEventViewModel.select(habitEvent);
+                    mNavController.navigate(
+                            R.id.action_habitEventListFragment_to_createEditHabitEventFragment);
+                },
+                habitEvent -> {
+                }, habitEvent -> new AlertDialog.Builder(requireContext())
+                        .setTitle("Delete Habit Event")
+                        .setMessage("Are you sure you want to delete this habit event?")
+                        .setIcon(R.drawable.ic_baseline_warning_24)
+                        .setPositiveButton("YES", (dialog, b) -> mHabitEventViewModel.delete(habitEvent))
+                        .setNegativeButton("NO", null).show());
         binding.habitEventRecyclerView.setAdapter(adapter);
         binding.habitEventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -74,7 +83,8 @@ public class HabitEventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getId();
-        mHabitEventViewModel.getHabitEventsById(habitId).observe(this, habitEvents -> adapter.submitList(habitEvents));
+        mHabitEventViewModel.getHabitEventsById(habitId).observe(this, habitEvents ->
+                adapter.submitList(habitEvents));
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBin
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -29,6 +30,7 @@ public class TodaysHabitsFragment extends Fragment {
     private HabitViewModel mHabitViewModel;
     private HabitAdapter adapter;
     private NavController mNavController;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,6 +44,12 @@ public class TodaysHabitsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            mNavController.navigate(R.id.loginFragment);
+            return;
+        }
+
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
         adapter = HabitAdapter.newInstance((habit) -> {
@@ -59,11 +67,16 @@ public class TodaysHabitsFragment extends Fragment {
             mHabitViewModel.select(null);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
+        binding.social.setOnClickListener(v -> mAuth.signOut());
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (mAuth.getCurrentUser() == null) {
+            mNavController.navigate(R.id.loginFragment);
+            return;
+        }
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> todaysHabits = new ArrayList<>();
             ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
@@ -76,6 +89,14 @@ public class TodaysHabitsFragment extends Fragment {
             }
             adapter.submitList(todaysHabits);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAuth.getCurrentUser() == null) {
+            mNavController.navigate(R.id.loginFragment);
+        }
     }
 
     @Override

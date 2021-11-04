@@ -4,128 +4,179 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.habit.ViewHabitFragment">
 
-    <TextView
-        android:id="@+id/view_title"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_reason"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Habit Title" />
 
-    <TextView
-        android:id="@+id/view_reason"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_date_started"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_title"
-        tools:text="Habit Reason" />
-
-    <TextView
-        android:id="@+id/view_date_started"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_reminder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/view_date_started_label"
-        app:layout_constraintTop_toBottomOf="@+id/view_reason"
-        tools:text="October 23, 2021" />
-
-    <TextView
-        android:id="@+id/view_date_started_label"
-        android:layout_width="103dp"
-        android:layout_height="30dp"
-        android:text="@string/date_started"
-        android:textSize="14sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/view_date_started"
-        app:layout_constraintEnd_toStartOf="@+id/view_date_started"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button_edit_habit"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/habitDataLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/edit_habit"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button_delete_habit"
-        app:layout_constraintEnd_toStartOf="@+id/button_delete_habit"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:layout_marginTop="@dimen/fragment_bottom_margin"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/dateStartedLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.968"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            tools:text="Habit Title" />
+
+        <TextView
+            android:id="@+id/view_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            tools:text="Habit Reason" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dateStartedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/reminderLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/habitDataLayout">
+
+        <TextView
+            android:id="@+id/view_date_started_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:text="@string/date_started"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/view_date_started"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            tools:text="October 23, 2021" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reminderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/consistencyLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateStartedLayout">
+
+        <TextView
+            android:id="@+id/view_reminder_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:text="@string/reminder_label"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
+
+        <TextView
+            android:id="@+id/view_reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            tools:text="Mon Wed Fri" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/consistencyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/habit_event_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reminderLayout">
+
+        <TextView
+            android:id="@+id/view_consistency_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:text="Consistency:"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
+
+        <TextView
+            android:id="@+id/view_consistency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            tools:text="87%" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/habit_event_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        app:layout_constraintBottom_toTopOf="@+id/button_new_habit_event"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/consistencyLayout"
+        tools:itemCount="5"
+        tools:listitem="@layout/list_habit_event_item" />
+
 
     <Button
         android:id="@+id/button_new_habit_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/new_event"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button_view_habit_events"
-        app:layout_constraintEnd_toStartOf="@+id/button_view_habit_events"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button_view_habit_events"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_events"
-        app:layout_constraintBottom_toTopOf="@+id/button_back_to_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_new_habit_event"
-        app:layout_constraintTop_toBottomOf="@+id/button_delete_habit" />
-
-    <Button
-        android:id="@+id/button_delete_habit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete"
-        app:layout_constraintBottom_toTopOf="@+id/button_view_habit_events"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_edit_habit"
-        app:layout_constraintTop_toBottomOf="@+id/view_reminder" />
-
-    <Button
-        android:id="@+id/button_back_to_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_edit_habit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_view_habit_events" />
+        app:layout_constraintTop_toBottomOf="@+id/habit_event_list" />
 
-    <TextView
-        android:id="@+id/view_reminder_label"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button_edit_habit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/reminder_label"
-        app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder"
-        app:layout_constraintEnd_toStartOf="@+id/view_reminder"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/view_reminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:text="@string/edit_habit"
         app:layout_constraintBottom_toTopOf="@+id/button_delete_habit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/view_reminder_label"
-        app:layout_constraintTop_toBottomOf="@+id/view_date_started"
-        tools:text="Mon Wed Fri" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_new_habit_event" />
+
+    <Button
+        android:id="@+id/button_delete_habit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:layout_marginBottom="32dp"
+        android:text="@string/delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_edit_habit" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

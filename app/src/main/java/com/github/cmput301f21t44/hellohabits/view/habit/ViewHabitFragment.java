@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
 import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventAdapter;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
@@ -27,6 +30,7 @@ public class ViewHabitFragment extends Fragment {
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
     private NavController mNavController;
+    private HabitEventAdapter mHabitEventAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,8 +49,22 @@ public class ViewHabitFragment extends Fragment {
 
         mNavController = NavHostFragment.findNavController(this);
 
-        binding.buttonBackToList.setOnClickListener(v -> mNavController
-                .navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment));
+        mHabitEventAdapter = HabitEventAdapter.newInstance(habitEvent -> {
+            mHabitEventViewModel.select(habitEvent);
+            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+        }, habitEvent -> {
+            mHabitEventViewModel.select(habitEvent);
+            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+        }, habitEvent -> new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Habit Event")
+                .setMessage("Are you sure you want to delete this habit event?")
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setPositiveButton("YES",
+                        (dialog, b) -> mHabitEventViewModel.delete(habitEvent))
+                .setNegativeButton("NO", null).show());
+
+        binding.habitEventList.setAdapter(mHabitEventAdapter);
+        binding.habitEventList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.buttonEditHabit.setOnClickListener(v -> mNavController
                 .navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));
@@ -59,9 +77,6 @@ public class ViewHabitFragment extends Fragment {
             mNavController
                     .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
         });
-
-        binding.buttonViewHabitEvents.setOnClickListener(v -> mNavController
-                .navigate(R.id.action_viewHabitFragment_to_viewHabitEventListFragment));
 
 
         binding.buttonDeleteHabit.setOnClickListener(v ->
@@ -92,6 +107,20 @@ public class ViewHabitFragment extends Fragment {
                     .format(habit.getDateStarted());
             binding.viewDateStarted.setText(date);
             binding.viewReminder.setText(DaysOfWeek.toString(habit.getDaysOfWeek()));
+
+            String initialConsistency = Integer.valueOf((int) (Habit
+                    .getConsistency(habit) * 100)).toString() + " %";
+
+            binding.viewConsistency.setText(initialConsistency);
+
+            mHabitEventViewModel.getHabitEventsById(habit.getId()).observe(getViewLifecycleOwner(),
+                    eventList -> {
+                        final String consistency = Integer.valueOf((int) (Habit
+                                .getConsistency(habit, eventList) * 100)).toString() + " %";
+
+                        binding.viewConsistency.setText(consistency);
+                        mHabitEventAdapter.submitList(eventList);
+                    });
         });
     }
 

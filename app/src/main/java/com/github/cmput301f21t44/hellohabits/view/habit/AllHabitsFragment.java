@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentAllHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.List;
 public class AllHabitsFragment extends Fragment {
     private FragmentAllHabitsBinding binding;
     private HabitViewModel mHabitViewModel;
+    private PreviousListViewModel mPreviousListViewModel;
     private HabitAdapter adapter;
     private NavController mNavController;
 
@@ -42,8 +45,10 @@ public class AllHabitsFragment extends Fragment {
         // attach the provider to activity instead of fragment so the fragments can share data
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
+        mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         adapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
+            mPreviousListViewModel.select(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
         });
         binding.habitRecyclerView.setAdapter(adapter);
@@ -62,6 +67,19 @@ public class AllHabitsFragment extends Fragment {
             List<Habit> allHabits = new ArrayList<>(habitList);
             adapter.submitList(allHabits);
         });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        mNavController.navigate(R.id.TodaysHabitsFragment);
+                    }
+                });
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventAdapter;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.time.ZoneId;
@@ -31,6 +33,8 @@ public class ViewHabitFragment extends Fragment {
     private HabitEventViewModel mHabitEventViewModel;
     private NavController mNavController;
     private HabitEventAdapter mHabitEventAdapter;
+    private PreviousListViewModel mPreviousListViewModel;
+    private int previousListDestId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,6 +50,8 @@ public class ViewHabitFragment extends Fragment {
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
         mHabitEventViewModel = provider.get(HabitEventViewModel.class);
+        mPreviousListViewModel = provider.get(PreviousListViewModel.class);
+        this.previousListDestId = mPreviousListViewModel.getDestId().getValue();
 
         mNavController = NavHostFragment.findNavController(this);
 
@@ -91,7 +97,7 @@ public class ViewHabitFragment extends Fragment {
 
     private void deleteHabit() {
         mHabitViewModel.delete(mHabitViewModel.getSelected().getValue());
-        mNavController.navigate(R.id.action_viewHabitFragment_to_todaysHabitsFragment);
+        mNavController.navigate(previousListDestId);
     }
 
     @Override
@@ -122,6 +128,19 @@ public class ViewHabitFragment extends Fragment {
                         mHabitEventAdapter.submitList(eventList);
                     });
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        mNavController.navigate(previousListDestId);
+                    }
+                });
+        mPreviousListViewModel.getDestId().observe(this, id -> this.previousListDestId = id);
     }
 
     @Override

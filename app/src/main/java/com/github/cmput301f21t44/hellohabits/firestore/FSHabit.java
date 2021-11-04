@@ -27,7 +27,8 @@ public class FSHabit implements Habit {
 
     private List<HabitEvent> habitEvents;
 
-    public FSHabit(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+    public FSHabit(String id, String title, String reason, Instant dateStarted,
+                   boolean[] daysOfWeek) {
         this.id = id;
         this.title = title;
         this.reason = reason;
@@ -40,6 +41,15 @@ public class FSHabit implements Habit {
         this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek);
     }
 
+    private static boolean[] getDaysOfWeek(List<Boolean> dayList) {
+        boolean[] daysOfWeek = new boolean[7];
+        assert dayList != null;
+        for (int i = 0; i < 7; ++i) {
+            daysOfWeek[i] = dayList.get(i);
+        }
+        return daysOfWeek;
+    }
+
     public static FSHabit fromSnapshot(QueryDocumentSnapshot doc) {
         String id = doc.getId();
         String title = doc.getString(TITLE);
@@ -49,12 +59,7 @@ public class FSHabit implements Habit {
         Instant dateStarted = (epochSeconds != null && nanoAdjustment != null) ?
                 Instant.ofEpochSecond(epochSeconds, nanoAdjustment) : null;
         List<Boolean> dayList = (List<Boolean>) doc.get(DAYS_OF_WEEK);
-        boolean[] daysOfWeek = new boolean[7];
-        assert dayList != null;
-        for (int i = 0; i < 7; ++i) {
-            daysOfWeek[i] = dayList.get(i);
-        }
-        return new FSHabit(id, title, reason, dateStarted, daysOfWeek);
+        return new FSHabit(id, title, reason, dateStarted, getDaysOfWeek(dayList));
     }
 
     public static Map<String, Object> getMap(FSHabit habit) {

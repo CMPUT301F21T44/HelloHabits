@@ -14,7 +14,6 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation
                 .findNavController(this, R.id.nav_host_fragment_content_main);
 
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
 
         NavigationUI
                 .setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -58,10 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation
-                .findNavController(this, R.id.nav_host_fragment_content_main);
-
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+        getOnBackPressedDispatcher().onBackPressed();
+        return super.onSupportNavigateUp();
     }
 }

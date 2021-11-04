@@ -10,8 +10,9 @@
 
     <Button
         android:id="@+id/button_add_photo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/add_photo"
         app:layout_constraintBottom_toTopOf="@+id/button_add_location"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,8 +22,9 @@
 
     <Button
         android:id="@+id/button_back"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,25 +34,14 @@
 
     <Button
         android:id="@+id/button_add_habit_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/add_habit_event"
-        app:layout_constraintBottom_toTopOf="@+id/button_delete_habit_event"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_add_location" />
-
-    <Button
-        android:id="@+id/button_delete_habit_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_habit_event"
         app:layout_constraintBottom_toTopOf="@+id/button_back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_add_habit_event" />
+        app:layout_constraintTop_toBottomOf="@+id/button_add_location" />
 
     <EditText
         android:id="@+id/edit_text_comment"
@@ -59,6 +50,7 @@
         android:ems="10"
         android:hint="@string/comment"
         android:minHeight="48dp"
+        android:textColorHint="#757575"
         app:layout_constraintBottom_toTopOf="@+id/button_add_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -79,8 +71,9 @@
 
     <Button
         android:id="@+id/button_add_location"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/add_location"
         app:layout_constraintBottom_toTopOf="@+id/button_add_habit_event"
         app:layout_constraintEnd_toEndOf="parent"

@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/reason"
+        android:textColorHint="#757575"
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/date_started_layout"
         app:layout_constraintEnd_toEndOf="parent"

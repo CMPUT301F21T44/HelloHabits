@@ -16,6 +16,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -30,6 +31,7 @@ public class TodaysHabitsFragment extends Fragment {
     private HabitViewModel mHabitViewModel;
     private HabitAdapter adapter;
     private NavController mNavController;
+    private PreviousListViewModel mPreviousListViewModel;
     private FirebaseAuth mAuth;
 
     @Override
@@ -52,6 +54,7 @@ public class TodaysHabitsFragment extends Fragment {
 
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
+        mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         adapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
@@ -60,6 +63,7 @@ public class TodaysHabitsFragment extends Fragment {
         binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.buttonNewHabit.setOnClickListener(view1 -> {
+            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
             mHabitViewModel.select(null);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
         });

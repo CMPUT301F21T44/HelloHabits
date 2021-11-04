@@ -51,9 +51,6 @@
         <action
             android:id="@+id/action_viewHabitFragment_to_createEditHabitEventFragment"
             app:destination="@id/createEditHabitEventFragment" />
-        <action
-            android:id="@+id/action_viewHabitFragment_to_viewHabitEventListFragment"
-            app:destination="@id/viewHabitEventListFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEditHabitEventFragment"
@@ -62,9 +59,6 @@
         <action
             android:id="@+id/action_createEditHabitEventFragment_to_viewHabitFragment"
             app:destination="@id/viewHabitFragment" />
-        <action
-            android:id="@+id/action_createEditHabitEventFragment_to_viewHabitEventListFragment"
-            app:destination="@id/viewHabitEventListFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHabitsFragment"
@@ -79,21 +73,9 @@
             app:destination="@id/CreateEditHabitFragment" />
     </fragment>
     <fragment
-        android:id="@+id/viewHabitEventListFragment"
-        android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventListFragment"
-        android:label="Habit Event List"
-        tools:layout="@layout/fragment_habit_event_list">
-        <action
-            android:id="@+id/action_habitEventListFragment_to_viewHabitFragment"
-            app:destination="@id/viewHabitFragment" />
-        <action
-            android:id="@+id/action_habitEventListFragment_to_createEditHabitEventFragment"
-            app:destination="@id/createEditHabitEventFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/loginFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.social.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_TodaysHabitsFragment"
             app:destination="@id/TodaysHabitsFragment" />

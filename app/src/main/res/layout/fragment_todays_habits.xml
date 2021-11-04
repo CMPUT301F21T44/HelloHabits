@@ -29,15 +29,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:itemCount="5"
+        tools:listitem="@layout/list_habit_item" />
 
     <Button
         android:id="@+id/social"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="48dp"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:layout_marginBottom="@dimen/fragment_vertical_margin"
-        android:text="Social"
+        android:text="@string/social"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -56,11 +55,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                     .getId();
             mHabitEventViewModel.insert(habitId, comment);
         }
-        mNavController
-                .navigate(isEdit ?
-                        R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment :
-                        R.id.action_createEditHabitEventFragment_to_viewHabitFragment);
-
+        mNavController.navigate(R.id.viewHabitFragment);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -72,23 +67,9 @@ public class CreateEditHabitEventFragment extends Fragment {
 
         binding.buttonAddHabitEvent.setOnClickListener(v -> submitHabitEvent());
 
-        binding.buttonDeleteHabitEvent.setOnClickListener(v ->
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Delete Habit Event")
-                        .setMessage("Are you sure you want to delete this habit event?")
-                        .setIcon(R.drawable.ic_launcher_foreground)
-                        .setPositiveButton("YES", (dialog, b) -> deleteHabitEvent())
-                        .setNegativeButton("NO", null).show()
-        );
-
         binding.buttonBack.setOnClickListener(v ->
                 mNavController
                         .navigate(R.id.action_createEditHabitEventFragment_to_viewHabitFragment));
-    }
-
-    private void deleteHabitEvent() {
-        mHabitEventViewModel.delete(mHabitEventViewModel.getSelected().getValue());
-        mNavController.navigate(R.id.action_createEditHabitEventFragment_to_viewHabitEventListFragment);
     }
 
     @Override
@@ -106,12 +87,9 @@ public class CreateEditHabitEventFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
-
 }

@@ -39,11 +39,11 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(HabitViewModel.class)) {
-            //noinspection unchecked
             return (T) new HabitViewModel(mHabitRepository);
         } else if (modelClass.isAssignableFrom(HabitEventViewModel.class)) {
-            //noinspection unchecked
             return (T) new HabitEventViewModel(mHabitEventRepository);
+        } else if (modelClass.isAssignableFrom(PreviousListViewModel.class)) {
+            return (T) new PreviousListViewModel();
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

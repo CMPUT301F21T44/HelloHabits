@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class CreateEditHabitFragment extends Fragment {
     public static final String ERROR_MESSAGE = "Input is too long";
@@ -84,9 +85,11 @@ public class CreateEditHabitFragment extends Fragment {
             mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek);
         }
 
-        mNavController.navigate(isEdit
-                ? R.id.action_createEditHabitFragment_to_viewHabitFragment
-                : R.id.action_createEditHabitFragment_to_todaysHabitsFragment);
+        // If created a new habit, this would either be TodaysHabitsFragment or AllHabitsFragment
+        int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
+                .getDestination().getId();
+
+        mNavController.navigate(isEdit ? R.id.viewHabitFragment : previousDest);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

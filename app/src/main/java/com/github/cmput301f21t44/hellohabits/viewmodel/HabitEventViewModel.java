@@ -27,7 +27,8 @@ public class HabitEventViewModel extends ViewModel {
         mRepository.insert(habitId, comment);
     }
 
-    public HabitEvent update(String id, String habitId, Instant date, String comment, String photoPath, Location location) {
+    public HabitEvent update(String id, String habitId, Instant date, String comment,
+                             String photoPath, Location location) {
         return mRepository.update(id, habitId, date, comment, photoPath, location);
     }
 

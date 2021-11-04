@@ -68,14 +68,16 @@ public class HabitEventListFragment extends Fragment {
                         .setTitle("Delete Habit Event")
                         .setMessage("Are you sure you want to delete this habit event?")
                         .setIcon(R.drawable.ic_baseline_warning_24)
-                        .setPositiveButton("YES", (dialog, b) -> mHabitEventViewModel.delete(habitEvent))
+                        .setPositiveButton("YES", (dialog, b) ->
+                                mHabitEventViewModel.delete(habitEvent))
                         .setNegativeButton("NO", null).show());
         binding.habitEventRecyclerView.setAdapter(adapter);
         binding.habitEventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.buttonNewEvent.setOnClickListener(v -> {
             mHabitEventViewModel.select(null);
-            mNavController.navigate(R.id.action_habitEventListFragment_to_createEditHabitEventFragment);
+            mNavController
+                    .navigate(R.id.action_habitEventListFragment_to_createEditHabitEventFragment);
         });
     }
 

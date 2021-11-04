@@ -54,7 +54,8 @@ public class FSHabitEvent implements HabitEvent {
         String habitId = doc.getString(HABIT_ID);
         Long epochSecond = doc.getLong(DATE_EPOCH);
         Long nanoAdjustment = doc.getLong(DATE_NANO);
-        Instant date = (epochSecond != null && nanoAdjustment != null) ? Instant.ofEpochSecond(epochSecond, nanoAdjustment) : null;
+        Instant date = (epochSecond != null && nanoAdjustment != null)
+                ? Instant.ofEpochSecond(epochSecond, nanoAdjustment) : null;
         String comment = doc.getString(COMMENT);
         return new FSHabitEvent(id, date, habitId, comment);
     }

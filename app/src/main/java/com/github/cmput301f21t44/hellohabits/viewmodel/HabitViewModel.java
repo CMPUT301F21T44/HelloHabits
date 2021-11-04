@@ -37,7 +37,8 @@ public class HabitViewModel extends ViewModel {
         mRepository.insert(name, reason, dateStarted, daysOfWeek);
     }
 
-    public Habit update(String id, String name, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+    public Habit update(String id, String name, String reason, Instant dateStarted,
+                        boolean[] daysOfWeek) {
         return mRepository.update(id, name, reason, dateStarted, daysOfWeek);
     }
 

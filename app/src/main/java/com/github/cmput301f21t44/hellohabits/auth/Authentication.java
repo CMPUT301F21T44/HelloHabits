@@ -29,9 +29,8 @@ public class Authentication {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
             Map<String, Object> user = new HashMap<>();
             user.put("name", name);
-            mDb.collection("users").document(email).set(user).addOnSuccessListener(u -> {
-                Log.d(TAG, "User " + name + " successfully created");
-            });
+            mDb.collection("users").document(email).set(user).addOnSuccessListener(u ->
+                    Log.d(TAG, "User " + name + " successfully created"));
         });
     }
 

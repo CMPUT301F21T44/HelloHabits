@@ -9,6 +9,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 
+/**
+ * fragment class for viewing days of week for habit
+ */
 public class DaysOfWeekFragment extends DialogFragment {
     OnConfirmCallback mConfirmCallback;
     private boolean[] mSelectedItems;

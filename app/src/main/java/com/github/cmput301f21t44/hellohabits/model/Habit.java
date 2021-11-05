@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * interface to implement habit functions
+ */
 public interface Habit {
     static boolean isInDay(ZonedDateTime today, boolean[] daysOfWeek) {
         // dayOfWeek goes from 1-7 (Monday-Sunday)

@@ -7,6 +7,9 @@ import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * interface to implement habit event repository functions
+ */
 public interface HabitEventRepository {
     /**
      * This function inserts a new habit event to the habit event list

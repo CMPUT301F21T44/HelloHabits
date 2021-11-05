@@ -13,6 +13,9 @@ import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 
+/**
+ * list adapter class for habits
+ */
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     public static int COLOUR_RED = Color.parseColor("#D12D2D");
     public static int COLOUR_ORANGE = Color.parseColor("#EFB112");

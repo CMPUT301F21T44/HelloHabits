@@ -10,6 +10,9 @@ import androidx.fragment.app.DialogFragment;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+/**
+ * fragment class for picking the date for start of habit
+ */
 public class DatePickerFragment extends DialogFragment {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 

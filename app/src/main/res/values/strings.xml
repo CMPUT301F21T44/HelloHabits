@@ -60,5 +60,6 @@
     <string name="social">Social</string>
     <string name="name">Name</string>
     <string name="sign_out">Sign out</string>
+    <string name="consistency">Consistency:</string>
 
 </resources>

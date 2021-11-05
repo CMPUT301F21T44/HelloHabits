@@ -16,23 +16,30 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * Adapter class for displaying a HabitEvent in a RecyclerView
+ */
 public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter.ViewHolder> {
     private OnItemClickListener<HabitEvent> mViewListener;
     private OnItemClickListener<HabitEvent> mEditListener;
     private OnItemClickListener<HabitEvent> mDeleteListener;
 
     /**
-     * @param diffCallback
+     * Constructor for HabitEventAdapter
+     *
+     * @param diffCallback Callback used for comparing two HabitEvents
      */
     public HabitEventAdapter(@NonNull DiffUtil.ItemCallback<HabitEvent> diffCallback) {
         super(diffCallback);
     }
 
     /**
-     * @param viewListener
-     * @param editListener
-     * @param deleteListener
-     * @return
+     * Creates a new instance of the HabitEventAdapter
+     *
+     * @param viewListener   Listener callback for when the HabitEvent body is clicked
+     * @param editListener   Listener callback for when the edit button is clicked
+     * @param deleteListener Listener callback for when the delete button is clicked
+     * @return A HabitEventAdapter instance with the listeners
      */
     public static HabitEventAdapter newInstance(OnItemClickListener<HabitEvent> viewListener,
                                                 OnItemClickListener<HabitEvent> editListener,
@@ -45,9 +52,11 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     }
 
     /**
-     * @param parent
-     * @param viewType
-     * @return
+     * HabitEventAdapter's Lifecycle onCreateViewHolder method
+     *
+     * @param parent   RecyclerView parent
+     * @param viewType Type of View (unused)
+     * @return a new ViewHolder instance for the HabitEvent item
      */
     @NonNull
     @Override
@@ -57,8 +66,12 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     }
 
     /**
-     * @param holder
-     * @param position
+     * HabitEventAdapter's Lifecycle onBindViewHolder method
+     * <p>
+     * Binds the listeners to the HabitEvent
+     *
+     * @param holder   ViewHolder for HabitEvent item
+     * @param position Position of HabitEvent in the list
      */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -66,11 +79,16 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
         holder.bind(current, mViewListener, mEditListener, mDeleteListener);
     }
 
+    /**
+     * ItemCallback class for comparing and updating HabitEvent RecyclerView items
+     */
     public static class HabitEventDiff extends DiffUtil.ItemCallback<HabitEvent> {
         /**
-         * @param oldItem
-         * @param newItem
-         * @return
+         * Check if two items are the same
+         *
+         * @param oldItem Old HabitEvent item to be compared
+         * @param newItem New HabitEvent item to be compared
+         * @return whether the two HabitEvents are the same
          */
         @Override
         public boolean areItemsTheSame(@NonNull HabitEvent oldItem, @NonNull HabitEvent newItem) {
@@ -78,9 +96,11 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
         }
 
         /**
-         * @param oldItem
-         * @param newItem
-         * @return
+         * Check if two items have the same content
+         *
+         * @param oldItem Old HabitEvent item to be compared
+         * @param newItem New HabitEvent item to be compared
+         * @return whether the two HabitEvents contain the same contents
          */
         @Override
         public boolean areContentsTheSame(@NonNull HabitEvent oldItem,
@@ -91,11 +111,16 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
         }
     }
 
+    /**
+     * ViewHolder class for holding HabitEvent items
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ListHabitEventItemBinding mItemBinding;
 
         /**
-         * @param binding
+         * Creates a new ViewHolder with a layout binding
+         *
+         * @param binding Layout binding to use
          */
         public ViewHolder(ListHabitEventItemBinding binding) {
             super(binding.getRoot());
@@ -103,26 +128,28 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
         }
 
         /**
-         * @param habitEvent
-         * @param viewListener
-         * @param editListener
-         * @param deleteListener
+         * Binds a HabitEvent to the ViewHolder
+         *
+         * @param event          HabitEvent data to bind
+         * @param viewListener   Listener callback for when the HabitEvent body is clicked
+         * @param editListener   Listener callback for when the edit button is clicked
+         * @param deleteListener Listener callback for when the delete button is clicked
          */
-        void bind(@NonNull final HabitEvent habitEvent,
+        void bind(@NonNull final HabitEvent event,
                   final OnItemClickListener<HabitEvent> viewListener,
                   final OnItemClickListener<HabitEvent> editListener,
                   final OnItemClickListener<HabitEvent> deleteListener) {
-            mItemBinding.comment.setText(habitEvent.getComment());
-            String date = DateTimeFormatter
-                    .ofPattern("d/M/y")
-                    .withZone(ZoneId.systemDefault())
-                    .format(habitEvent.getDate());
+            mItemBinding.comment.setText(event.getComment());
+
+            // set Date
+            String date = DateTimeFormatter .ofPattern("d/M/y") .withZone(ZoneId.systemDefault())
+                    .format(event.getDate());
             mItemBinding.dateDenoted.setText(date);
-            mItemBinding.textHabitEvent.setOnClickListener(v ->
-                    viewListener.onItemClick(habitEvent));
-            mItemBinding.buttonEdit.setOnClickListener(v -> editListener.onItemClick(habitEvent));
-            mItemBinding.buttonDelete.setOnClickListener(v ->
-                    deleteListener.onItemClick(habitEvent));
+
+            // bind listeners
+            mItemBinding.textHabitEvent.setOnClickListener(v -> viewListener.onItemClick(event));
+            mItemBinding.buttonEdit.setOnClickListener(v -> editListener.onItemClick(event));
+            mItemBinding.buttonDelete.setOnClickListener(v -> deleteListener.onItemClick(event));
         }
     }
 }

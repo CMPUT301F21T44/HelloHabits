@@ -59,6 +59,7 @@ public interface Habit {
      */
     static double getConsistency(Habit habit, List<HabitEvent> events) {
         Instant instant = habit.getDateStarted();
+        if (instant == null || events == null) return 0;
         LocalDate startDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDate = LocalDate.now();
         int startDay = startDate.getDayOfWeek().getValue();

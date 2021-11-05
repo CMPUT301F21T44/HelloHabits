@@ -73,7 +73,10 @@ public class TodaysHabitsFragment extends Fragment {
             mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
-        binding.social.setOnClickListener(v -> mAuth.signOut());
+        binding.social.setOnClickListener(v -> {
+            mAuth.signOut();
+            mNavController.navigate(R.id.loginFragment);
+        });
     }
 
     @Override

@@ -22,6 +22,9 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.Objects;
 
+/**
+ * Fragment class for creating or editing a HabitEvent
+ */
 public class CreateEditHabitEventFragment extends Fragment {
     private static final int MAX_COMMENT_LEN = 20;
     private FragmentCreateEditHabitEventBinding binding;
@@ -48,43 +51,80 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    /**
+     * Show error message on the bottom of the screen
+     *
+     * @param text  Message to print out
+     * @param error Error received
+     */
     private void showErrorToast(String text, Exception error) {
         Toast.makeText(requireActivity(), text + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * This function does the input validation for both construction of a new habit event and editing of an exiting habit event
-     * If the input habit event comment is over 20 characters it will throw the warning
-     * And it submits the updated/new habit event to the view model
+     * Validates and returns the input from the comment field
+     *
+     * @return A String if input is valid, null if invalid
      */
-
-    private void submitHabitEvent() {
+    private String validateComment() {
         String comment = binding.editTextComment.getText().toString();
         if (comment.length() > MAX_COMMENT_LEN) {
             binding.editTextComment.setError(CreateEditHabitFragment.TOO_LONG_ERROR_MESSAGE);
             binding.editTextComment.requestFocus();
-            return;
+            return null;
         }
+        return comment;
+    }
+
+    /**
+     * Creates or edits a HabitEvent depending on the current HabitEvent data
+     */
+    private void submitHabitEvent() {
+        String comment = validateComment();
+
+        // invalid comment
+        if (comment == null) return;
+
         if (isEdit) {
-            mHabitEventViewModel.update(mHabitEvent.getId(),
-                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
-                    (updatedHabitEvent) -> {
-                        mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
-                        mNavController.navigate(R.id.viewHabitFragment);
-                    },
-                    (e) -> showErrorToast("Failed to update habit", e));
+            updateHabitEvent(comment);
         } else {
-            String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
-                    .getId();
-            mHabitEventViewModel.insert(habitId, comment, () -> {
-                mNavController.navigate(R.id.viewHabitFragment);
-            }, e -> showErrorToast("Failed to add habit", e));
+            createHabitEvent(comment);
         }
     }
 
     /**
-     * This function set up the ViewModel of Habit and habit event
-     * And it sets the OnClickListener for buttons in this page
+     * Creates a new habit event
+     *
+     * @param comment New HabitEvent's comment
+     */
+    private void createHabitEvent(String comment) {
+        String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
+                .getId();
+        mHabitEventViewModel.insert(habitId, comment,
+                () -> mNavController.navigate(R.id.viewHabitFragment),
+                e -> showErrorToast("Failed to add habit", e));
+
+    }
+
+    /**
+     * Updates an existing habit event
+     *
+     * @param comment Updated HabitEvent's comment
+     */
+    private void updateHabitEvent(String comment) {
+        mHabitEventViewModel.update(mHabitEvent.getId(),
+                mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
+                (updatedHabitEvent) -> {
+                    mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
+                    mNavController.navigate(R.id.viewHabitFragment);
+                },
+                (e) -> showErrorToast("Failed to update habit", e));
+    }
+
+    /**
+     * CreateEditHabitEventFragment's Lifecycle onViewCreated method
+     * <p>
+     * Initializes member variables and button OnClickListeners
      *
      * @param view               a default view
      * @param savedInstanceState a default Bundle
@@ -102,43 +142,60 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.buttonAddPhoto.setOnClickListener(v -> getPhoto());
     }
 
+    /**
+     * Get user's geolocation to attach to the event
+     * TODO: Implement
+     */
     private void getLocation() {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
-
     }
 
-
+    /**
+     * Get a photo to attach to the event
+     * TODO: Implement
+     */
     private void getPhoto() {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * This function sets the boolean isEdit value: true for edited habit event,false for new habit event
+     * CreateEditHabitEventFragment's Lifecycle onStart method
      */
     @Override
     public void onStart() {
         super.onStart();
-        mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(), habitEvent -> {
-            if (habitEvent == null) {
-                isEdit = false;
-            } else {
-                isEdit = true;
-                // update UI
-                mHabitEvent = habitEvent;
-                binding.editTextComment.setText(habitEvent.getComment());
-            }
-            String habitTitle =
-                    Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
-            binding.habitTitle.setText(habitTitle);
-        });
+        // Observe the current event object being observed
+        mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(),
+                this::onHabitEventChanged);
     }
 
     /**
-     * This function close the current function and go to the last page
+     * CreateEditHabitEventFragment's Lifecycle onDestroyView method
+     * <p>
+     * Unbinds the view binding
      */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    /**
+     * Updates the UI to the currently observed HabitEvent
+     *
+     * @param habitEvent The current HabitEvent to be shown on screen, null for new HabitEvent
+     */
+    private void onHabitEventChanged(HabitEvent habitEvent) {
+        isEdit = habitEvent != null;
+        if (isEdit) {
+            // update UI
+            mHabitEvent = habitEvent;
+            binding.editTextComment.setText(habitEvent.getComment());
+        }
+
+        // Set title to the currently selected Habit
+        String habitTitle =
+                Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
+        binding.habitTitle.setText(habitTitle);
     }
 }

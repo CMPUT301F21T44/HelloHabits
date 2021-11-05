@@ -40,23 +40,32 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    private void showErrorToast(String text, Exception error) {
+        Toast.makeText(requireActivity(), text + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
     private void submitHabitEvent() {
         String comment = binding.editTextComment.getText().toString();
         if (comment.length() > MAX_COMMENT_LEN) {
-            binding.editTextComment.setError(CreateEditHabitFragment.ERROR_MESSAGE);
+            binding.editTextComment.setError(CreateEditHabitFragment.TOO_LONG_ERROR_MESSAGE);
             binding.editTextComment.requestFocus();
             return;
         }
         if (isEdit) {
-            HabitEvent updatedHabitEvent = mHabitEventViewModel.update(mHabitEvent.getId(),
-                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment, null, null);
-            mHabitEventViewModel.select(updatedHabitEvent);
+            mHabitEventViewModel.update(mHabitEvent.getId(),
+                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
+                    (updatedHabitEvent) -> {
+                        mHabitEventViewModel.select(updatedHabitEvent);
+                        mNavController.navigate(R.id.viewHabitFragment);
+                    },
+                    (e) -> showErrorToast("Failed to update habit", e));
         } else {
             String habitId = Objects.requireNonNull(mHabitViewModel.getSelected().getValue())
                     .getId();
-            mHabitEventViewModel.insert(habitId, comment);
+            mHabitEventViewModel.insert(habitId, comment, () -> {
+                mNavController.navigate(R.id.viewHabitFragment);
+            }, e -> showErrorToast("Failed to add habit", e));
         }
-        mNavController.navigate(R.id.viewHabitFragment);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

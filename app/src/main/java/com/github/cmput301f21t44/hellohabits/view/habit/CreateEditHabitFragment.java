@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -26,7 +27,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class CreateEditHabitFragment extends Fragment {
-    public static final String ERROR_MESSAGE = "Input is too long";
+    public static final String TOO_LONG_ERROR_MESSAGE = "Input is too long";
+    public static final String EMPTY_ERROR_MESSAGE = "Input cannot be empty";
     private static final int MAX_TITLE_LEN = 20;
     private static final int MAX_REASON_LEN = 30;
 
@@ -62,15 +64,24 @@ public class CreateEditHabitFragment extends Fragment {
         boolean validTitle = true, validReason = true;
 
         String title = binding.editTextTitle.getText().toString();
-        if (title.length() > MAX_TITLE_LEN) {
-            binding.editTextTitle.setError(ERROR_MESSAGE);
+        if (title.isEmpty()) {
+            binding.editTextTitle.setError(EMPTY_ERROR_MESSAGE);
+            binding.editTextTitle.requestFocus();
+            validTitle = false;
+
+        } else if (title.length() > MAX_TITLE_LEN) {
+            binding.editTextTitle.setError(TOO_LONG_ERROR_MESSAGE);
             binding.editTextTitle.requestFocus();
             validTitle = false;
         }
 
         String reason = binding.editTextReason.getText().toString();
-        if (reason.length() > MAX_REASON_LEN) {
-            binding.editTextReason.setError(ERROR_MESSAGE);
+        if (reason.isEmpty()) {
+            binding.editTextReason.setError(EMPTY_ERROR_MESSAGE);
+            binding.editTextReason.requestFocus();
+            validReason = false;
+        } else if (reason.length() > MAX_REASON_LEN) {
+            binding.editTextReason.setError(TOO_LONG_ERROR_MESSAGE);
             binding.editTextReason.requestFocus();
             validReason = false;
         }
@@ -78,18 +89,30 @@ public class CreateEditHabitFragment extends Fragment {
         if (!validTitle || !validReason) return;
 
         if (isEdit) {
-            Habit updatedHabit = mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
-                    mDaysOfWeek);
-            mHabitViewModel.select(updatedHabit);
+            mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
+                    mDaysOfWeek, updatedHabit -> {
+                        mHabitViewModel.select(updatedHabit);
+                        completeScreen();
+                    }, e -> showErrorToast("update", e));
         } else {
-            mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek);
+            mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek, this::completeScreen,
+                    e -> showErrorToast("create", e));
         }
+    }
 
+    private void showErrorToast(String operation, Exception e) {
+        Toast.makeText(requireActivity(),
+                "Failed to " + operation + " habit: " + e.getMessage(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void completeScreen() {
         // If created a new habit, this would either be TodaysHabitsFragment or AllHabitsFragment
         int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
                 .getDestination().getId();
 
         mNavController.navigate(isEdit ? R.id.viewHabitFragment : previousDest);
+
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

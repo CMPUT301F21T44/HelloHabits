@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
-import com.github.cmput301f21t44.hellohabits.model.Location;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,17 +23,19 @@ public class HabitEventViewModel extends ViewModel {
         return mRepository.getEventsByHabitId(habitId);
     }
 
-    public void insert(String habitId, String comment) {
-        mRepository.insert(habitId, comment);
+    public void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
+        mRepository.insert(habitId, comment, successCallback, failCallback);
     }
 
-    public HabitEvent update(String id, String habitId, Instant date, String comment,
-                             String photoPath, Location location) {
-        return mRepository.update(id, habitId, date, comment, photoPath, location);
+    public void update(String id, String habitId, Instant date, String comment,
+                       FirebaseTask.ResultFunction<HabitEvent> successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
+        mRepository.update(id, habitId, date, comment, successCallback, failCallback);
     }
 
-    public void delete(HabitEvent habitEvent) {
-        mRepository.delete(habitEvent);
+    public void delete(HabitEvent habitEvent, FirebaseTask.CatchFunction failCallback) {
+        mRepository.delete(habitEvent, failCallback);
     }
 
     public void select(HabitEvent habit) {

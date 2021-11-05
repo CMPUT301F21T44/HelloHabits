@@ -100,7 +100,7 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
          *
          * @param oldItem Old HabitEvent item to be compared
          * @param newItem New HabitEvent item to be compared
-         * @return whether the two HabitEvents contain the same contents
+         * @return whether the two HabitEvents have the same contents
          */
         @Override
         public boolean areContentsTheSame(@NonNull HabitEvent oldItem,
@@ -142,7 +142,7 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
             mItemBinding.comment.setText(event.getComment());
 
             // set Date
-            String date = DateTimeFormatter .ofPattern("d/M/y") .withZone(ZoneId.systemDefault())
+            String date = DateTimeFormatter.ofPattern("d/M/y").withZone(ZoneId.systemDefault())
                     .format(event.getDate());
             mItemBinding.dateDenoted.setText(date);
 

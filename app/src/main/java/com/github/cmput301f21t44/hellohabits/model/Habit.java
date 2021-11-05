@@ -8,9 +8,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
- * interface to implement habit functions
+ * Interface to implement habit functions
  */
 public interface Habit {
+    /**
+     * Check if Habit is scheduled today
+     *
+     * @param today      Today's date
+     * @param daysOfWeek Array of booleans to check from
+     * @return true if the Habit is scheduled today, false if not
+     */
     static boolean isInDay(ZonedDateTime today, boolean[] daysOfWeek) {
         // dayOfWeek goes from 1-7 (Monday-Sunday)
         int dayOfWeek = today.getDayOfWeek().getValue();
@@ -23,6 +30,18 @@ public interface Habit {
         return daysOfWeek[dayOfWeek - 1];
     }
 
+    /**
+     * Check level of consistency
+     * <p>
+     * if consistency <50% red logo, if between 50 and 75%, yellow logo,
+     * if greater than 75% green logo.
+     * if habit is non repetitive or hasn't started yet, consistency = 100%
+     * <p>
+     * This overload gets the list of HabitEvents from the Habit itself
+     *
+     * @param habit Habit to get consistency of
+     * @return Percentage of consistency
+     */
     static double getConsistency(Habit habit) {
         return getConsistency(habit, habit.getEvents());
     }
@@ -34,7 +53,8 @@ public interface Habit {
      * if greater than 75% green logo.
      * if habit is non repetitive or hasn't started yet, consistency = 100%
      *
-     * @param habit Habit to get consistency of
+     * @param habit  Habit to get consistency of
+     * @param events List of habit events to check from
      * @return Percentage of consistency
      */
     static double getConsistency(Habit habit, List<HabitEvent> events) {

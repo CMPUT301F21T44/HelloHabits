@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
- * fragment class for cretaing/editing fragment
+ * Fragment for creating or editing a Habit
  */
 public class CreateEditHabitFragment extends Fragment {
     public static final String TOO_LONG_ERROR_MESSAGE = "Input is too long";
@@ -60,7 +61,7 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function update/set the start date of a exiting/new habit
+     * Set the current start date and update the UI accordingly
      *
      * @param instant an Instant - the start date before updated
      */
@@ -72,7 +73,7 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function update/set the days for habit events in every week for an exiting/new habit
+     * Set the current days of week and update the UI accordingly
      *
      * @param daysOfWeek a boolean array standing for the days for habit events
      */
@@ -82,38 +83,30 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function does the input validation for both construction of a new habit and editing of an exiting habit
-     * If the input habit title is over 20 characters it will throw the warning
-     * If the input habit reason is over 30 characters it will throw the warning
-     * And it submits the updated/new habit to the view model
+     * Validates and extract input from an EditText view
+     *
+     * @param field     EditText view to extract input from
+     * @param maxLength Maximum character length for the input
+     * @return The input String if valid, null if invalid
+     */
+    private String validateInput(EditText field, int maxLength) {
+        String input = field.getText().toString();
+        if (input.isEmpty() || input.length() > maxLength) {
+            field.requestFocus();
+            field.setError(input.isEmpty() ? EMPTY_ERROR_MESSAGE : TOO_LONG_ERROR_MESSAGE);
+            return null;
+        }
+        return input;
+    }
+
+    /**
+     * Handles the creation of a new Habit or modification of an existing Habit
      */
     private void submitHabit() {
-        boolean validTitle = true, validReason = true;
+        String title = validateInput(binding.editTextTitle, MAX_TITLE_LEN);
+        String reason = validateInput(binding.editTextReason, MAX_REASON_LEN);
 
-        String title = binding.editTextTitle.getText().toString();
-        if (title.isEmpty()) {
-            binding.editTextTitle.setError(EMPTY_ERROR_MESSAGE);
-            binding.editTextTitle.requestFocus();
-            validTitle = false;
-
-        } else if (title.length() > MAX_TITLE_LEN) {
-            binding.editTextTitle.setError(TOO_LONG_ERROR_MESSAGE);
-            binding.editTextTitle.requestFocus();
-            validTitle = false;
-        }
-
-        String reason = binding.editTextReason.getText().toString();
-        if (reason.isEmpty()) {
-            binding.editTextReason.setError(EMPTY_ERROR_MESSAGE);
-            binding.editTextReason.requestFocus();
-            validReason = false;
-        } else if (reason.length() > MAX_REASON_LEN) {
-            binding.editTextReason.setError(TOO_LONG_ERROR_MESSAGE);
-            binding.editTextReason.requestFocus();
-            validReason = false;
-        }
-
-        if (!validTitle || !validReason) return;
+        if (title == null || reason == null) return;
 
         if (mIsEdit) {
             mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
@@ -127,12 +120,25 @@ public class CreateEditHabitFragment extends Fragment {
         }
     }
 
-    private void showErrorToast(String operation, Exception e) {
+    /**
+     * Show Toast for an operation error
+     *
+     * @param operation Operation that failed
+     * @param error     Exception passed from failing callback
+     */
+    private void showErrorToast(String operation, Exception error) {
         Toast.makeText(requireActivity(),
-                "Failed to " + operation + " habit: " + e.getMessage(),
+                "Failed to " + operation + " habit: " + error.getMessage(),
                 Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Complete create/edit Habit
+     * <p>
+     * If editing a Habit, navigate to View Habit screen
+     * <p>
+     * if creating a Habit, navigate to the previous list visited (Today's Habits or All Habits)
+     */
     private void completeScreen() {
         // If created a new habit, this would either be TodaysHabitsFragment or AllHabitsFragment
         int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
@@ -143,7 +149,9 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function set the OnClickerListener to buttons in this page
+     * CreateEditHabitEventFragment's Lifecycle onViewCreated method
+     * <p>
+     * Initializes member variables and button OnClickListeners
      *
      * @param view               a default view
      * @param savedInstanceState a default Bundle
@@ -162,7 +170,7 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function provides a fragment to select the start date
+     * Starts a dialog fragment to select the start date
      */
     private void startDatePickerFragment() {
         DialogFragment newFragment = DatePickerFragment.newInstance(
@@ -173,7 +181,7 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function provides a fragment to select days of a week for habit event
+     * Starts a dialog fragment to select days of a week for when this Habit is scheduled to be done
      */
     private void startDaysOfWeekFragment() {
         DialogFragment newFragment = DaysOfWeekFragment
@@ -182,27 +190,12 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
     /**
-     * This function do a judgement to see if this page is called to edit a habit or create a habit at the beginning
+     * CreateEditHabitEventFragment's Lifecycle onStart method
      */
     @Override
     public void onStart() {
         super.onStart();
-        mHabitViewModel.getSelectedHabit().observe(getViewLifecycleOwner(), habit -> {
-            mIsEdit = habit != null;
-            if (mIsEdit) {
-                // populate fields with habit data
-                mHabit = habit;
-                binding.editTextTitle.setText(habit.getTitle());
-                binding.editTextReason.setText(habit.getReason());
-                updateInstant(habit.getDateStarted());
-                updateDaysOfWeek(habit.getDaysOfWeek());
-
-                binding.buttonAddHabit.setText(R.string.save_changes);
-            } else {
-                updateInstant(Instant.now());
-                updateDaysOfWeek(DaysOfWeek.emptyArray());
-            }
-        });
+        mHabitViewModel.getSelectedHabit().observe(getViewLifecycleOwner(), this::onHabitChanged);
     }
 
     /**
@@ -215,4 +208,25 @@ public class CreateEditHabitFragment extends Fragment {
     }
 
 
+    /**
+     * Updates the UI to the currently observed Habit
+     *
+     * @param habit The current Habit to be shown on screen, null for new Habit
+     */
+    private void onHabitChanged(Habit habit) {
+        mIsEdit = habit != null;
+        if (mIsEdit) {
+            // populate fields with habit data
+            mHabit = habit;
+            binding.editTextTitle.setText(habit.getTitle());
+            binding.editTextReason.setText(habit.getReason());
+            updateInstant(habit.getDateStarted());
+            updateDaysOfWeek(habit.getDaysOfWeek());
+
+            binding.buttonAddHabit.setText(R.string.save_changes);
+        } else {
+            updateInstant(Instant.now());
+            updateDaysOfWeek(DaysOfWeek.emptyArray());
+        }
+    }
 }

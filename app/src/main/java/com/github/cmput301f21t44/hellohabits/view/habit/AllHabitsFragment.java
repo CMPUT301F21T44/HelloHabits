@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * fragment class for viewing all habits
+ * Fragment for viewing all habits
  */
 public class AllHabitsFragment extends Fragment {
     private FragmentAllHabitsBinding mBinding;
@@ -34,10 +34,12 @@ public class AllHabitsFragment extends Fragment {
     private NavController mNavController;
 
     /**
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

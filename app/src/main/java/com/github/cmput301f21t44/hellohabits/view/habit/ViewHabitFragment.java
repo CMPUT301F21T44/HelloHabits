@@ -30,7 +30,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
- * fragment class for viewing a habits
+ * Fragment class for viewing a habits
  */
 public class ViewHabitFragment extends Fragment {
     private FragmentViewHabitBinding binding;
@@ -57,6 +57,9 @@ public class ViewHabitFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Initialise ViewModels
+     */
     private void initViewModels() {
         // attach the provider to activity instead of fragment so the fragments can share data
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
@@ -68,6 +71,9 @@ public class ViewHabitFragment extends Fragment {
         this.mPreviousListDestId = mPreviousListViewModel.getDestinationId().getValue();
     }
 
+    /**
+     * Initialise button OnClick listeners
+     */
     private void initListeners() {
         binding.buttonEditHabit.setOnClickListener(v -> mNavController
                 .navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));

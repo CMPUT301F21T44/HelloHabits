@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.firestore;
+package com.github.cmput301f21t44.hellohabits.firebase;
 
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
@@ -16,25 +16,24 @@ public class FSHabit implements Habit {
     public static final String TITLE = "title";
     public static final String REASON = "reason";
     public static final String DATE_STARTED = "dateStarted";
-    public static final String DATE_STARTED_EPOCH = "dateStarted.epochSecond";
-    public static final String DATE_STARTED_NANO = "dateStarted.nano";
     public static final String DAYS_OF_WEEK = "daysOfWeek";
-    private final String id;
-    private final String title;
-    private final String reason;
-    private final Instant dateStarted;
-    private final boolean[] daysOfWeek;
 
-    private List<HabitEvent> habitEvents;
+    private final String mId;
+    private final String mTitle;
+    private final String mReason;
+    private final Instant mDateStarted;
+    private final boolean[] mDaysOfWeek;
+
+    private List<HabitEvent> mHabitEvents;
 
     public FSHabit(String id, String title, String reason, Instant dateStarted,
                    boolean[] daysOfWeek) {
-        this.id = id;
-        this.title = title;
-        this.reason = reason;
-        this.habitEvents = new ArrayList<>();
-        this.dateStarted = dateStarted;
-        this.daysOfWeek = daysOfWeek;
+        this.mId = id;
+        this.mTitle = title;
+        this.mReason = reason;
+        this.mHabitEvents = new ArrayList<>();
+        this.mDateStarted = dateStarted;
+        this.mDaysOfWeek = daysOfWeek;
     }
 
     public FSHabit(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
@@ -54,21 +53,18 @@ public class FSHabit implements Habit {
         String id = doc.getId();
         String title = doc.getString(TITLE);
         String reason = doc.getString(REASON);
-        Long epochSeconds = doc.getLong(DATE_STARTED_EPOCH);
-        Long nanoAdjustment = doc.getLong(DATE_STARTED_NANO);
-        Instant dateStarted = (epochSeconds != null && nanoAdjustment != null) ?
-                Instant.ofEpochSecond(epochSeconds, nanoAdjustment) : null;
+        Instant dateStarted = FirestoreRepository.instantFromDoc(doc, DATE_STARTED);
         List<Boolean> dayList = (List<Boolean>) doc.get(DAYS_OF_WEEK);
         return new FSHabit(id, title, reason, dateStarted, getDaysOfWeek(dayList));
     }
 
     public static Map<String, Object> getMap(FSHabit habit) {
         Map<String, Object> map = new HashMap<>();
-        map.put(TITLE, habit.title);
-        map.put(REASON, habit.reason);
-        map.put(DATE_STARTED, habit.dateStarted);
+        map.put(TITLE, habit.mTitle);
+        map.put(REASON, habit.mReason);
+        map.put(DATE_STARTED, habit.mDateStarted);
         List<Boolean> days = new ArrayList<>();
-        for (boolean b : habit.daysOfWeek) {
+        for (boolean b : habit.mDaysOfWeek) {
             days.add(b);
         }
         map.put(DAYS_OF_WEEK, days);
@@ -77,35 +73,35 @@ public class FSHabit implements Habit {
 
     @Override
     public String getId() {
-        return id;
+        return mId;
     }
 
     @Override
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     @Override
     public String getReason() {
-        return reason;
+        return mReason;
     }
 
     @Override
     public Instant getDateStarted() {
-        return dateStarted;
+        return mDateStarted;
     }
 
     @Override
     public List<HabitEvent> getEvents() {
-        return habitEvents;
+        return mHabitEvents;
     }
 
     @Override
     public boolean[] getDaysOfWeek() {
-        return daysOfWeek;
+        return mDaysOfWeek;
     }
 
     public void setHabitEvents(List<HabitEvent> habitEvents) {
-        this.habitEvents = habitEvents;
+        this.mHabitEvents = habitEvents;
     }
 }

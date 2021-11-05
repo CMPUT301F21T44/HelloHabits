@@ -24,20 +24,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllHabitsFragment extends Fragment {
-    private FragmentAllHabitsBinding binding;
+    private FragmentAllHabitsBinding mBinding;
     private HabitViewModel mHabitViewModel;
     private PreviousListViewModel mPreviousListViewModel;
-    private HabitAdapter adapter;
+    private HabitAdapter mAdapter;
     private NavController mNavController;
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAllHabitsBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = FragmentAllHabitsBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
+    /**
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -46,30 +56,37 @@ public class AllHabitsFragment extends Fragment {
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
-        adapter = HabitAdapter.newInstance((habit) -> {
+        mAdapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
-            mPreviousListViewModel.select(R.id.allHabitsFragment);
+            mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
         });
-        binding.habitRecyclerView.setAdapter(adapter);
-        binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBinding.habitRecyclerView.setAdapter(mAdapter);
+        mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.buttonNewHabit.setOnClickListener(view1 -> {
+        mBinding.buttonNewHabit.setOnClickListener(view1 -> {
             mHabitViewModel.select(null);
+            mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_newHabitFragment);
         });
     }
 
+    /**
+     * This function get and list all the habits on screen when go to this fragment
+     */
     @Override
     public void onStart() {
         super.onStart();
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> allHabits = new ArrayList<>(habitList);
-            adapter.submitList(allHabits);
+            mAdapter.submitList(allHabits);
         });
 
     }
 
+    /**
+     * This function handle the back button event when the fragment is on resume
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -82,9 +99,12 @@ public class AllHabitsFragment extends Fragment {
                 });
     }
 
+    /**
+     * This function close the current page and return to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 }

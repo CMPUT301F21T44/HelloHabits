@@ -5,6 +5,11 @@ import androidx.annotation.NonNull;
 public final class DaysOfWeek {
     public static final String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
+    /**
+     * This function returns an empty boolean array
+     *
+     * @return a empty boolean array
+     */
     public static boolean[] emptyArray() {
         return new boolean[]{false, false, false, false, false, false, false};
     }

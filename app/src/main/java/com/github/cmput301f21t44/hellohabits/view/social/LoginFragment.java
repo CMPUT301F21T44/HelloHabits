@@ -17,6 +17,9 @@ import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.view.InputValidator;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Fragment for logging in or signing up
+ */
 public class LoginFragment extends Fragment {
     private static final int LONG_MESSAGE_THRESHOLD = 50;
     private FragmentLoginBinding binding;
@@ -137,11 +140,10 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * This function validates the input message
-     * If the input message is greater than 50 characters, raise the warning message
+     * Show error message as Toast
      *
-     * @param text
-     * @param e
+     * @param text Text to output
+     * @param e    Exception thrown
      */
     private void showErrorToast(String text, Exception e) {
         String message = text + ": " + e.getLocalizedMessage();

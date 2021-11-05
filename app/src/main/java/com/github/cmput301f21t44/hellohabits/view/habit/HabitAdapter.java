@@ -14,7 +14,7 @@ import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 
 /**
- * list adapter class for habits
+ * Adapter class for displaying a Habitin a RecyclerView
  */
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     public static int COLOUR_RED = Color.parseColor("#D12D2D");
@@ -24,15 +24,19 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     private OnItemClickListener<Habit> mOnClickListener;
 
     /**
-     * @param diffCallback
+     * Constructor for HabitAdapter
+     *
+     * @param diffCallback Callback used for comparing two Habits
      */
     public HabitAdapter(@NonNull DiffUtil.ItemCallback<Habit> diffCallback) {
         super(diffCallback);
     }
 
     /**
-     * @param listener
-     * @return
+     * Creates a new instance of the HabitAdapter
+     *
+     * @param listener Listener callback for when the Habit body is clicked
+     * @return A HabitAdapter instance with the listener
      */
     public static HabitAdapter newInstance(OnItemClickListener<Habit> listener) {
         HabitAdapter adapter = new HabitAdapter(new HabitDiff());
@@ -41,9 +45,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     }
 
     /**
-     * @param parent
-     * @param viewType
-     * @return
+     * HabitAdapter's Lifecycle onCreateViewHolder method
+     *
+     * @param parent   RecyclerView parent
+     * @param viewType Type of View (unused)
+     * @return a new ViewHolder instance for the Habit item
      */
     @NonNull
     @Override
@@ -54,8 +60,12 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     }
 
     /**
-     * @param holder
-     * @param position
+     * HabitAdapter's Lifecycle onBindViewHolder method
+     * <p>
+     * Binds the listener to the Habit
+     *
+     * @param holder   ViewHolder for Habit item
+     * @param position Position of Habit in the list
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -63,13 +73,16 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         holder.bind(current, mOnClickListener);
     }
 
+    /**
+     * ItemCallback class for comparing and updating Habit RecyclerView items
+     */
     public static class HabitDiff extends DiffUtil.ItemCallback<Habit> {
         /**
-         * This function tells if two habit items are same by ID
+         * Check if two items are the same
          *
-         * @param oldItem the old habit
-         * @param newItem the new habit
-         * @return a boolean value for equality: true for equal, false for unequal
+         * @param oldItem Old Habit item to be compared
+         * @param newItem New Habit item to be compared
+         * @return whether the two Habits are the same
          */
         @Override
         public boolean areItemsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
@@ -77,11 +90,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         }
 
         /**
-         * This function tells if two habit items are same by all the contents
+         * Check if two items have the same content
          *
-         * @param oldItem the old habit
-         * @param newItem the new habit
-         * @return a boolean value for equality: true for equal, false for unequal
+         * @param oldItem Old Habit item to be compared
+         * @param newItem New Habit item to be compared
+         * @return whether the two Habits have the same contents
          */
         @Override
         public boolean areContentsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
@@ -92,11 +105,16 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         }
     }
 
+    /**
+     * ViewHolder class for holding Habit items
+     */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private final ListHabitItemBinding mItemBinding;
 
         /**
-         * @param itemBinding
+         * Creates a new ViewHolder with a layout binding
+         *
+         * @param itemBinding Layout binding to use
          */
         ViewHolder(@NonNull ListHabitItemBinding itemBinding) {
             super(itemBinding.getRoot());
@@ -104,8 +122,10 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         }
 
         /**
-         * @param habit
-         * @param listener
+         * Binds a Habit to the ViewHolder
+         *
+         * @param habit    Habit data to bind
+         * @param listener Listener callback for when the Habit body is clicked
          */
         void bind(@NonNull final Habit habit, final OnItemClickListener<Habit> listener) {
             mItemBinding.titleView.setText(habit.getTitle());

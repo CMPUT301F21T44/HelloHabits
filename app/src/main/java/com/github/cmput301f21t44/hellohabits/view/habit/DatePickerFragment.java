@@ -11,15 +11,15 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
- * fragment class for picking the date for start of habit
+ * Dialog Fragment for picking the date for start of Habit
  */
 public class DatePickerFragment extends DialogFragment {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     /**
-     * This function returns a new instance of the DatePickerFragment
+     * Returns a new instance of the DatePickerFragment
      *
-     * @param listener a listener listening to the fragment
+     * @param listener Callback for when the date is set
      * @return a new DatePickerFragment instance
      */
     public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener) {
@@ -29,10 +29,10 @@ public class DatePickerFragment extends DialogFragment {
     }
 
     /**
-     * This function creates a new dialog for the DatePicker
+     * Initializes the values for the DatePicker
      *
      * @param savedInstanceState a default Bundle
-     * @return a new dialog to select a date based on today's date
+     * @return DatePickerDialog
      */
     @NonNull
     @Override

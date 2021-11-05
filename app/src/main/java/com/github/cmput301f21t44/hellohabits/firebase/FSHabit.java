@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Firestore implementation of  Habit
+ */
 public class FSHabit implements Habit {
     public static final String COLLECTION = "habits";
     public static final String TITLE = "title";
@@ -26,6 +29,14 @@ public class FSHabit implements Habit {
 
     private List<HabitEvent> mHabitEvents;
 
+    /**
+     * Create a FSHabit
+     * @param id UUID of the Habit
+     * @param title Title of the Habit
+     * @param reason Reason for starting the Habit
+     * @param dateStarted Date on which the Habit was started
+     * @param daysOfWeek Days of the week for when the Habit is scheduled
+     */
     public FSHabit(String id, String title, String reason, Instant dateStarted,
                    boolean[] daysOfWeek) {
         this.mId = id;
@@ -36,10 +47,22 @@ public class FSHabit implements Habit {
         this.mDaysOfWeek = daysOfWeek;
     }
 
+    /**
+     * Creates a new FSHabit with a generated UUID
+     * @param title Title of the Habit
+     * @param reason Reason for starting the Habit
+     * @param dateStarted Date on which the Habit was started
+     * @param daysOfWeek Days of the week for when the Habit is scheduled
+     */
     public FSHabit(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
         this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek);
     }
 
+    /**
+     * Convert a Boolean List to a boolean array
+     * @param dayList List of Booleans
+     * @return Array of booleans
+     */
     private static boolean[] getDaysOfWeek(List<Boolean> dayList) {
         boolean[] daysOfWeek = new boolean[7];
         assert dayList != null;
@@ -49,6 +72,11 @@ public class FSHabit implements Habit {
         return daysOfWeek;
     }
 
+    /**
+     * Creates an FSHabit instance from a DocumentSnapshot
+     * @param doc Firestore document
+     * @return FSHabit from the document
+     */
     public static FSHabit fromSnapshot(QueryDocumentSnapshot doc) {
         String id = doc.getId();
         String title = doc.getString(TITLE);
@@ -58,6 +86,11 @@ public class FSHabit implements Habit {
         return new FSHabit(id, title, reason, dateStarted, getDaysOfWeek(dayList));
     }
 
+    /**
+     * Converts Habit fields to a Map
+     * @param habit Habit to convert
+     * @return Map of Habit fields
+     */
     public static Map<String, Object> getMap(FSHabit habit) {
         Map<String, Object> map = new HashMap<>();
         map.put(TITLE, habit.mTitle);
@@ -101,6 +134,10 @@ public class FSHabit implements Habit {
         return mDaysOfWeek;
     }
 
+    /**
+     * Set the list of HabitEvents
+     * @param habitEvents list of HabitEvents
+     */
     public void setHabitEvents(List<HabitEvent> habitEvents) {
         this.mHabitEvents = habitEvents;
     }

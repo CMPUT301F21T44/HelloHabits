@@ -18,16 +18,33 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Firestore Repository for Habits
+ */
 public class FirestoreHabitRepository extends FirestoreRepository implements HabitRepository {
+    /**
+     * Creates a new FirestoreHabitRepository
+     *
+     * @param db   FirebaseFirestore instance
+     * @param auth FirebaseAuth instance
+     */
     public FirestoreHabitRepository(FirebaseFirestore db, FirebaseAuth auth) {
         super(db, auth);
     }
 
+    /**
+     * Creates a new FirestoreHabitRepository using getInstance for FirebaseAuth and FirebaseFirestore
+     */
     public FirestoreHabitRepository() {
         this(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance());
 
     }
 
+    /**
+     * Return a list of all Habits of the current user
+     *
+     * @return List of all Habits
+     */
     @Override
     public LiveData<List<Habit>> getAllHabits() {
         final MediatorLiveData<List<Habit>> habitLiveData = new MediatorLiveData<>();
@@ -47,6 +64,16 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
     }
 
 
+    /**
+     * Creates a new Habit for the user
+     *
+     * @param title           Title of the Habit
+     * @param reason          Reason for the Habit
+     * @param dateStarted     The starting date for the Habit
+     * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
     @Override
     public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                        FirebaseTask.ThenFunction successCallback,
@@ -58,6 +85,13 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
     }
 
 
+    /**
+     * Deletes a Habit containing events in a single transaction
+     *
+     * @param eventSnapshots Snapshots of HabitEvents
+     * @param habitId        UUID of the Habit to delete
+     * @return Task to which to add callbacks
+     */
     private Task<Void> deleteHabitWithEvents(QuerySnapshot eventSnapshots, String habitId) {
         // delete event collections in a batch
         WriteBatch batch = mDb.batch();
@@ -69,6 +103,13 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
         return batch.commit();
     }
 
+    /**
+     * Delete a habit with no events
+     *
+     * @param habit           Habit to delete
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
     private void deleteHabit(Habit habit, FirebaseTask.ThenFunction successCallback,
                              FirebaseTask.CatchFunction failCallback) {
 
@@ -77,6 +118,13 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
                 .addOnFailureListener(failCallback::apply);
     }
 
+    /**
+     * Delete a given Habit, along with any HabitEvents under it
+     *
+     * @param habit           Habit to delete
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
     @Override
     public void delete(Habit habit, FirebaseTask.ThenFunction successCallback,
                        FirebaseTask.CatchFunction failCallback) {
@@ -89,6 +137,17 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
                 .addOnFailureListener(err -> deleteHabit(habit, successCallback, failCallback));
     }
 
+    /**
+     * Update a Habit with the given UUID
+     *
+     * @param id              UUID of the Habit
+     * @param title           Title of the Habit
+     * @param reason          Reason for the Habit
+     * @param dateStarted     The starting date for the Habit
+     * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
     @Override
     public void update(String id, String title, String reason, Instant dateStarted,
                        boolean[] daysOfWeek, FirebaseTask.ResultFunction<Habit> successCallback,

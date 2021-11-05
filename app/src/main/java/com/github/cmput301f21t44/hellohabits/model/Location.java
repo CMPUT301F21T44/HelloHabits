@@ -1,7 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.model;
 
 /**
- * interface to implement get location functions
+ * Interface to implement a HabitEvent Location
  */
 public interface Location {
     double getLongitude();

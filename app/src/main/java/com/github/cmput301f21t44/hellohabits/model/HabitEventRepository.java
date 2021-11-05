@@ -8,33 +8,46 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * interface to implement habit event repository functions
+ * Interface to implement habit event repository functions
  */
 public interface HabitEventRepository {
     /**
-     * This function inserts a new habit event to the habit event list
+     * Inserts a new habit event to the HabitEvent list of a Habit with the given UUID
      *
-     * @param habitId a string of habit ID
-     * @param comment a string of habit comment
+     * @param habitId         UUID of the Habit parent
+     * @param comment         Optional comment
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
      */
     void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
                 FirebaseTask.CatchFunction failCallback);
 
     /**
-     * This function deletes the given habit event
+     * Deletes a given HabitEvent
      *
-     * @param habitEvent a HabitEvent to be deleted
+     * @param habitEvent   HabitEvent to delete
+     * @param failCallback Callback for when the operation fails
      */
     void delete(HabitEvent habitEvent, FirebaseTask.CatchFunction failCallback);
 
     /**
-     * this function returns a HabitEvent list by a habit ID
+     * Returns a HabitEvent list owned by a Habit with a given ID
      *
-     * @param habitId a habit with 0 or more habit events
-     * @return the habit event list of the given habit
+     * @param habitId UUID of the Habit
+     * @return The HabitEvent list of the given habit
      */
     LiveData<List<HabitEvent>> getEventsByHabitId(String habitId);
 
+    /**
+     * Updates a HabitEvent with a given UUID
+     *
+     * @param id              UUID of the HabitEvent
+     * @param habitId         UUID of the Habit parent
+     * @param date            Instant of when the HabitEvent was denoted
+     * @param comment         Optional comment
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
     void update(String id, String habitId, Instant date, String comment,
                 FirebaseTask.ResultFunction<HabitEvent> successCallback,
                 FirebaseTask.CatchFunction failCallback);

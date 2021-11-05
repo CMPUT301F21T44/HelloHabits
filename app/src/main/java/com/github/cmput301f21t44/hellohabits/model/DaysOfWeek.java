@@ -3,13 +3,13 @@ package com.github.cmput301f21t44.hellohabits.model;
 import androidx.annotation.NonNull;
 
 /**
- * class to store the days of week for habits
+ * Class to store the days of week for habits
  */
 public final class DaysOfWeek {
     public static final String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
     /**
-     * This function returns an empty boolean array
+     * Returns an empty boolean array
      *
      * @return a empty boolean array
      */

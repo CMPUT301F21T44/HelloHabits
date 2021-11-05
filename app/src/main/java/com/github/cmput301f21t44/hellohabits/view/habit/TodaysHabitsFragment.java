@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * fragment class for viewing today's habits
+ * Fragment for viewing today's habits
  */
 public class TodaysHabitsFragment extends Fragment {
     private FragmentTodaysHabitsBinding mBinding;
@@ -67,8 +67,12 @@ public class TodaysHabitsFragment extends Fragment {
     }
 
     /**
-     * @param view
-     * @param savedInstanceState
+     * TodaysHabitsFragment's Lifecycle onViewCreated method
+     * <p>
+     * Initializes member variables and button OnClickListeners
+     *
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -104,25 +108,14 @@ public class TodaysHabitsFragment extends Fragment {
     }
 
     /**
-     * This function list all the habits that should be done today
+     * TodaysHabitsFragment's Lifecycle onStart method
      */
     @Override
     public void onStart() {
         super.onStart();
         if (!requireUser()) return;
 
-        mHabitViewModel.getAllHabits().observe(this, habitList -> {
-            List<Habit> todaysHabits = new ArrayList<>();
-            ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
-            // traverse all h in habitList, and only masks in those who matches the checkBox
-            // checkBox implementation can be seen in isInDay() from Habit.java
-            for (Habit h : habitList) {
-                if (Habit.isInDay(today, h.getDaysOfWeek())) {
-                    todaysHabits.add(h);
-                }
-            }
-            mAdapter.submitList(todaysHabits);
-        });
+        mHabitViewModel.getAllHabits().observe(this, this::onHabitListChanged);
     }
 
     /**
@@ -142,5 +135,23 @@ public class TodaysHabitsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+    }
+
+    /**
+     * Update the UI to reflect changes in the Habit list
+     *
+     * @param habitList updated  Habit list
+     */
+    private void onHabitListChanged(List<Habit> habitList) {
+        List<Habit> todaysHabits = new ArrayList<>();
+        ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
+        // traverse all h in habitList, and only masks in those who matches the checkBox
+        // checkBox implementation can be seen in isInDay() from Habit.java
+        for (Habit h : habitList) {
+            if (Habit.isInDay(today, h.getDaysOfWeek())) {
+                todaysHabits.add(h);
+            }
+        }
+        mAdapter.submitList(todaysHabits);
     }
 }

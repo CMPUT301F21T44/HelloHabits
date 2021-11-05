@@ -8,43 +8,49 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * interface to implement habit repository functions
+ * Interface to implement habit repository methods
  */
 public interface HabitRepository {
     /**
-     * this function return a list of all habits
+     * Return a list of all habits of the current user
      *
      * @return a list consisting of all habits
      */
     LiveData<List<Habit>> getAllHabits();
 
     /**
-     * This function insert a new habit into the list
+     * Creates a new Habit for the user
      *
-     * @param title       a string of habit title
-     * @param reason      a string of habit reason
-     * @param dateStarted an instant of start date
-     * @param daysOfWeek  a boolean array of days
+     * @param title           Title of the Habit
+     * @param reason          Reason for the Habit
+     * @param dateStarted     The starting date for the Habit
+     * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
      */
     void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                 FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback);
 
     /**
-     * This function delete the given habit
+     * Delete the given Habit
      *
-     * @param habit
+     * @param habit           Habit to delete
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
      */
     void delete(Habit habit, FirebaseTask.ThenFunction successCallback,
                 FirebaseTask.CatchFunction failCallback);
 
     /**
-     * This function update the changes after changing an exiting habit
+     * Updates a Habit with the given UUID
      *
-     * @param id          the id of the given habit
-     * @param title       a string of habit title
-     * @param reason      a string of habit reason
-     * @param dateStarted an instant of start date
-     * @param daysOfWeek  a boolean array of days
+     * @param id              UUID of the Habit
+     * @param title           Title of the Habit
+     * @param reason          Reason for the Habit
+     * @param dateStarted     The starting date for the Habit
+     * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
      */
     void update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                 FirebaseTask.ResultFunction<Habit> successCallback,

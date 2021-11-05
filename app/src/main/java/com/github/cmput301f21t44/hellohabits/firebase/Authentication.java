@@ -9,15 +9,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handles authentication with Firebase
+ */
 public class Authentication {
     private final FirebaseAuth mAuth;
     private final FirebaseFirestore mDb;
 
     /**
-     * This function get the auth and database down to this class
+     * Creates a new Authentication object
      *
-     * @param auth the auth
-     * @param db   the database in fire store
+     * @param auth FirebaseAuth instance
+     * @param db   FirebaseFirestore instance
      */
     public Authentication(FirebaseAuth auth, FirebaseFirestore db) {
         this.mAuth = auth;
@@ -25,7 +28,7 @@ public class Authentication {
     }
 
     /**
-     * This function gets the instance of auth and database
+     * Creates a new Authentication object using getInstance for FirebaseAuth and FirebaseFirestore
      */
     public Authentication() {
         this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
@@ -66,6 +69,10 @@ public class Authentication {
         mAuth.signOut();
     }
 
+    /**
+     * Gets the current signed in user
+     * @return the current user, null if not signed in
+     */
     public FirebaseUser getCurrentUser() {
         return mAuth.getCurrentUser();
     }

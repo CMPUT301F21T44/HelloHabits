@@ -36,7 +36,7 @@ public class CreateEditHabitFragment extends Fragment {
     private HabitViewModel mHabitViewModel;
     private Habit mHabit;
     private Instant mInstant;
-    private boolean isEdit;
+    private boolean mIsEdit;
     private boolean[] mDaysOfWeek;
     private NavController mNavController;
 
@@ -88,7 +88,7 @@ public class CreateEditHabitFragment extends Fragment {
 
         if (!validTitle || !validReason) return;
 
-        if (isEdit) {
+        if (mIsEdit) {
             mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
                     mDaysOfWeek, updatedHabit -> {
                         mHabitViewModel.select(updatedHabit);
@@ -111,7 +111,7 @@ public class CreateEditHabitFragment extends Fragment {
         int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
                 .getDestination().getId();
 
-        mNavController.navigate(isEdit ? R.id.viewHabitFragment : previousDest);
+        mNavController.navigate(mIsEdit ? R.id.viewHabitFragment : previousDest);
 
     }
 
@@ -145,9 +145,9 @@ public class CreateEditHabitFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mHabitViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
-            isEdit = habit != null;
-            if (isEdit) {
+        mHabitViewModel.getSelectedHabit().observe(getViewLifecycleOwner(), habit -> {
+            mIsEdit = habit != null;
+            if (mIsEdit) {
                 // populate fields with habit data
                 mHabit = habit;
                 binding.editTextTitle.setText(habit.getTitle());

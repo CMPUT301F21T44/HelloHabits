@@ -11,7 +11,7 @@ import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
-    private static volatile ViewModelFactory INSTANCE;
+    private static volatile ViewModelFactory sInstance;
 
     private final HabitRepository mHabitRepository;
     private final HabitEventRepository mHabitEventRepository;
@@ -28,11 +28,11 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     public static ViewModelFactory getInstance() {
         synchronized (ViewModelFactory.class) {
-            if (INSTANCE == null) {
-                INSTANCE = new ViewModelFactory();
+            if (sInstance == null) {
+                sInstance = new ViewModelFactory();
             }
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     @NonNull

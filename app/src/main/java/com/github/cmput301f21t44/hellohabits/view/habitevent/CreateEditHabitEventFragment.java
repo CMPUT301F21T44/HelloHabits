@@ -55,12 +55,12 @@ public class CreateEditHabitEventFragment extends Fragment {
             mHabitEventViewModel.update(mHabitEvent.getId(),
                     mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
                     (updatedHabitEvent) -> {
-                        mHabitEventViewModel.select(updatedHabitEvent);
+                        mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
                         mNavController.navigate(R.id.viewHabitFragment);
                     },
                     (e) -> showErrorToast("Failed to update habit", e));
         } else {
-            String habitId = Objects.requireNonNull(mHabitViewModel.getSelected().getValue())
+            String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                     .getId();
             mHabitEventViewModel.insert(habitId, comment, () -> {
                 mNavController.navigate(R.id.viewHabitFragment);
@@ -94,7 +94,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mHabitEventViewModel.getSelected().observe(getViewLifecycleOwner(), habitEvent -> {
+        mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(), habitEvent -> {
             if (habitEvent == null) {
                 isEdit = false;
             } else {
@@ -104,7 +104,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                 binding.editTextComment.setText(habitEvent.getComment());
             }
             String habitTitle =
-                    Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getTitle();
+                    Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
             binding.habitTitle.setText(habitTitle);
         });
     }

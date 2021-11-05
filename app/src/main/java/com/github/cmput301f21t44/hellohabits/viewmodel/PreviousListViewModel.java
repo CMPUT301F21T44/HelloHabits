@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel;
 import com.github.cmput301f21t44.hellohabits.R;
 
 public class PreviousListViewModel extends ViewModel {
-    private final MutableLiveData<Integer> destId =
+    private final MutableLiveData<Integer> mDestinationId =
             new MutableLiveData<>(R.id.TodaysHabitsFragment);
 
-    public void select(int id) {
-        destId.setValue(id);
+    public LiveData<Integer> getDestinationId() {
+        return mDestinationId;
     }
 
-    public LiveData<Integer> getDestId() {
-        return destId;
+    public void setDestinationId(int id) {
+        mDestinationId.setValue(id);
     }
 }

@@ -36,7 +36,7 @@ public class ViewHabitFragment extends Fragment {
     private NavController mNavController;
     private HabitEventAdapter mHabitEventAdapter;
     private PreviousListViewModel mPreviousListViewModel;
-    private int previousListDestId;
+    private int mPreviousListDestId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,29 +46,18 @@ public class ViewHabitFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void initViewModels() {
         // attach the provider to activity instead of fragment so the fragments can share data
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
         mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
+
         //noinspection ConstantConditions
-        this.previousListDestId = mPreviousListViewModel.getDestId().getValue();
+        this.mPreviousListDestId = mPreviousListViewModel.getDestinationId().getValue();
+    }
 
-        mNavController = NavHostFragment.findNavController(this);
-
-        mHabitEventAdapter = HabitEventAdapter.newInstance(habitEvent -> {
-            mHabitEventViewModel.select(habitEvent);
-            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
-        }, habitEvent -> {
-            mHabitEventViewModel.select(habitEvent);
-            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
-        }, this::deleteHabitEvent);
-
-        binding.habitEventList.setAdapter(mHabitEventAdapter);
-        binding.habitEventList.setLayoutManager(new LinearLayoutManager(getContext()));
-
+    private void initListeners() {
         binding.buttonEditHabit.setOnClickListener(v -> mNavController
                 .navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));
 
@@ -76,25 +65,37 @@ public class ViewHabitFragment extends Fragment {
                 .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment));
 
         binding.buttonNewHabitEvent.setOnClickListener(v -> {
-            mHabitEventViewModel.select(null);
+            mHabitEventViewModel.setSelectedEvent(null);
             mNavController
                     .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
         });
 
+        binding.buttonDeleteHabit.setOnClickListener(this::createDeleteHabitDialog);
 
-        binding.buttonDeleteHabit.setOnClickListener(v ->
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Delete Habit")
-                        .setMessage("Are you sure you want to delete this habit?")
-                        .setIcon(R.drawable.ic_launcher_foreground)
-                        .setPositiveButton("YES", (dialog, b) -> deleteHabit())
-                        .setNegativeButton("NO", null).show()
-        );
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViewModels();
+
+        mNavController = NavHostFragment.findNavController(this);
+        mHabitEventAdapter = HabitEventAdapter.newInstance(habitEvent -> {
+            mHabitEventViewModel.setSelectedEvent(habitEvent);
+            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+        }, habitEvent -> {
+            mHabitEventViewModel.setSelectedEvent(habitEvent);
+            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+        }, this::deleteHabitEvent);
+
+        binding.habitEventList.setAdapter(mHabitEventAdapter);
+        binding.habitEventList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        initListeners();
     }
 
     private void deleteHabit() {
-        mHabitViewModel.delete(mHabitViewModel.getSelected().getValue(),
-                () -> mNavController.navigate(previousListDestId),
+        mHabitViewModel.delete(mHabitViewModel.getSelectedHabit().getValue(),
+                () -> mNavController.navigate(mPreviousListDestId),
                 e -> Toast.makeText(requireActivity(),
                         "Failed to delete habit: " + e.getMessage(),
                         Toast.LENGTH_SHORT).show());
@@ -103,7 +104,7 @@ public class ViewHabitFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mHabitViewModel.getSelected().observe(getViewLifecycleOwner(), habit -> {
+        mHabitViewModel.getSelectedHabit().observe(getViewLifecycleOwner(), habit -> {
             // update UI
             binding.viewTitle.setText(habit.getTitle());
             binding.viewReason.setText(habit.getReason());
@@ -137,10 +138,10 @@ public class ViewHabitFragment extends Fragment {
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        mNavController.navigate(previousListDestId);
+                        mNavController.navigate(mPreviousListDestId);
                     }
                 });
-        mPreviousListViewModel.getDestId().observe(this, id -> this.previousListDestId = id);
+        mPreviousListViewModel.getDestinationId().observe(this, id -> this.mPreviousListDestId = id);
     }
 
     @Override
@@ -159,6 +160,15 @@ public class ViewHabitFragment extends Fragment {
                                 e -> Toast.makeText(requireActivity(),
                                         "Failed to delete event: " + e.getMessage(),
                                         Toast.LENGTH_SHORT).show()))
+                .setNegativeButton("NO", null).show();
+    }
+
+    private void createDeleteHabitDialog(View v) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Habit")
+                .setMessage("Are you sure you want to delete this habit?")
+                .setIcon(R.drawable.ic_launcher_foreground)
+                .setPositiveButton("YES", (dialog, b) -> deleteHabit())
                 .setNegativeButton("NO", null).show();
     }
 }

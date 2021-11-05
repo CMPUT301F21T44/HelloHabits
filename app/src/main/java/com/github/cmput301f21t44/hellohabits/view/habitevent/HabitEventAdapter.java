@@ -17,9 +17,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter.ViewHolder> {
-    private OnItemClickListener<HabitEvent> viewListener;
-    private OnItemClickListener<HabitEvent> editListener;
-    private OnItemClickListener<HabitEvent> deleteListener;
+    private OnItemClickListener<HabitEvent> mViewListener;
+    private OnItemClickListener<HabitEvent> mEditListener;
+    private OnItemClickListener<HabitEvent> mDeleteListener;
 
 
     public HabitEventAdapter(@NonNull DiffUtil.ItemCallback<HabitEvent> diffCallback) {
@@ -30,9 +30,9 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
                                                 OnItemClickListener<HabitEvent> editListener,
                                                 OnItemClickListener<HabitEvent> deleteListener) {
         HabitEventAdapter adapter = new HabitEventAdapter(new HabitEventDiff());
-        adapter.viewListener = viewListener;
-        adapter.editListener = editListener;
-        adapter.deleteListener = deleteListener;
+        adapter.mViewListener = viewListener;
+        adapter.mEditListener = editListener;
+        adapter.mDeleteListener = deleteListener;
         return adapter;
     }
 
@@ -46,7 +46,7 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         HabitEvent current = getItem(position);
-        holder.bind(current, viewListener, editListener, deleteListener);
+        holder.bind(current, mViewListener, mEditListener, mDeleteListener);
     }
 
     public static class HabitEventDiff extends DiffUtil.ItemCallback<HabitEvent> {

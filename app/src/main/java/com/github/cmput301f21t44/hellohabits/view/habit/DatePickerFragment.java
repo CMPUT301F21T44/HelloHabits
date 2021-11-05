@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.time.ZoneId;
@@ -30,6 +31,7 @@ public class DatePickerFragment extends DialogFragment {
      * @param savedInstanceState a default Bundle
      * @return a new dialog to select a date based on today's date
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.systemDefault());

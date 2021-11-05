@@ -10,9 +10,22 @@ import androidx.fragment.app.DialogFragment;
 import com.github.cmput301f21t44.hellohabits.R;
 
 public class DaysOfWeekFragment extends DialogFragment {
-
-    private boolean[] mSelectedItems;
     OnConfirmCallback mConfirmCallback;
+    private boolean[] mSelectedItems;
+
+    /**
+     * This function returns a new instance of the days of week fragment
+     *
+     * @param days     a boolean array of days
+     * @param callback
+     * @return a new instance of the days of week fragment
+     */
+    public static DaysOfWeekFragment newInstance(boolean[] days, OnConfirmCallback callback) {
+        DaysOfWeekFragment newFragment = new DaysOfWeekFragment();
+        newFragment.mSelectedItems = days;
+        newFragment.mConfirmCallback = callback;
+        return newFragment;
+    }
 
     /**
      * This function create a new fragment of days of week for user to select days for habit event
@@ -41,20 +54,6 @@ public class DaysOfWeekFragment extends DialogFragment {
         builder.setNegativeButton("Cancel", null);
 
         return builder.create();
-    }
-
-    /**
-     * This function returns a new instance of the days of week fragment
-     *
-     * @param days     a boolean array of days
-     * @param callback
-     * @return a new instance of the days of week fragment
-     */
-    public static DaysOfWeekFragment newInstance(boolean[] days, OnConfirmCallback callback) {
-        DaysOfWeekFragment newFragment = new DaysOfWeekFragment();
-        newFragment.mSelectedItems = days;
-        newFragment.mConfirmCallback = callback;
-        return newFragment;
     }
 
     /**

@@ -32,7 +32,9 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**This function set the basic creation
+    /**
+     * This function set the basic creation
+     *
      * @param savedInstanceState a default Bundle
      */
     @Override

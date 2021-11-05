@@ -31,7 +31,6 @@ public class AllHabitsFragment extends Fragment {
     private NavController mNavController;
 
     /**
-     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -46,8 +45,7 @@ public class AllHabitsFragment extends Fragment {
     }
 
     /**
-     *
-     * @param view a default view
+     * @param view               a default view
      * @param savedInstanceState a default Bundle
      */
     @Override

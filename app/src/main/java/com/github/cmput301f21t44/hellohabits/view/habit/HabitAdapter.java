@@ -14,7 +14,11 @@ import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
-    private OnItemClickListener<Habit> listener;
+    public static int COLOUR_RED = Color.parseColor("#D12D2D");
+    public static int COLOUR_ORANGE = Color.parseColor("#EFB112");
+    public static int COLOUR_GREEN = Color.parseColor("#329548");
+
+    private OnItemClickListener<Habit> mOnClickListener;
 
     /**
      * @param diffCallback
@@ -29,7 +33,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
      */
     public static HabitAdapter newInstance(OnItemClickListener<Habit> listener) {
         HabitAdapter adapter = new HabitAdapter(new HabitDiff());
-        adapter.listener = listener;
+        adapter.mOnClickListener = listener;
         return adapter;
     }
 
@@ -53,7 +57,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Habit current = getItem(position);
-        holder.bind(current, listener);
+        holder.bind(current, mOnClickListener);
     }
 
     public static class HabitDiff extends DiffUtil.ItemCallback<Habit> {
@@ -107,11 +111,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             double consistency = Habit.getConsistency(habit);
 
             if (consistency < 0.5) {
-                mItemBinding.imageView.setColorFilter(Color.parseColor("#D12D2D"));
+                mItemBinding.imageView.setColorFilter(COLOUR_RED);
             } else if (consistency < 0.75) {
-                mItemBinding.imageView.setColorFilter(Color.parseColor("#EFB112"));
+                mItemBinding.imageView.setColorFilter(COLOUR_ORANGE);
             } else {
-                mItemBinding.imageView.setColorFilter(Color.parseColor("#329548"));
+                mItemBinding.imageView.setColorFilter(COLOUR_GREEN);
             }
 
             mItemBinding.getRoot().setOnClickListener(v -> listener.onItemClick(habit));

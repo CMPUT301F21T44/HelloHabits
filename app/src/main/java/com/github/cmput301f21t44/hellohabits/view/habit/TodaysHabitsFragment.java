@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -27,12 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodaysHabitsFragment extends Fragment {
-    private FragmentTodaysHabitsBinding binding;
+    private FragmentTodaysHabitsBinding mBinding;
     private HabitViewModel mHabitViewModel;
-    private HabitAdapter adapter;
+    private HabitAdapter mAdapter;
     private NavController mNavController;
     private PreviousListViewModel mPreviousListViewModel;
-    private FirebaseAuth mAuth;
+    private Authentication mAuth;
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -46,46 +46,55 @@ public class TodaysHabitsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentTodaysHabitsBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = FragmentTodaysHabitsBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     /**
+     * Navigates to login if there is no user
      *
+     * @return true if there's a user, false if not
+     */
+    private boolean requireUser() {
+        if (mAuth.getCurrentUser() == null) {
+            mNavController.navigate(R.id.loginFragment);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @param view
      * @param savedInstanceState
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-            return;
-        }
+        mAuth = new Authentication();
+        if (!requireUser()) return;
 
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
-        adapter = HabitAdapter.newInstance((habit) -> {
+        mAdapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
-            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
+            mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
         });
-        binding.habitRecyclerView.setAdapter(adapter);
-        binding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBinding.habitRecyclerView.setAdapter(mAdapter);
+        mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.buttonNewHabit.setOnClickListener(view1 -> {
-            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
+        mBinding.buttonNewHabit.setOnClickListener(view1 -> {
+            mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mHabitViewModel.select(null);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
         });
-        binding.viewAllHabits.setOnClickListener(view1 -> {
+        mBinding.viewAllHabits.setOnClickListener(view1 -> {
             mHabitViewModel.select(null);
-            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
+            mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
-        binding.social.setOnClickListener(v -> {
+        mBinding.social.setOnClickListener(v -> {
             mAuth.signOut();
             mNavController.navigate(R.id.loginFragment);
         });
@@ -97,10 +106,8 @@ public class TodaysHabitsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-            return;
-        }
+        if (!requireUser()) return;
+
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> todaysHabits = new ArrayList<>();
             ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
@@ -111,7 +118,7 @@ public class TodaysHabitsFragment extends Fragment {
                     todaysHabits.add(h);
                 }
             }
-            adapter.submitList(todaysHabits);
+            mAdapter.submitList(todaysHabits);
         });
     }
 
@@ -122,9 +129,7 @@ public class TodaysHabitsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-        }
+        requireUser();
     }
 
     /**
@@ -133,6 +138,6 @@ public class TodaysHabitsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 }

@@ -48,15 +48,19 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
 
 
     @Override
-    public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek) {
+    public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
+                       FirebaseTask.ThenFunction successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
         FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek);
-        getHabitCollectionRef().document(habit.getId()).set(FSHabit.getMap(habit));
+        getHabitCollectionRef().document(habit.getId()).set(FSHabit.getMap(habit))
+                .addOnSuccessListener(u -> successCallback.apply())
+                .addOnFailureListener(failCallback::apply);
     }
 
 
     private Task<Void> deleteHabitWithEvents(QuerySnapshot eventSnapshots, String habitId) {
         // delete event collections in a batch
-        WriteBatch batch = db.batch();
+        WriteBatch batch = mDb.batch();
         for (DocumentSnapshot d : eventSnapshots.getDocuments()) {
             batch.delete(d.getReference());
         }
@@ -65,34 +69,33 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
         return batch.commit();
     }
 
-    @Override
-    public void delete(Habit habit) {
-        getEventCollectionRef(habit.getId()).get()
-                .addOnSuccessListener(eventSnapshots ->
-                        deleteHabitWithEvents(eventSnapshots, habit.getId())
-                                .addOnSuccessListener(u -> {
+    private void deleteHabit(Habit habit, FirebaseTask.ThenFunction successCallback,
+                             FirebaseTask.CatchFunction failCallback) {
 
-
-                                })).addOnFailureListener(err -> {
-            // only delete
-            getHabitRef(habit.getId()).delete().addOnSuccessListener(u -> {
-
-            }).addOnFailureListener(e -> {
-            });
-
-        });
-
+        getHabitRef(habit.getId()).delete()
+                .addOnSuccessListener(u -> successCallback.apply())
+                .addOnFailureListener(failCallback::apply);
     }
 
     @Override
-    public Habit update(String id, String title, String reason, Instant dateStarted,
-                        boolean[] daysOfWeek) {
+    public void delete(Habit habit, FirebaseTask.ThenFunction successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
+
+        getEventCollectionRef(habit.getId()).get()
+                .addOnSuccessListener(eventSnapshots ->
+                        deleteHabitWithEvents(eventSnapshots, habit.getId())
+                                .addOnSuccessListener(u -> successCallback.apply()))
+                // only delete the habit (no sub-collections)
+                .addOnFailureListener(err -> deleteHabit(habit, successCallback, failCallback));
+    }
+
+    @Override
+    public void update(String id, String title, String reason, Instant dateStarted,
+                       boolean[] daysOfWeek, FirebaseTask.ResultFunction<Habit> successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
         FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek);
         getHabitRef(habit.getId()).update(FSHabit.getMap(habit))
-                .addOnSuccessListener(u -> {
-                }).addOnFailureListener(e -> {
-        });
-
-        return habit;
+                .addOnSuccessListener(u -> successCallback.apply(habit))
+                .addOnFailureListener(failCallback::apply);
     }
 }

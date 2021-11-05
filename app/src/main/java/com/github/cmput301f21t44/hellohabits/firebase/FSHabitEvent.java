@@ -13,11 +13,7 @@ public class FSHabitEvent implements HabitEvent {
     public static final String COLLECTION = "events";
     public static final String HABIT_ID = "habitId";
     public static final String DATE = "date";
-    public static final String DATE_EPOCH = "date.epochSecond";
-    public static final String DATE_NANO = "date.nano";
     public static final String COMMENT = "comment";
-    public static final String PHOTO_PATH = "photoPath";
-    public static final String LOCATION = "location";
 
     private final String id;
     private final String habitId;
@@ -52,10 +48,7 @@ public class FSHabitEvent implements HabitEvent {
     public static FSHabitEvent fromSnapshot(QueryDocumentSnapshot doc) {
         String id = doc.getId();
         String habitId = doc.getString(HABIT_ID);
-        Long epochSecond = doc.getLong(DATE_EPOCH);
-        Long nanoAdjustment = doc.getLong(DATE_NANO);
-        Instant date = (epochSecond != null && nanoAdjustment != null)
-                ? Instant.ofEpochSecond(epochSecond, nanoAdjustment) : null;
+        Instant date = FirestoreRepository.instantFromDoc(doc, DATE);
         String comment = doc.getString(COMMENT);
         return new FSHabitEvent(id, date, habitId, comment);
     }

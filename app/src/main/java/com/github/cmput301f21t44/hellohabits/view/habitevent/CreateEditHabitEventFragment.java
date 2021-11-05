@@ -48,28 +48,38 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    private void showErrorToast(String text, Exception error) {
+        Toast.makeText(requireActivity(), text + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * This function does the input validation for both construction of a new habit event and editing of an exiting habit event
      * If the input habit event comment is over 20 characters it will throw the warning
      * And it submits the updated/new habit event to the view model
      */
+
     private void submitHabitEvent() {
         String comment = binding.editTextComment.getText().toString();
         if (comment.length() > MAX_COMMENT_LEN) {
-            binding.editTextComment.setError(CreateEditHabitFragment.ERROR_MESSAGE);
+            binding.editTextComment.setError(CreateEditHabitFragment.TOO_LONG_ERROR_MESSAGE);
             binding.editTextComment.requestFocus();
             return;
         }
         if (isEdit) {
-            HabitEvent updatedHabitEvent = mHabitEventViewModel.update(mHabitEvent.getId(),
-                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment, null, null);
-            mHabitEventViewModel.select(updatedHabitEvent);
+            mHabitEventViewModel.update(mHabitEvent.getId(),
+                    mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
+                    (updatedHabitEvent) -> {
+                        mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
+                        mNavController.navigate(R.id.viewHabitFragment);
+                    },
+                    (e) -> showErrorToast("Failed to update habit", e));
         } else {
-            String habitId = Objects.requireNonNull(mHabitViewModel.getSelected().getValue())
+            String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                     .getId();
-            mHabitEventViewModel.insert(habitId, comment);
+            mHabitEventViewModel.insert(habitId, comment, () -> {
+                mNavController.navigate(R.id.viewHabitFragment);
+            }, e -> showErrorToast("Failed to add habit", e));
         }
-        mNavController.navigate(R.id.viewHabitFragment);
     }
 
     /**
@@ -108,7 +118,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mHabitEventViewModel.getSelected().observe(getViewLifecycleOwner(), habitEvent -> {
+        mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(), habitEvent -> {
             if (habitEvent == null) {
                 isEdit = false;
             } else {
@@ -118,7 +128,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                 binding.editTextComment.setText(habitEvent.getComment());
             }
             String habitTitle =
-                    Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getTitle();
+                    Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
             binding.habitTitle.setText(habitTitle);
         });
     }

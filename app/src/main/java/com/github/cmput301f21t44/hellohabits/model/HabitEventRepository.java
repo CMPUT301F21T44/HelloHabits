@@ -2,6 +2,8 @@ package com.github.cmput301f21t44.hellohabits.model;
 
 import androidx.lifecycle.LiveData;
 
+import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -12,14 +14,15 @@ public interface HabitEventRepository {
      * @param habitId a string of habit ID
      * @param comment a string of habit comment
      */
-    void insert(String habitId, String comment);
+    void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
+                FirebaseTask.CatchFunction failCallback);
 
     /**
      * This function deletes the given habit event
      *
      * @param habitEvent a HabitEvent to be deleted
      */
-    void delete(HabitEvent habitEvent);
+    void delete(HabitEvent habitEvent, FirebaseTask.CatchFunction failCallback);
 
     /**
      * this function returns a HabitEvent list by a habit ID
@@ -29,5 +32,7 @@ public interface HabitEventRepository {
      */
     LiveData<List<HabitEvent>> getEventsByHabitId(String habitId);
 
-    HabitEvent update(String id, String habitId, Instant date, String comment, String photoPath, Location location);
+    void update(String id, String habitId, Instant date, String comment,
+                FirebaseTask.ResultFunction<HabitEvent> successCallback,
+                FirebaseTask.CatchFunction failCallback);
 }

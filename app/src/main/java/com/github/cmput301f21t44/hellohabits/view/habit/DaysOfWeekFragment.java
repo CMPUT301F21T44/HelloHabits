@@ -12,7 +12,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 public class DaysOfWeekFragment extends DialogFragment {
 
     private boolean[] mSelectedItems;
-    OnConfirmCallback callback;
+    OnConfirmCallback mConfirmCallback;
 
     /**
      * This function create a new fragment of days of week for user to select days for habit event
@@ -35,7 +35,8 @@ public class DaysOfWeekFragment extends DialogFragment {
                     }
                 });
 
-        builder.setPositiveButton("OK", (dialog, which) -> callback.onConfirm(mSelectedItems));
+        builder.setPositiveButton("OK", (dialog, which) ->
+                mConfirmCallback.onConfirm(mSelectedItems));
 
         builder.setNegativeButton("Cancel", null);
 
@@ -52,7 +53,7 @@ public class DaysOfWeekFragment extends DialogFragment {
     public static DaysOfWeekFragment newInstance(boolean[] days, OnConfirmCallback callback) {
         DaysOfWeekFragment newFragment = new DaysOfWeekFragment();
         newFragment.mSelectedItems = days;
-        newFragment.callback = callback;
+        newFragment.mConfirmCallback = callback;
         return newFragment;
     }
 

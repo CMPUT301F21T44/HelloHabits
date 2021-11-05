@@ -3,13 +3,13 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Authentication {
-    private static final String TAG = "Authentication";
     private final FirebaseAuth mAuth;
     private final FirebaseFirestore mDb;
 
@@ -64,5 +64,9 @@ public class Authentication {
      */
     public void signOut() {
         mAuth.signOut();
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return mAuth.getCurrentUser();
     }
 }

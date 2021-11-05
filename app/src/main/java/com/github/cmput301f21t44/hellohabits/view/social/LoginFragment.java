@@ -23,7 +23,7 @@ public class LoginFragment extends Fragment {
     private Authentication auth;
     private FirebaseAuth mAuth;
     private NavController mNav;
-    private boolean isLogin;
+    private boolean mIsLogin;
 
     /**
      *
@@ -68,10 +68,10 @@ public class LoginFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mNav = NavHostFragment.findNavController(this);
         auth = new Authentication();
-        isLogin = true;
+        mIsLogin = true;
         toggleNameFieldVisibility();
         binding.submit.setOnClickListener(v -> {
-            if (isLogin) {
+            if (mIsLogin) {
                 login();
             } else {
                 signup();
@@ -84,15 +84,15 @@ public class LoginFragment extends Fragment {
      * This function sets the visibility of name field by whether the user is login or sign-up
      */
     private void toggleNameFieldVisibility() {
-        binding.name.setVisibility(isLogin ? View.INVISIBLE : View.VISIBLE);
+        binding.name.setVisibility(mIsLogin ? View.INVISIBLE : View.VISIBLE);
     }
 
     /**
      * This function display proper message according to user's login or sign-up condition
      */
     private void toggleFunction() {
-        isLogin = !isLogin;
-        if (isLogin) {
+        mIsLogin = !mIsLogin;
+        if (mIsLogin) {
             binding.toggle.setText(R.string.action_register_short);
             binding.submit.setText(R.string.action_sign_in_short);
         } else {

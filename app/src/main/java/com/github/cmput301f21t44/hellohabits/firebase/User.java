@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.firestore;
+package com.github.cmput301f21t44.hellohabits.firebase;
 
 public class User {
     public static final String COLLECTION = "users";

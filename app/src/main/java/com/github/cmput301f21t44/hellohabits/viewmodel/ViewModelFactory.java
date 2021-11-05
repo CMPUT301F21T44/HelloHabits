@@ -5,7 +5,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.github.cmput301f21t44.hellohabits.firestore.FirestoreRepository;
+import com.github.cmput301f21t44.hellohabits.firebase.FirestoreEventRepository;
+import com.github.cmput301f21t44.hellohabits.firebase.FirestoreHabitRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
@@ -16,9 +17,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final HabitEventRepository mHabitEventRepository;
 
     private ViewModelFactory() {
-        FirestoreRepository repo = new FirestoreRepository();
-        mHabitRepository = repo;
-        mHabitEventRepository = repo;
+        mHabitRepository = new FirestoreHabitRepository();
+        mHabitEventRepository = new FirestoreEventRepository();
     }
 
     public static ViewModelProvider getProvider(FragmentActivity activity) {

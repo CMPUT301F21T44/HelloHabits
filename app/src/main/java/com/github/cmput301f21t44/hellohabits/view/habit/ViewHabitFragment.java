@@ -51,6 +51,7 @@ public class ViewHabitFragment extends Fragment {
         mHabitViewModel = provider.get(HabitViewModel.class);
         mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
+        //noinspection ConstantConditions
         this.previousListDestId = mPreviousListViewModel.getDestId().getValue();
 
         mNavController = NavHostFragment.findNavController(this);

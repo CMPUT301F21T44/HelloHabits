@@ -56,6 +56,7 @@ public class AllHabitsFragment extends Fragment {
 
         binding.buttonNewHabit.setOnClickListener(view1 -> {
             mHabitViewModel.select(null);
+            mPreviousListViewModel.select(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_newHabitFragment);
         });
     }

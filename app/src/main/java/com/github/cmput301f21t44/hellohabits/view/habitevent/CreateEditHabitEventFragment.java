@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -66,10 +67,19 @@ public class CreateEditHabitEventFragment extends Fragment {
         mNavController = NavHostFragment.findNavController(this);
 
         binding.buttonAddHabitEvent.setOnClickListener(v -> submitHabitEvent());
+        binding.buttonAddLocation.setOnClickListener(v -> getLocation());
 
-        binding.buttonBack.setOnClickListener(v ->
-                mNavController
-                        .navigate(R.id.action_createEditHabitEventFragment_to_viewHabitFragment));
+        binding.buttonAddPhoto.setOnClickListener(v -> getPhoto());
+    }
+
+
+    private void getLocation() {
+        Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void getPhoto() {
+        Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -82,6 +92,9 @@ public class CreateEditHabitEventFragment extends Fragment {
                 isEdit = true;
                 // update UI
                 mHabitEvent = habitEvent;
+                String habitTitle =
+                        Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getTitle();
+                binding.habitTitle.setText(habitTitle);
                 binding.editTextComment.setText(habitEvent.getComment());
             }
         });

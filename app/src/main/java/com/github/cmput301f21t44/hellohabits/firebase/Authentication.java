@@ -1,11 +1,8 @@
-package com.github.cmput301f21t44.hellohabits.auth;
-
-import android.util.Log;
+package com.github.cmput301f21t44.hellohabits.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -25,21 +22,18 @@ public class Authentication {
         this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
     }
 
-    public void signup(String name, String email, String password) {
+    public void signup(String name, String email, String password,
+                       FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
             Map<String, Object> user = new HashMap<>();
             user.put("name", name);
-            mDb.collection("users").document(email).set(user).addOnSuccessListener(u ->
-                    Log.d(TAG, "User " + name + " successfully created"));
-        });
+            mDb.collection("users").document(email).set(user)
+                    .addOnSuccessListener(u -> successCallback.apply());
+        }).addOnFailureListener(failCallback::apply);
     }
 
     public Task<AuthResult> signIn(String email, String password) {
         return mAuth.signInWithEmailAndPassword(email, password);
-    }
-
-    public FirebaseUser getUser() {
-        return mAuth.getCurrentUser();
     }
 
     public void signOut() {

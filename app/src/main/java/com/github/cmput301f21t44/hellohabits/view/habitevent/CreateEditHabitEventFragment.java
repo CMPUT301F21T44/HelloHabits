@@ -92,11 +92,11 @@ public class CreateEditHabitEventFragment extends Fragment {
                 isEdit = true;
                 // update UI
                 mHabitEvent = habitEvent;
-                String habitTitle =
-                        Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getTitle();
-                binding.habitTitle.setText(habitTitle);
                 binding.editTextComment.setText(habitEvent.getComment());
             }
+            String habitTitle =
+                    Objects.requireNonNull(mHabitViewModel.getSelected().getValue()).getTitle();
+            binding.habitTitle.setText(habitTitle);
         });
     }
 

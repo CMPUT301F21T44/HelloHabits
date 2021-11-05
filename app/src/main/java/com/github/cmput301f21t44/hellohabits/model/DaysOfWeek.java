@@ -2,6 +2,9 @@ package com.github.cmput301f21t44.hellohabits.model;
 
 import androidx.annotation.NonNull;
 
+/**
+ * class to store the days of week for habits
+ */
 public final class DaysOfWeek {
     public static final String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 

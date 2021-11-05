@@ -7,6 +7,9 @@ import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * interface to implement habit repository functions
+ */
 public interface HabitRepository {
     /**
      * this function return a list of all habits

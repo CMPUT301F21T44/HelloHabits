@@ -29,6 +29,9 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * fragment class for viewing a habits
+ */
 public class ViewHabitFragment extends Fragment {
     private FragmentViewHabitBinding binding;
     private HabitViewModel mHabitViewModel;

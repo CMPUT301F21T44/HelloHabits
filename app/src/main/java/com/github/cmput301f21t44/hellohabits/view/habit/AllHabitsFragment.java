@@ -23,6 +23,9 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fragment class for viewing all habits
+ */
 public class AllHabitsFragment extends Fragment {
     private FragmentAllHabitsBinding mBinding;
     private HabitViewModel mHabitViewModel;

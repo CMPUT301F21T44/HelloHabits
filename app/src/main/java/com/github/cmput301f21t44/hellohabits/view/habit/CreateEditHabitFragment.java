@@ -26,6 +26,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * fragment class for cretaing/editing fragment
+ */
 public class CreateEditHabitFragment extends Fragment {
     public static final String TOO_LONG_ERROR_MESSAGE = "Input is too long";
     public static final String EMPTY_ERROR_MESSAGE = "Input cannot be empty";

@@ -26,6 +26,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fragment class for viewing today's habits
+ */
 public class TodaysHabitsFragment extends Fragment {
     private FragmentTodaysHabitsBinding mBinding;
     private HabitViewModel mHabitViewModel;

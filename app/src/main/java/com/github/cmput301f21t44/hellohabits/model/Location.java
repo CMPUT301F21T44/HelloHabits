@@ -1,5 +1,8 @@
 package com.github.cmput301f21t44.hellohabits.model;
 
+/**
+ * interface to implement get location functions
+ */
 public interface Location {
     double getLongitude();
 

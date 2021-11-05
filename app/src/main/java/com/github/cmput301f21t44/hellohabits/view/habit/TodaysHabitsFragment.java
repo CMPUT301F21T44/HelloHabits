@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -32,7 +32,7 @@ public class TodaysHabitsFragment extends Fragment {
     private HabitAdapter adapter;
     private NavController mNavController;
     private PreviousListViewModel mPreviousListViewModel;
-    private FirebaseAuth mAuth;
+    private Authentication mAuth;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,15 +42,24 @@ public class TodaysHabitsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Navigates to login if there is no user
+     *
+     * @return true if there's a user, false if not
+     */
+    private boolean requireUser() {
+        if (mAuth.getCurrentUser() == null) {
+            mNavController.navigate(R.id.loginFragment);
+            return false;
+        }
+        return true;
+    }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-            return;
-        }
+        mAuth = new Authentication();
+        if (!requireUser()) return;
 
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mHabitViewModel = provider.get(HabitViewModel.class);
@@ -82,10 +91,8 @@ public class TodaysHabitsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-            return;
-        }
+        if (!requireUser()) return;
+
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> todaysHabits = new ArrayList<>();
             ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
@@ -103,9 +110,7 @@ public class TodaysHabitsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
-        }
+        requireUser();
     }
 
     @Override

@@ -9,28 +9,37 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class FirestoreRepository {
-    protected final FirebaseFirestore db;
-    protected final FirebaseAuth auth;
-    protected FirebaseUser user;
+    protected final FirebaseFirestore mDb;
+    protected final FirebaseAuth mAuth;
+    protected FirebaseUser mUser;
 
     protected FirestoreRepository(FirebaseFirestore db, FirebaseAuth auth) {
-        this.db = db;
-        this.auth = auth;
+        this.mDb = db;
+        this.mAuth = auth;
+    }
+
+    public static Instant instantFromDoc(DocumentSnapshot doc, String field) {
+        Long epochSeconds = doc.getLong(field + ".epochSecond");
+        Long nanoAdjustment = doc.getLong(field + ".nano");
+        return (epochSeconds != null && nanoAdjustment != null) ?
+                Instant.ofEpochSecond(epochSeconds, nanoAdjustment) : null;
     }
 
     protected FirebaseUser getUser() {
-        if (user == null) {
-            user = auth.getCurrentUser();
+        if (mUser == null) {
+            mUser = mAuth.getCurrentUser();
         }
-        return user;
+        return mUser;
     }
 
     @NonNull
@@ -43,7 +52,7 @@ public abstract class FirestoreRepository {
     }
 
     protected CollectionReference getHabitCollectionRef() {
-        return db.collection(User.COLLECTION).document(getEmail()).collection(FSHabit.COLLECTION);
+        return mDb.collection(User.COLLECTION).document(getEmail()).collection(FSHabit.COLLECTION);
     }
 
     protected DocumentReference getHabitRef(String habitId) {

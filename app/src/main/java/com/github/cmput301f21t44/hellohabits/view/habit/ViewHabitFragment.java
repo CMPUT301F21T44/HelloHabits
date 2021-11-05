@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
 import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventAdapter;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
@@ -62,13 +64,7 @@ public class ViewHabitFragment extends Fragment {
         }, habitEvent -> {
             mHabitEventViewModel.select(habitEvent);
             mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
-        }, habitEvent -> new AlertDialog.Builder(requireContext())
-                .setTitle("Delete Habit Event")
-                .setMessage("Are you sure you want to delete this habit event?")
-                .setIcon(R.drawable.ic_baseline_warning_24)
-                .setPositiveButton("YES",
-                        (dialog, b) -> mHabitEventViewModel.delete(habitEvent))
-                .setNegativeButton("NO", null).show());
+        }, this::deleteHabitEvent);
 
         binding.habitEventList.setAdapter(mHabitEventAdapter);
         binding.habitEventList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -97,8 +93,11 @@ public class ViewHabitFragment extends Fragment {
     }
 
     private void deleteHabit() {
-        mHabitViewModel.delete(mHabitViewModel.getSelected().getValue());
-        mNavController.navigate(previousListDestId);
+        mHabitViewModel.delete(mHabitViewModel.getSelected().getValue(),
+                () -> mNavController.navigate(previousListDestId),
+                e -> Toast.makeText(requireActivity(),
+                        "Failed to delete habit: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -120,7 +119,7 @@ public class ViewHabitFragment extends Fragment {
 
             binding.viewConsistency.setText(initialConsistency);
 
-            mHabitEventViewModel.getHabitEventsById(habit.getId()).observe(getViewLifecycleOwner(),
+            mHabitEventViewModel.getHabitEventsById(habit.getId()).observe(this,
                     eventList -> {
                         final String consistency = Integer.valueOf((int) (Habit
                                 .getConsistency(habit, eventList) * 100)).toString() + " %";
@@ -134,7 +133,7 @@ public class ViewHabitFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+        requireActivity().getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
@@ -148,5 +147,18 @@ public class ViewHabitFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void deleteHabitEvent(HabitEvent habitEvent) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Habit Event")
+                .setMessage("Are you sure you want to delete this habit event?")
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setPositiveButton("YES",
+                        (dialog, b) -> mHabitEventViewModel.delete(habitEvent,
+                                e -> Toast.makeText(requireActivity(),
+                                        "Failed to delete event: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show()))
+                .setNegativeButton("NO", null).show();
     }
 }

@@ -31,6 +31,14 @@ public class CreateEditHabitEventFragment extends Fragment {
     private boolean isEdit;
     private NavController mNavController;
 
+    /**
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -40,6 +48,11 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    /**
+     * This function does the input validation for both construction of a new habit event and editing of an exiting habit event
+     * If the input habit event comment is over 20 characters it will throw the warning
+     * And it submits the updated/new habit event to the view model
+     */
     private void submitHabitEvent() {
         String comment = binding.editTextComment.getText().toString();
         if (comment.length() > MAX_COMMENT_LEN) {
@@ -59,6 +72,13 @@ public class CreateEditHabitEventFragment extends Fragment {
         mNavController.navigate(R.id.viewHabitFragment);
     }
 
+    /**
+     * This function set up the ViewModel of Habit and habit event
+     * And it sets the OnClickListener for buttons in this page
+     *
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
@@ -72,16 +92,19 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.buttonAddPhoto.setOnClickListener(v -> getPhoto());
     }
 
-
     private void getLocation() {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
 
     }
 
+
     private void getPhoto() {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This function sets the boolean isEdit value: true for edited habit event,false for new habit event
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -100,6 +123,9 @@ public class CreateEditHabitEventFragment extends Fragment {
         });
     }
 
+    /**
+     * This function close the current function and go to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

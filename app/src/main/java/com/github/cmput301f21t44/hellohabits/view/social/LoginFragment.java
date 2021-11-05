@@ -25,15 +25,29 @@ public class LoginFragment extends Fragment {
     private NavController mNav;
     private boolean isLogin;
 
+    /**
+     *
+     */
     public LoginFragment() {
         // Required empty public constructor
     }
 
+    /**This function set the basic creation
+     * @param savedInstanceState a default Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +55,13 @@ public class LoginFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * This function handle the login and sign-up
+     * If the input has already in fire store do login,else go sign-up
+     *
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -59,10 +80,16 @@ public class LoginFragment extends Fragment {
         binding.toggle.setOnClickListener(v -> toggleFunction());
     }
 
+    /**
+     * This function sets the visibility of name field by whether the user is login or sign-up
+     */
     private void toggleNameFieldVisibility() {
         binding.name.setVisibility(isLogin ? View.INVISIBLE : View.VISIBLE);
     }
 
+    /**
+     * This function display proper message according to user's login or sign-up condition
+     */
     private void toggleFunction() {
         isLogin = !isLogin;
         if (isLogin) {
@@ -75,6 +102,9 @@ public class LoginFragment extends Fragment {
         toggleNameFieldVisibility();
     }
 
+    /**
+     * This function handles the login event
+     */
     private void login() {
         if (InputValidator.hasEmptyInput(binding.email, binding.password)) {
             showErrorToast("Failed to sign in", new Exception("There is an empty field"));
@@ -88,6 +118,9 @@ public class LoginFragment extends Fragment {
                 .addOnFailureListener(e -> showErrorToast("Failed to sign in", e));
     }
 
+    /**
+     * This function handles the sign-up event
+     */
     private void signup() {
         if (InputValidator.hasEmptyInput(binding.name, binding.email, binding.password)) {
             showErrorToast("Failed to sign up", new Exception("There is an empty field"));
@@ -101,6 +134,13 @@ public class LoginFragment extends Fragment {
                 e -> showErrorToast("Failed to sign up", e));
     }
 
+    /**
+     * This function validates the input message
+     * If the input message is greater than 50 characters, raise the warning message
+     *
+     * @param text
+     * @param e
+     */
     private void showErrorToast(String text, Exception e) {
         String message = text + ": " + e.getLocalizedMessage();
         int duration = message.length() > LONG_MESSAGE_THRESHOLD
@@ -108,6 +148,9 @@ public class LoginFragment extends Fragment {
         Toast.makeText(requireContext(), message, duration).show();
     }
 
+    /**
+     * This function handle the back button event when the fragment is on resume
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -117,6 +160,9 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * This function close the current page and return to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -34,6 +34,14 @@ public class TodaysHabitsFragment extends Fragment {
     private PreviousListViewModel mPreviousListViewModel;
     private FirebaseAuth mAuth;
 
+    /**
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -42,7 +50,11 @@ public class TodaysHabitsFragment extends Fragment {
         return binding.getRoot();
     }
 
-
+    /**
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
@@ -79,6 +91,9 @@ public class TodaysHabitsFragment extends Fragment {
         });
     }
 
+    /**
+     * This function list all the habits that should be done today
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -100,6 +115,10 @@ public class TodaysHabitsFragment extends Fragment {
         });
     }
 
+    /**
+     * This function keeps checking the user while in this page
+     * If the user is null,go to login page
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -108,6 +127,9 @@ public class TodaysHabitsFragment extends Fragment {
         }
     }
 
+    /**
+     * This function close the current function and go to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

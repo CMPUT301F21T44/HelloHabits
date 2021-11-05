@@ -14,6 +14,12 @@ public class DaysOfWeekFragment extends DialogFragment {
     private boolean[] mSelectedItems;
     OnConfirmCallback callback;
 
+    /**
+     * This function create a new fragment of days of week for user to select days for habit event
+     *
+     * @param savedInstanceState a default Bundle
+     * @return the built up days of week fragment
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,6 +42,13 @@ public class DaysOfWeekFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * This function returns a new instance of the days of week fragment
+     *
+     * @param days     a boolean array of days
+     * @param callback
+     * @return a new instance of the days of week fragment
+     */
     public static DaysOfWeekFragment newInstance(boolean[] days, OnConfirmCallback callback) {
         DaysOfWeekFragment newFragment = new DaysOfWeekFragment();
         newFragment.mSelectedItems = days;
@@ -43,6 +56,9 @@ public class DaysOfWeekFragment extends DialogFragment {
         return newFragment;
     }
 
+    /**
+     *
+     */
     public interface OnConfirmCallback {
         void onConfirm(boolean[] days);
     }

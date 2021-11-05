@@ -36,6 +36,14 @@ public class ViewHabitFragment extends Fragment {
     private PreviousListViewModel mPreviousListViewModel;
     private int previousListDestId;
 
+    /**
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -44,6 +52,14 @@ public class ViewHabitFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * This function setup the habitevent adapter
+     * And set the jump-out confirmation dialog warning user when a user want to delete a habit event
+     * And set OnClickListeners for the buttons in this page
+     *
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // attach the provider to activity instead of fragment so the fragments can share data
@@ -96,11 +112,17 @@ public class ViewHabitFragment extends Fragment {
         );
     }
 
+    /**
+     * This function remove a selected habit from the habit list and jump back to last page
+     */
     private void deleteHabit() {
         mHabitViewModel.delete(mHabitViewModel.getSelected().getValue());
         mNavController.navigate(previousListDestId);
     }
 
+    /**
+     * This function write the details of a habit to screen for user to view
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -131,6 +153,9 @@ public class ViewHabitFragment extends Fragment {
         });
     }
 
+    /**
+     * This function handle the back arror event while user in this page
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -144,6 +169,9 @@ public class ViewHabitFragment extends Fragment {
         mPreviousListViewModel.getDestId().observe(this, id -> this.previousListDestId = id);
     }
 
+    /**
+     * This function close the current function and go to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -50,7 +50,8 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         public boolean areContentsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
             return oldItem.getReason().equals(newItem.getReason())
                     && oldItem.getTitle().equals(newItem.getTitle())
-                    && oldItem.getDateStarted().equals(newItem.getDateStarted());
+                    && oldItem.getDateStarted().equals(newItem.getDateStarted())
+                    && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);
         }
     }
 
@@ -67,7 +68,6 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             mItemBinding.reasonView.setText(habit.getReason());
             // check level of consistency
             double consistency = Habit.getConsistency(habit);
-
 
             if (consistency < 0.5) {
                 mItemBinding.imageView.setColorFilter(Color.parseColor("#D12D2D"));

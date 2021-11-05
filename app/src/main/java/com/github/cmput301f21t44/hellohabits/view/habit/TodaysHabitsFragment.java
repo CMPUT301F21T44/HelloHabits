@@ -57,6 +57,7 @@ public class TodaysHabitsFragment extends Fragment {
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         adapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.select(habit);
+            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
         });
         binding.habitRecyclerView.setAdapter(adapter);
@@ -69,6 +70,7 @@ public class TodaysHabitsFragment extends Fragment {
         });
         binding.viewAllHabits.setOnClickListener(view1 -> {
             mHabitViewModel.select(null);
+            mPreviousListViewModel.select(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
         binding.social.setOnClickListener(v -> mAuth.signOut());

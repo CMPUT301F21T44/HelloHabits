@@ -17,7 +17,8 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
     }
 
     @Override
-    public void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback) {
+    public void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
+                       FirebaseTask.CatchFunction failCallback) {
         final FSHabitEvent event = new FSHabitEvent(Instant.now(), habitId, comment);
         getEventRef(event.getId(), habitId).set(FSHabitEvent.getMap(event))
                 .addOnSuccessListener(u -> successCallback.apply())

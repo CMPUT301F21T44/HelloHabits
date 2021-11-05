@@ -14,8 +14,7 @@ import java.util.List;
 public class HabitViewModel extends ViewModel {
     private final HabitRepository mRepository;
     private final LiveData<List<Habit>> mAllHabits;
-
-    private final MutableLiveData<Habit> selected = new MutableLiveData<>();
+    private final MutableLiveData<Habit> mSelectedHabit = new MutableLiveData<>();
 
     public HabitViewModel(HabitRepository habitRepository) {
         mRepository = habitRepository;
@@ -23,11 +22,11 @@ public class HabitViewModel extends ViewModel {
     }
 
     public void select(Habit habit) {
-        selected.setValue(habit);
+        mSelectedHabit.setValue(habit);
     }
 
-    public LiveData<Habit> getSelected() {
-        return selected;
+    public LiveData<Habit> getSelectedHabit() {
+        return mSelectedHabit;
     }
 
     public LiveData<List<Habit>> getAllHabits() {

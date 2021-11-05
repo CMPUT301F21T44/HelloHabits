@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HabitEventViewModel extends ViewModel {
     private final HabitEventRepository mRepository;
-    private final MutableLiveData<HabitEvent> selected = new MutableLiveData<>();
+    private final MutableLiveData<HabitEvent> mSelectedEvent = new MutableLiveData<>();
 
     public HabitEventViewModel(HabitEventRepository habitEventRepository) {
         mRepository = habitEventRepository;
@@ -38,11 +38,11 @@ public class HabitEventViewModel extends ViewModel {
         mRepository.delete(habitEvent, failCallback);
     }
 
-    public void select(HabitEvent habit) {
-        selected.setValue(habit);
+    public LiveData<HabitEvent> getSelectedEvent() {
+        return mSelectedEvent;
     }
 
-    public LiveData<HabitEvent> getSelected() {
-        return selected;
+    public void setSelectedEvent(HabitEvent habit) {
+        mSelectedEvent.setValue(habit);
     }
 }

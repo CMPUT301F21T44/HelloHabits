@@ -16,3 +16,4 @@
 .cxx
 local.properties
 google-services.json
+*-debug.log

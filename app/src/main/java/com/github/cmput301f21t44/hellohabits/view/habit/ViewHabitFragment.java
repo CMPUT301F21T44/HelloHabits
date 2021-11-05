@@ -38,6 +38,14 @@ public class ViewHabitFragment extends Fragment {
     private PreviousListViewModel mPreviousListViewModel;
     private int mPreviousListDestId;
 
+    /**
+     * When the view is created, connect the layout to the class using binding
+     *
+     * @param inflater           a default LayoutInflater
+     * @param container          a default ViewGroup
+     * @param savedInstanceState a default Bundle
+     * @return a path representing the root component of the corresponding layout
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -74,6 +82,14 @@ public class ViewHabitFragment extends Fragment {
 
     }
 
+    /**
+     * This function setup the HabitEvent adapter
+     * And set the jump-out confirmation dialog warning user when a user want to delete a habit event
+     * And set OnClickListeners for the buttons in this page
+     *
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewModels();
@@ -93,6 +109,9 @@ public class ViewHabitFragment extends Fragment {
         initListeners();
     }
 
+    /**
+     * This function remove a selected habit from the habit list and jump back to last page
+     */
     private void deleteHabit() {
         mHabitViewModel.delete(mHabitViewModel.getSelectedHabit().getValue(),
                 () -> mNavController.navigate(mPreviousListDestId),
@@ -101,6 +120,9 @@ public class ViewHabitFragment extends Fragment {
                         Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * This function write the details of a habit to screen for user to view
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -131,6 +153,9 @@ public class ViewHabitFragment extends Fragment {
         });
     }
 
+    /**
+     * This function handle the back error event while user in this page
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -144,6 +169,9 @@ public class ViewHabitFragment extends Fragment {
         mPreviousListViewModel.getDestinationId().observe(this, id -> this.mPreviousListDestId = id);
     }
 
+    /**
+     * This function close the current function and go to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

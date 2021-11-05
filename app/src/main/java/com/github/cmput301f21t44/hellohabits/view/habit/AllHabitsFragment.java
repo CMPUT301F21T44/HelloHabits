@@ -30,6 +30,12 @@ public class AllHabitsFragment extends Fragment {
     private HabitAdapter mAdapter;
     private NavController mNavController;
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -38,6 +44,10 @@ public class AllHabitsFragment extends Fragment {
         return mBinding.getRoot();
     }
 
+    /**
+     * @param view               a default view
+     * @param savedInstanceState a default Bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,6 +71,9 @@ public class AllHabitsFragment extends Fragment {
         });
     }
 
+    /**
+     * This function get and list all the habits on screen when go to this fragment
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -71,6 +84,9 @@ public class AllHabitsFragment extends Fragment {
 
     }
 
+    /**
+     * This function handle the back button event when the fragment is on resume
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -83,6 +99,9 @@ public class AllHabitsFragment extends Fragment {
                 });
     }
 
+    /**
+     * This function close the current page and return to the last page
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

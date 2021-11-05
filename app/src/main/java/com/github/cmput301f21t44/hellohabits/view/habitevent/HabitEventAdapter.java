@@ -21,11 +21,19 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     private OnItemClickListener<HabitEvent> mEditListener;
     private OnItemClickListener<HabitEvent> mDeleteListener;
 
-
+    /**
+     * @param diffCallback
+     */
     public HabitEventAdapter(@NonNull DiffUtil.ItemCallback<HabitEvent> diffCallback) {
         super(diffCallback);
     }
 
+    /**
+     * @param viewListener
+     * @param editListener
+     * @param deleteListener
+     * @return
+     */
     public static HabitEventAdapter newInstance(OnItemClickListener<HabitEvent> viewListener,
                                                 OnItemClickListener<HabitEvent> editListener,
                                                 OnItemClickListener<HabitEvent> deleteListener) {
@@ -36,6 +44,11 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
         return adapter;
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,6 +56,10 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
+    /**
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         HabitEvent current = getItem(position);
@@ -50,11 +67,21 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     }
 
     public static class HabitEventDiff extends DiffUtil.ItemCallback<HabitEvent> {
+        /**
+         * @param oldItem
+         * @param newItem
+         * @return
+         */
         @Override
         public boolean areItemsTheSame(@NonNull HabitEvent oldItem, @NonNull HabitEvent newItem) {
             return oldItem.getId().equals(newItem.getId());
         }
 
+        /**
+         * @param oldItem
+         * @param newItem
+         * @return
+         */
         @Override
         public boolean areContentsTheSame(@NonNull HabitEvent oldItem,
                                           @NonNull HabitEvent newItem) {
@@ -67,11 +94,20 @@ public class HabitEventAdapter extends ListAdapter<HabitEvent, HabitEventAdapter
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ListHabitEventItemBinding mItemBinding;
 
+        /**
+         * @param binding
+         */
         public ViewHolder(ListHabitEventItemBinding binding) {
             super(binding.getRoot());
             this.mItemBinding = binding;
         }
 
+        /**
+         * @param habitEvent
+         * @param viewListener
+         * @param editListener
+         * @param deleteListener
+         */
         void bind(@NonNull final HabitEvent habitEvent,
                   final OnItemClickListener<HabitEvent> viewListener,
                   final OnItemClickListener<HabitEvent> editListener,

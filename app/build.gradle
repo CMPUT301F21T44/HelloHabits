@@ -60,15 +60,4 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
-
-    task javadoc(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    afterEvaluate {
-        javadoc.classpath += files(android.libraryVariants.collect { variant ->
-            variant.javaCompileProvider.get().classpath.files
-        })
-    }
 }

@@ -32,12 +32,21 @@ public class HabitViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
+    /**
+     * Mock HabitRepository object to be injected to HabitViewModel
+     */
     @Mock
-    HabitRepository habitRepository;
+    HabitRepository mockHabitRepo;
 
+    /**
+     * LiveData stub to be returned by HabitRepository.getAllHabits
+     */
     @Mock
-    LiveData<List<Habit>> mockHabits;
+    LiveData<List<Habit>> habitListStub;
 
+    /**
+     * Argument captors
+     */
     @Captor
     ArgumentCaptor<String> nameCaptor;
     @Captor
@@ -51,22 +60,27 @@ public class HabitViewModelTest {
     @Captor
     ArgumentCaptor<FirebaseTask.CatchFunction> failCallbackCaptor;
 
+    /**
+     * HabitViewModel, the class being tested
+     */
     private HabitViewModel viewModel;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(habitRepository.getAllHabits()).thenReturn(mockHabits);
-        viewModel = new HabitViewModel(habitRepository);
+        // Provide stub value for getAllHabits
+        when(mockHabitRepo.getAllHabits()).thenReturn(habitListStub);
+        viewModel = new HabitViewModel(mockHabitRepo);
     }
 
     @Test
-    public void testGetHabits() {
-        assertEquals(mockHabits, viewModel.getAllHabits());
+    public void test_getAllHabits() {
+        // Verify that getAllHabits returns the stub
+        assertEquals(habitListStub, viewModel.getAllHabits());
     }
 
     @Test
-    public void testInsert() {
+    public void test_insert() {
         // Initialize method parameters
         String name = "Test Title";
         String reason = "Test Reason";
@@ -81,7 +95,7 @@ public class HabitViewModelTest {
         viewModel.insert(name, reason, dateStarted, daysOfWeek, successCallback, failCallback);
 
         // Capture values passed to the mock object
-        verify(habitRepository, times(1)).insert(nameCaptor.capture(), reasonCaptor.capture(),
+        verify(mockHabitRepo, times(1)).insert(nameCaptor.capture(), reasonCaptor.capture(),
                 dateStartedCaptor.capture(), daysOfWeekCaptor.capture(),
                 successCallbackCaptor.capture(), failCallbackCaptor.capture());
 

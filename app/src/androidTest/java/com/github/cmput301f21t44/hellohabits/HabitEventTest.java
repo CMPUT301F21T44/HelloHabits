@@ -54,7 +54,7 @@ public class HabitEventTest {
     @BeforeClass
     public static void setup() {
         final FSHabit habit = new FSHabit(UUID.randomUUID().toString(), HabitTest.HABIT_TITLE,
-                HabitTest.HABIT_REASON, Instant.now(), DaysOfWeek.emptyArray());
+                HabitTest.HABIT_REASON, Instant.now(), DaysOfWeek.emptyArray(), true);
         TestUtil.initEmulators(sAuth, sDb);
         sAuth.signOut();
         TestUtil.login(sAuth);

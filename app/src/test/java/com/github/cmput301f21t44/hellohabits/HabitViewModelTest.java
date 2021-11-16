@@ -56,6 +56,8 @@ public class HabitViewModelTest {
     @Captor
     ArgumentCaptor<boolean[]> daysOfWeekCaptor;
     @Captor
+    ArgumentCaptor<Boolean> isPrivateCaptor;
+    @Captor
     ArgumentCaptor<FirebaseTask.ThenFunction> successCallbackCaptor;
     @Captor
     ArgumentCaptor<FirebaseTask.CatchFunction> failCallbackCaptor;
@@ -92,11 +94,12 @@ public class HabitViewModelTest {
         };
 
         // Call method to test
-        viewModel.insert(name, reason, dateStarted, daysOfWeek, successCallback, failCallback);
+        viewModel.insert(name, reason, dateStarted, daysOfWeek, true, successCallback,
+                failCallback);
 
         // Capture values passed to the mock object
         verify(mockHabitRepo, times(1)).insert(nameCaptor.capture(), reasonCaptor.capture(),
-                dateStartedCaptor.capture(), daysOfWeekCaptor.capture(),
+                dateStartedCaptor.capture(), daysOfWeekCaptor.capture(), isPrivateCaptor.capture(),
                 successCallbackCaptor.capture(), failCallbackCaptor.capture());
 
         // Verify that the mock method was called with the right parameters
@@ -104,6 +107,7 @@ public class HabitViewModelTest {
         assertEquals(reason, reasonCaptor.getValue());
         assertEquals(dateStarted, dateStartedCaptor.getValue());
         assertEquals(daysOfWeek, daysOfWeekCaptor.getValue());
+        assertEquals(true, isPrivateCaptor.getValue());
         assertEquals(successCallback, successCallbackCaptor.getValue());
         assertEquals(failCallback, failCallbackCaptor.getValue());
     }

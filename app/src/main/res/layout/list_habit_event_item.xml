@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:contentDescription="check box"
+        android:contentDescription="@string/check_box"
         app:srcCompat="@drawable/ic_check" />
 
     <LinearLayout
@@ -43,7 +43,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:contentDescription="Edit button"
+        android:contentDescription="@string/edit_button"
         app:srcCompat="@drawable/ic_baseline_edit_24" />
 
     <ImageView
@@ -51,7 +51,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:contentDescription="Delete button"
+        android:contentDescription="@string/delete_button"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
 
 

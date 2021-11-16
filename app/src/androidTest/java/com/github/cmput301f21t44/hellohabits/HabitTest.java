@@ -10,8 +10,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.os.SystemClock;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -27,8 +25,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -63,6 +59,8 @@ public class HabitTest {
         }
         onView(withText("OK")).perform(click());
 
+        onView(withId(R.id.private_checkbox)).perform(click());
+
         onView(withId(R.id.button_add_habit)).perform(click());
     }
 
@@ -74,6 +72,8 @@ public class HabitTest {
         onView(withId(R.id.view_reason)).check(matches(withText(HABIT_REASON)));
         String everyDay = DaysOfWeek.toString(
                 new boolean[]{true, true, true, true, true, true, true});
+
+        onView(withId(R.id.view_privacy)).check(matches(withText(R.string.isPrivate)));
         onView(withId(R.id.view_reminder)).check(matches(withText(everyDay)));
     }
 
@@ -91,6 +91,8 @@ public class HabitTest {
         onView(withText("Sunday")).perform(click());
         onView(withText("OK")).perform(click());
 
+        onView(withId(R.id.private_checkbox)).perform(click());
+
         onView(withId(R.id.button_add_habit)).perform(click());
 
         onView(withId(R.id.view_title)).check(matches(withText(NEW_HABIT_TITLE)));
@@ -98,6 +100,7 @@ public class HabitTest {
         String everyDay = DaysOfWeek.toString(
                 new boolean[]{true, true, true, true, true, true, false});
         onView(withId(R.id.view_reminder)).check(matches(withText(everyDay)));
+        onView(withId(R.id.view_privacy)).check(matches(withText(R.string.isPublic)));
     }
 
     @Test

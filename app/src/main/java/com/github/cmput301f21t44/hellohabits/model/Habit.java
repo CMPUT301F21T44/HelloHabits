@@ -100,4 +100,9 @@ public interface Habit {
     List<HabitEvent> getEvents();
 
     boolean[] getDaysOfWeek();
+
+    /**
+     * @return true if not visible to anyone, false if the habit is visible to followers
+     */
+    boolean isPrivate();
 }

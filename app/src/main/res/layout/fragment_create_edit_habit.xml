@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/reason"
-        android:textColorHint="#757575"
         android:minHeight="48dp"
+        android:textColorHint="#757575"
         app:layout_constraintBottom_toTopOf="@+id/date_started_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/reminder_layout"
+        app:layout_constraintBottom_toTopOf="@+id/private_checkbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,8 +77,9 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/button_add_habit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_started_layout">
+        app:layout_constraintTop_toBottomOf="@+id/private_checkbox">
 
         <TextView
             android:id="@+id/reminder_label"
@@ -110,9 +111,18 @@
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:text="@string/add_habit"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reminder_layout"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <CheckBox
+        android:id="@+id/private_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/isPrivate"
+        app:layout_constraintBottom_toTopOf="@+id/reminder_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reminder_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/date_started_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

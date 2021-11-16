@@ -1,5 +1,8 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -141,6 +144,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
                 mItemBinding.imageView.setColorFilter(COLOUR_GREEN);
             }
 
+            mItemBinding.lock.setVisibility(habit.isPrivate() ? VISIBLE : INVISIBLE);
             mItemBinding.getRoot().setOnClickListener(v -> listener.onItemClick(habit));
         }
 

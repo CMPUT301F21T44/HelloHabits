@@ -42,6 +42,7 @@ public class CreateEditHabitFragment extends Fragment {
     private Instant mInstant;
     private boolean mIsEdit;
     private boolean[] mDaysOfWeek;
+    private boolean mIsPrivate;
     private NavController mNavController;
 
     /**
@@ -58,6 +59,16 @@ public class CreateEditHabitFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateEditHabitBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    /**
+     * Set the Habit visibility and update the UI accordingly
+     *
+     * @param isPrivate whether the Habit should be visible to others or not
+     */
+    private void updatePrivate(boolean isPrivate) {
+        this.mIsPrivate = isPrivate;
+        binding.privateCheckbox.setChecked(isPrivate);
     }
 
     /**
@@ -110,13 +121,13 @@ public class CreateEditHabitFragment extends Fragment {
 
         if (mIsEdit) {
             mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
-                    mDaysOfWeek, updatedHabit -> {
+                    mDaysOfWeek, mIsPrivate, updatedHabit -> {
                         mHabitViewModel.select(updatedHabit);
                         completeScreen();
                     }, e -> showErrorToast("update", e));
         } else {
-            mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek, this::completeScreen,
-                    e -> showErrorToast("create", e));
+            mHabitViewModel.insert(title, reason, mInstant, mDaysOfWeek, mIsPrivate,
+                    this::completeScreen, e -> showErrorToast("create", e));
         }
     }
 
@@ -167,6 +178,8 @@ public class CreateEditHabitFragment extends Fragment {
         binding.dateStartedLayout.setOnClickListener(v -> startDatePickerFragment());
 
         binding.reminderLayout.setOnClickListener(v -> startDaysOfWeekFragment());
+
+        binding.privateCheckbox.setOnClickListener(v -> updatePrivate(!mIsPrivate));
     }
 
     /**
@@ -207,7 +220,6 @@ public class CreateEditHabitFragment extends Fragment {
         binding = null;
     }
 
-
     /**
      * Updates the UI to the currently observed Habit
      *
@@ -220,11 +232,14 @@ public class CreateEditHabitFragment extends Fragment {
             mHabit = habit;
             binding.editTextTitle.setText(habit.getTitle());
             binding.editTextReason.setText(habit.getReason());
+            updatePrivate(habit.isPrivate());
             updateInstant(habit.getDateStarted());
             updateDaysOfWeek(habit.getDaysOfWeek());
 
             binding.buttonAddHabit.setText(R.string.save_changes);
         } else {
+            // use default values for new habit
+            updatePrivate(false);
             updateInstant(Instant.now());
             updateDaysOfWeek(DaysOfWeek.emptyArray());
         }

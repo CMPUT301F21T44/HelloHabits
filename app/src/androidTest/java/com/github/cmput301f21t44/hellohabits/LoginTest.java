@@ -55,7 +55,7 @@ public class LoginTest {
     }
 
     @Test
-    public void A_testSignup() {
+    public void A_test_signup() {
         try {
             onView(withId(R.id.social)).perform(click());
         } catch (Exception ignored) {
@@ -69,7 +69,7 @@ public class LoginTest {
     }
 
     @Test
-    public void B_testLogin() {
+    public void B_test_login() {
         onView(withId(R.id.email)).perform(typeText(EMAIL), closeSoftKeyboard());
         onView(withId(R.id.password)).perform(typeText(PASSWORD), closeSoftKeyboard());
         onView(withId(R.id.submit)).perform(click());

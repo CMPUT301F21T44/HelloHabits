@@ -52,7 +52,7 @@ public class HabitTest {
     }
 
     @Test
-    public void A_addHabitTest() {
+    public void A_test_addHabit() {
         onView(withId(R.id.button_new_habit)).perform(click());
         onView(withId(R.id.edit_text_title)).perform(typeText(HABIT_TITLE), closeSoftKeyboard());
         onView(withId(R.id.edit_text_reason)).perform(typeText(HABIT_REASON), closeSoftKeyboard());
@@ -67,7 +67,7 @@ public class HabitTest {
     }
 
     @Test
-    public void B_viewHabitTest() {
+    public void B_test_viewHabit() {
         onView(withText(HABIT_TITLE)).perform(click());
 
         onView(withId(R.id.view_title)).check(matches(withText(HABIT_TITLE)));
@@ -78,7 +78,7 @@ public class HabitTest {
     }
 
     @Test
-    public void C_editHabitTest() {
+    public void C_test_editHabit() {
         onView(withText(HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_edit_habit)).perform(click());
 
@@ -101,7 +101,7 @@ public class HabitTest {
     }
 
     @Test
-    public void D_deleteHabitTest() {
+    public void D_test_deleteHabit() {
         onView(withText(NEW_HABIT_TITLE)).perform(click());
 
         onView(withId(R.id.button_delete_habit)).perform(click());

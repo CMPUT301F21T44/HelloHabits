@@ -77,7 +77,7 @@ public class HabitEventTest {
 
 
     @Test
-    public void A_addEventTest() {
+    public void A_test_addEvent() {
         onView(withId(R.id.view_all_habits)).perform(click());
         onView(withText(HabitTest.HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_new_habit_event)).perform(click());
@@ -86,14 +86,14 @@ public class HabitEventTest {
     }
 
     @Test
-    public void B_viewEventTest() {
+    public void B_test_viewEvent() {
         onView(withId(R.id.view_all_habits)).perform(click());
         onView(withText(HabitTest.HABIT_TITLE)).perform(click());
         onView(withText(EVENT_COMMENT)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void C_editEventTest() {
+    public void C_test_editEvent() {
         onView(withId(R.id.view_all_habits)).perform(click());
         onView(withText(HabitTest.HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_edit)).perform(click());
@@ -104,7 +104,7 @@ public class HabitEventTest {
     }
 
     @Test
-    public void D_deleteEventTest() {
+    public void D_test_deleteEvent() {
         onView(withId(R.id.view_all_habits)).perform(click());
         onView(withText(HabitTest.HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_delete)).perform(click());

@@ -12,13 +12,13 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DaysOfWeekTest {
     @Test
-    public void testToString_emptyArray() {
+    public void test_toString_emptyArray() {
         boolean[] daysOfWeek = DaysOfWeek.emptyArray();
         assertTrue(DaysOfWeek.toString(daysOfWeek).isEmpty());
     }
 
     @Test
-    public void testToString_oneDay() {
+    public void test_toString_oneDay() {
         for (int i = 0; i < DaysOfWeek.shorthandDays.length; ++i) {
             boolean[] daysOfWeek = DaysOfWeek.emptyArray();
             daysOfWeek[i] = true;
@@ -27,7 +27,7 @@ public class DaysOfWeekTest {
     }
 
     @Test
-    public void testToString_twoDays() {
+    public void test_toString_twoDays() {
         for (int i = 0; i < DaysOfWeek.shorthandDays.length - 1; ++i) {
             boolean[] daysOfWeek = DaysOfWeek.emptyArray();
             daysOfWeek[i] = true;

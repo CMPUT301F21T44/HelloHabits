@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/habit_event_list"
+        app:layout_constraintBottom_toTopOf="@+id/privacyLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -128,6 +128,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/privacyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/habit_event_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/consistencyLayout">
+
+        <TextView
+            android:id="@+id/view_privacy_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:text="@string/visibility"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
+
+        <TextView
+            android:id="@+id/view_privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            tools:text="Private" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/habit_event_list"
         android:layout_width="match_parent"
@@ -137,7 +167,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/consistencyLayout"
+        app:layout_constraintTop_toBottomOf="@+id/privacyLayout"
         tools:itemCount="5"
         tools:listitem="@layout/list_habit_event_item" />
 

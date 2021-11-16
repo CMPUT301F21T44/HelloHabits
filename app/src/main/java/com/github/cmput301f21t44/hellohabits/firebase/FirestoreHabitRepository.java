@@ -71,14 +71,15 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      * @param reason          Reason for the Habit
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param isPrivate Whether the habit is invisible to followers
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     @Override
     public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                       FirebaseTask.ThenFunction successCallback,
+                       boolean isPrivate, FirebaseTask.ThenFunction successCallback,
                        FirebaseTask.CatchFunction failCallback) {
-        FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek);
+        FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek, isPrivate);
         getHabitCollectionRef().document(habit.getId()).set(FSHabit.getMap(habit))
                 .addOnSuccessListener(u -> successCallback.apply())
                 .addOnFailureListener(failCallback::apply);
@@ -150,9 +151,9 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      */
     @Override
     public void update(String id, String title, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, FirebaseTask.ResultFunction<Habit> successCallback,
+                       boolean[] daysOfWeek, boolean isPrivate, FirebaseTask.ResultFunction<Habit> successCallback,
                        FirebaseTask.CatchFunction failCallback) {
-        FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek);
+        FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate);
         getHabitRef(habit.getId()).update(FSHabit.getMap(habit))
                 .addOnSuccessListener(u -> successCallback.apply(habit))
                 .addOnFailureListener(failCallback::apply);

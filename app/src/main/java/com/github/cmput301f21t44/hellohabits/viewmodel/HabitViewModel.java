@@ -34,15 +34,17 @@ public class HabitViewModel extends ViewModel {
     }
 
     public void insert(String name, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                       FirebaseTask.ThenFunction successCallback,
+                       boolean isPrivate, FirebaseTask.ThenFunction successCallback,
                        FirebaseTask.CatchFunction failCallback) {
-        mRepository.insert(name, reason, dateStarted, daysOfWeek, successCallback, failCallback);
+        mRepository.insert(name, reason, dateStarted, daysOfWeek, isPrivate, successCallback,
+                failCallback);
     }
 
     public void update(String id, String name, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, FirebaseTask.ResultFunction<Habit> successCallback,
+                       boolean[] daysOfWeek, boolean isPrivate,
+                       FirebaseTask.ResultFunction<Habit> successCallback,
                        FirebaseTask.CatchFunction failCallback) {
-        mRepository.update(id, name, reason, dateStarted, daysOfWeek, successCallback,
+        mRepository.update(id, name, reason, dateStarted, daysOfWeek, isPrivate, successCallback,
                 failCallback);
     }
 

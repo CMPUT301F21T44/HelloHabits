@@ -43,14 +43,13 @@ public class LoginTest {
         TestUtil.initEmulators(sAuth, sDb);
     }
 
-
-    @Before
-    public void logout() {
+    @AfterClass
+    public static void tearDown() {
         sAuth.signOut();
     }
 
-    @AfterClass
-    public static void tearDown() {
+    @Before
+    public void logout() {
         sAuth.signOut();
     }
 

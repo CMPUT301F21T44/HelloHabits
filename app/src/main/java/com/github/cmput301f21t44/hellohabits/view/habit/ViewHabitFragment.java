@@ -88,7 +88,6 @@ public class ViewHabitFragment extends Fragment {
         });
 
         binding.buttonDeleteHabit.setOnClickListener(this::createDeleteHabitDialog);
-
     }
 
     /**
@@ -150,6 +149,7 @@ public class ViewHabitFragment extends Fragment {
                     .getConsistency(habit) * 100)).toString() + " %";
 
             binding.viewConsistency.setText(initialConsistency);
+            binding.viewPrivacy.setText(habit.isPrivate() ? R.string.isPrivate : R.string.isPublic);
 
             mHabitEventViewModel.getHabitEventsById(habit.getId()).observe(this,
                     eventList -> {
@@ -204,7 +204,7 @@ public class ViewHabitFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Habit")
                 .setMessage("Are you sure you want to delete this habit?")
-                .setIcon(R.drawable.ic_launcher_foreground)
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setPositiveButton("YES", (dialog, b) -> deleteHabit())
                 .setNegativeButton("NO", null).show();
     }

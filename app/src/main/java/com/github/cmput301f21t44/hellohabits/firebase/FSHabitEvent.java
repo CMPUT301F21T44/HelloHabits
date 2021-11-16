@@ -29,10 +29,9 @@ public class FSHabitEvent implements HabitEvent {
     /**
      * Creates a new FSHabitEvent
      *
-     * @param habitId         UUID of the Habit parent
-     * @param comment         Optional comment
-     * @param successCallback Callback for when the operation succeeds
-     * @param failCallback    Callback for when the operation fails
+     * @param id      UUID of the HabitEvent
+     * @param date    Date of when the HabitEvent is denoted
+     * @param habitId UUID of the Habit parent
      */
     public FSHabitEvent(String id, Instant date, String habitId) {
         this.id = id;
@@ -43,7 +42,7 @@ public class FSHabitEvent implements HabitEvent {
     /**
      * Creates a new FSHabitEvent with a comment and generated UUID
      *
-     * @param id UUID of the HabitEvent
+     * @param id      UUID of the HabitEvent
      * @param date    Date of when the HabitEvent is denoted
      * @param habitId UUID of the Habit parent
      * @param comment Optional comment
@@ -66,6 +65,7 @@ public class FSHabitEvent implements HabitEvent {
 
     /**
      * Creates an FSHabitEvent instance from a DocumentSnapshot
+     *
      * @param doc Firestore document
      * @return FSHabitEvent from the document
      */
@@ -79,6 +79,7 @@ public class FSHabitEvent implements HabitEvent {
 
     /**
      * Converts HabitEvent fields to a Map
+     *
      * @param event HabitEvent to convert
      * @return Map of HabitEvent fields
      */

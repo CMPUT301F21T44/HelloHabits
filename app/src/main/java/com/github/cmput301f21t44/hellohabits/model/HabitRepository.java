@@ -25,11 +25,13 @@ public interface HabitRepository {
      * @param reason          Reason for the Habit
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param isPrivate       Whether the habit is invisible to followers
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback);
+                boolean isPrivate, FirebaseTask.ThenFunction successCallback,
+                FirebaseTask.CatchFunction failCallback);
 
     /**
      * Delete the given Habit
@@ -49,10 +51,11 @@ public interface HabitRepository {
      * @param reason          Reason for the Habit
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param isPrivate       Whether the habit is invisible to followers
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     void update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                FirebaseTask.ResultFunction<Habit> successCallback,
+                boolean isPrivate, FirebaseTask.ResultFunction<Habit> successCallback,
                 FirebaseTask.CatchFunction failCallback);
 }

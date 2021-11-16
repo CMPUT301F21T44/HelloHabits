@@ -1,11 +1,13 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -16,6 +18,7 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentTodaysHabitsBinding;
 import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
@@ -101,10 +104,30 @@ public class TodaysHabitsFragment extends Fragment {
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });
-        mBinding.social.setOnClickListener(v -> {
-            mAuth.signOut();
-            mNavController.navigate(R.id.loginFragment);
-        });
+        mBinding.social.setOnClickListener(v -> showSignOutDialog());
+    }
+
+    /**
+     * Show an AlertDialog when trying to sign out
+     */
+    private void showSignOutDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Sign out")
+                .setMessage("Are you sure you want to sign out?")
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setPositiveButton("YES", (dialog, b) -> signOut())
+                .setNegativeButton("NO", null).show();
+
+    }
+
+    /**
+     * Signs out and restarts MainActivity to clear all LiveData listeners
+     */
+    private void signOut() {
+        mAuth.signOut();
+        Intent intent = new Intent(requireActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        requireActivity().startActivity(intent);
     }
 
     /**

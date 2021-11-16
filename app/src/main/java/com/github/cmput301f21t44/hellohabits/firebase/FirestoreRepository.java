@@ -55,10 +55,7 @@ public abstract class FirestoreRepository {
      * @return The current FireBaseUser
      */
     protected FirebaseUser getUser() {
-        if (mUser == null) {
-            mUser = mAuth.getCurrentUser();
-        }
-        return mUser;
+        return mAuth.getCurrentUser();
     }
 
     /**

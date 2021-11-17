@@ -16,9 +16,20 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final HabitRepository mHabitRepository;
     private final HabitEventRepository mHabitEventRepository;
 
+    /**
+     * Used for testing dependency injection
+     *
+     * @param habitRepository      HabitRepository instance to insert to ViewModel
+     * @param habitEventRepository HabitEventRepository instance to insert to ViewModel
+     */
+    public ViewModelFactory(HabitRepository habitRepository,
+                            HabitEventRepository habitEventRepository) {
+        this.mHabitRepository = habitRepository;
+        this.mHabitEventRepository = habitEventRepository;
+    }
+
     private ViewModelFactory() {
-        mHabitRepository = new FirestoreHabitRepository();
-        mHabitEventRepository = new FirestoreEventRepository();
+        this(new FirestoreHabitRepository(), new FirestoreEventRepository());
     }
 
     public static ViewModelProvider getProvider(FragmentActivity activity) {

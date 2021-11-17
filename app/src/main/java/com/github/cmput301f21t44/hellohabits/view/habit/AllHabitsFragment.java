@@ -62,7 +62,7 @@ public class AllHabitsFragment extends Fragment {
         mHabitViewModel = provider.get(HabitViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         mAdapter = HabitAdapter.newInstance((habit) -> {
-            mHabitViewModel.select(habit);
+            mHabitViewModel.setSelectedHabit(habit);
             mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
         });
@@ -70,7 +70,7 @@ public class AllHabitsFragment extends Fragment {
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBinding.buttonNewHabit.setOnClickListener(view1 -> {
-            mHabitViewModel.select(null);
+            mHabitViewModel.setSelectedHabit(null);
             mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
             mNavController.navigate(R.id.action_allHabitsFragment_to_newHabitFragment);
         });

@@ -87,7 +87,7 @@ public class TodaysHabitsFragment extends Fragment {
         mHabitViewModel = provider.get(HabitViewModel.class);
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         mAdapter = HabitAdapter.newInstance((habit) -> {
-            mHabitViewModel.select(habit);
+            mHabitViewModel.setSelectedHabit(habit);
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
         });
@@ -96,11 +96,11 @@ public class TodaysHabitsFragment extends Fragment {
 
         mBinding.buttonNewHabit.setOnClickListener(view1 -> {
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
-            mHabitViewModel.select(null);
+            mHabitViewModel.setSelectedHabit(null);
             mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
         });
         mBinding.viewAllHabits.setOnClickListener(view1 -> {
-            mHabitViewModel.select(null);
+            mHabitViewModel.setSelectedHabit(null);
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
         });

@@ -24,7 +24,6 @@ import java.util.Objects;
 public abstract class FirestoreRepository {
     protected final FirebaseFirestore mDb;
     protected final FirebaseAuth mAuth;
-    protected FirebaseUser mUser;
 
     /**
      * Creates a new FirestoreRepository
@@ -82,7 +81,7 @@ public abstract class FirestoreRepository {
      * @return CollectionReference to a user's Habits
      */
     protected CollectionReference getHabitCollectionRef() {
-        return mDb.collection(User.COLLECTION).document(getEmail()).collection(FSHabit.COLLECTION);
+        return mDb.collection(FSUser.COLLECTION).document(getEmail()).collection(FSHabit.COLLECTION);
     }
 
     /**

@@ -18,7 +18,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import com.github.cmput301f21t44.hellohabits.firebase.FSHabit;
-import com.github.cmput301f21t44.hellohabits.firebase.User;
+import com.github.cmput301f21t44.hellohabits.firebase.FSUser;
 import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +60,7 @@ public class HabitEventTest {
         TestUtil.login(sAuth);
         AtomicBoolean hasHabitEvent = new AtomicBoolean(false);
         habitId = habit.getId();
-        sDb.collection(User.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
+        sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
                 .document(habit.getId()).set(FSHabit.getMap(habit)).addOnSuccessListener(u -> {
             hasHabitEvent.set(true);
         });
@@ -71,7 +71,7 @@ public class HabitEventTest {
 
     @AfterClass
     public static void tearDown() {
-        sDb.collection(User.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
+        sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
                 .document(habitId).delete();
     }
 

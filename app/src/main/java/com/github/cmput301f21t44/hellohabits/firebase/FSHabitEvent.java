@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Firestore implementation of HabitEvent
  */
-public class FSHabitEvent implements HabitEvent, FSDocument<FSHabitEvent> {
+public class FSHabitEvent implements HabitEvent, FSDocument {
     public static final String COLLECTION = "events";
     public static final String HABIT_ID = "habitId";
     public static final String DATE = "date";
@@ -65,7 +65,8 @@ public class FSHabitEvent implements HabitEvent, FSDocument<FSHabitEvent> {
     }
 
     public FSHabitEvent(QueryDocumentSnapshot doc) {
-        this(doc.getId(), (Instant) doc.get(DATE), doc.getString(HABIT_ID), doc.getString(COMMENT));
+        this(doc.getId(), FSDocument.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
+                doc.getString(COMMENT));
     }
 
     /**

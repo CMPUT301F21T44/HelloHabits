@@ -6,7 +6,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FSFollow implements Follow, FSDocument<FSFollow> {
+public class FSFollow implements Follow, FSDocument {
     public static final FollowCollection FOLLOWER_COLLECTION =
             new FollowCollection("followers");
     public static final FollowCollection FOLLOWING_COLLECTION =

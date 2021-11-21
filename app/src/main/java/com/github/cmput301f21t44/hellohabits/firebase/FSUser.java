@@ -6,7 +6,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FSUser implements User, FSDocument<FSUser> {
+public class FSUser implements User, FSDocument {
     public static final String COLLECTION = "users";
     public static final String NAME = "name";
     private final String mEmail;

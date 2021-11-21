@@ -76,6 +76,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
      * @param <T>        Type of ViewModel class
      * @return an instance of the given ViewModel class
      */
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {

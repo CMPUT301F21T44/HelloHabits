@@ -132,7 +132,7 @@ public abstract class FirestoreRepository {
      * @return CollectionReference to the Habit's HabitEvents
      */
     protected CollectionReference getEventCollectionRef(String habitId, String email) {
-        return getHabitRef(email, habitId).collection(FSHabitEvent.COLLECTION);
+        return getHabitRef(habitId, email).collection(FSHabitEvent.COLLECTION);
     }
 
     /**

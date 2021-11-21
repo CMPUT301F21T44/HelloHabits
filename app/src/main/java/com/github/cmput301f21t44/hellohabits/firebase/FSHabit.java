@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Firestore implementation of  Habit
  */
-public class FSHabit implements Habit, FSDocument<FSHabit> {
+public class FSHabit implements Habit, FSDocument {
     public static final String COLLECTION = "habits";
     public static final String TITLE = "title";
     public static final String REASON = "reason";
@@ -58,8 +58,9 @@ public class FSHabit implements Habit, FSDocument<FSHabit> {
      * @param doc Firestore document
      */
     public FSHabit(QueryDocumentSnapshot doc) {
+        //noinspection unchecked
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
-                (Instant) doc.get(DATE_STARTED),
+                FSDocument.instantFromDoc(doc, DATE_STARTED),
                 getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
                 convertVisibility(doc.getBoolean(IS_PRIVATE)));
     }

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -19,6 +21,9 @@ import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Objects;
 
 /**
  * Fragment for viewing a list of habits
@@ -30,6 +35,10 @@ public abstract class HabitListFragment extends Fragment {
 
     protected PreviousListViewModel mPreviousListViewModel;
     protected NavController mNavController;
+    protected boolean mReordering = false;
+
+    private FloatingActionButton mNewHabitFab;
+    private FloatingActionButton mReorderFab;
 
     /**
      * HabitList's onCreateView lifecycle method
@@ -51,6 +60,8 @@ public abstract class HabitListFragment extends Fragment {
 
     /**
      * HabitList's onViewCreated lifecycle method
+     * <p>
+     * Removes the floating action buttons by default until initListeners is called
      *
      * @param view               a default view
      * @param savedInstanceState a default Bundle
@@ -58,6 +69,10 @@ public abstract class HabitListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.mNewHabitFab = mBinding.newHabit;
+        mNewHabitFab.setVisibility(View.GONE);
+        this.mReorderFab = mBinding.reorderFab;
+        mReorderFab.setVisibility(View.GONE);
         mNavController = NavHostFragment.findNavController(this);
     }
 
@@ -87,22 +102,44 @@ public abstract class HabitListFragment extends Fragment {
     }
 
     /**
-     * Initializes the listeners for the HabitAdapter and floating action button
+     * Initializes the listeners for the HabitAdapter
+     * <p>
+     * Also makes the floating action buttons visible
      *
      * @param resId destination ID for the PreviousListViewModel
      */
     protected void initListeners(int resId) {
         initAdapter((habit) -> {
+            if (mReordering) return;
+
             mHabitViewModel.setSelectedHabit(habit);
             mPreviousListViewModel.setDestinationId(resId);
             mNavController.navigate(R.id.ViewHabitFragment);
         });
 
-        mBinding.fab.setOnClickListener(view1 -> {
+        mNewHabitFab.setVisibility(View.VISIBLE);
+        mNewHabitFab.setOnClickListener(v -> {
             mHabitViewModel.setSelectedHabit(null);
             mPreviousListViewModel.setDestinationId(resId);
             mNavController.navigate(R.id.HabitCreateEditFragment);
         });
+
+        mReorderFab.setVisibility(View.VISIBLE);
+        mReorderFab.setOnClickListener(v -> toggleReorder());
+    }
+
+    private void toggleReorder() {
+        final ActionBar actionBar = Objects.requireNonNull(((AppCompatActivity) requireActivity())
+                .getSupportActionBar());
+        this.mReordering = !mReordering;
+        actionBar.setDisplayHomeAsUpEnabled(!mReordering);
+        if (mReordering) {
+            mBinding.reorderFab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+            mBinding.newHabit.setVisibility(View.INVISIBLE);
+        } else {
+            mBinding.reorderFab.setImageResource(R.drawable.ic_baseline_reorder_24);
+            mBinding.newHabit.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

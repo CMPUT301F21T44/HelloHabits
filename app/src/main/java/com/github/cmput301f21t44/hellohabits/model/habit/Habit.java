@@ -99,6 +99,8 @@ public interface Habit {
 
     Instant getDateStarted();
 
+    int getIndex();
+
     List<HabitEvent> getEvents();
 
     boolean[] getDaysOfWeek();

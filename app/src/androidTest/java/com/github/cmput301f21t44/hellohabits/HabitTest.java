@@ -13,7 +13,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment.MAX_TITLE_LEN;
 
-import android.os.SystemClock;
 import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
@@ -58,7 +57,7 @@ public class HabitTest {
 
     @Test
     public void A_test_addHabit() {
-        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.new_habit)).perform(click());
         onView(withId(R.id.edit_text_title)).perform(typeText(HABIT_TITLE), closeSoftKeyboard());
         onView(withId(R.id.edit_text_reason)).perform(typeText(HABIT_REASON), closeSoftKeyboard());
 

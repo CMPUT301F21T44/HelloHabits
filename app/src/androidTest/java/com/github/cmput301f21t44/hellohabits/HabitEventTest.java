@@ -68,7 +68,7 @@ public class HabitEventTest {
         habitTitle = TestUtil.getRealTimeString(HabitTest.HABIT_TITLE, MAX_TITLE_LEN);
         newComment = TestUtil.getRealTimeString(NEW_EVENT_COMMENT, MAX_COMMENT_LEN);
         final FSHabit habit = new FSHabit(UUID.randomUUID().toString(), habitTitle,
-                HabitTest.HABIT_REASON, Instant.now(), DaysOfWeek.emptyArray(), true);
+                HabitTest.HABIT_REASON, Instant.now(), DaysOfWeek.emptyArray(), true, 0);
         TestUtil.initEmulators(sAuth, sDb);
         sAuth.signOut();
         TestUtil.login(sAuth);

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
-import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -16,6 +16,8 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -62,6 +64,8 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
                     habitLiveData.addSource(habitEvents, habit::setHabitEvents);
                 }
             }
+            // sort by index
+            Collections.sort(habits, Comparator.comparingInt(Habit::getIndex));
             habitLiveData.setValue(habits);
         });
 
@@ -89,9 +93,18 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
     public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                        boolean isPrivate, ThenFunction successCallback,
                        CatchFunction failCallback) {
-        FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek, isPrivate);
-        FSDocument.set(habit, failCallback, getHabitCollectionRef())
-                .addOnSuccessListener(u -> successCallback.apply());
+        getHabitCollectionRef().get().addOnSuccessListener((q) -> {
+            // this gets expensive real real fast
+            // https://medium.com/firebase-tips-tricks/how-to-count-documents-in-firestore-a0527f792d04
+            FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek, isPrivate, q.size());
+            FSDocument.set(habit, failCallback, getHabitCollectionRef())
+                    .addOnSuccessListener(u -> successCallback.apply());
+        }).addOnFailureListener((e) -> {
+            FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek, isPrivate, 0);
+            FSDocument.set(habit, failCallback, getHabitCollectionRef())
+                    .addOnSuccessListener(u -> successCallback.apply())
+                    .addOnFailureListener(failCallback::apply);
+        });
     }
 
 
@@ -154,14 +167,16 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      * @param reason          Reason for the Habit
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param index           Index of the Habit in the user's list
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     @Override
     public void update(String id, String title, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, boolean isPrivate, ResultFunction<Habit> successCallback,
+                       boolean[] daysOfWeek, boolean isPrivate, int index,
+                       ResultFunction<Habit> successCallback,
                        CatchFunction failCallback) {
-        FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate);
+        FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate, index);
         FSDocument.set(habit, failCallback, getHabitCollectionRef())
                 .addOnSuccessListener(u -> successCallback.apply(habit));
     }

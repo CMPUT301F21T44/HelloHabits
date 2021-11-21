@@ -104,15 +104,16 @@ public class HabitViewModel extends ViewModel {
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
      * @param isPrivate       Whether the habit is invisible to followers
+     * @param  index The index of the
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     public void update(String id, String title, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, boolean isPrivate,
+                       boolean[] daysOfWeek, boolean isPrivate, int index,
                        ResultFunction<Habit> successCallback,
                        CatchFunction failCallback) {
-        mRepository.update(id, title, reason, dateStarted, daysOfWeek, isPrivate, successCallback,
-                failCallback);
+        mRepository.update(id, title, reason, dateStarted, daysOfWeek, isPrivate, index,
+                successCallback, failCallback);
     }
 
     /**

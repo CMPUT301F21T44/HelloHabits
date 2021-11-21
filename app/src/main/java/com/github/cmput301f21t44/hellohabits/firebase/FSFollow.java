@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FSFollow implements FSUser.Follow {
+public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
     public static final String FOLLOWER_COLLECTION = "followers";
     public static final String FOLLOWING_COLLECTION = "following";
     public static final String STATUS = "status";
@@ -18,18 +18,17 @@ public class FSFollow implements FSUser.Follow {
         this.mStatus = status;
     }
 
-    public static FSFollow fromSnapshot(QueryDocumentSnapshot doc) {
-        String email = doc.getId();
-        String statusStr = doc.getString(STATUS);
-        // give a default value to status, this totally won't go wrong 🤪
-        Status status = Status.get(statusStr != null ? statusStr : String.valueOf(Status.REQUESTED));
-        return new FSFollow(email, status);
+    public FSFollow(String email) {
+        this(email, Status.REQUESTED);
     }
 
-    public static Map<String, Object> getMap(FSFollow follow) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(STATUS, follow.getStatus().getText());
-        return map;
+    public FSFollow(QueryDocumentSnapshot doc) {
+        this(doc.getId(), convertStatus(doc.getString(STATUS)));
+    }
+
+    private static Status convertStatus(String status) {
+        // give a default value to status, this totally won't go wrong 🤪
+        return status != null ? Status.get(status) : Status.REQUESTED;
     }
 
     @Override
@@ -42,4 +41,15 @@ public class FSFollow implements FSUser.Follow {
         return mStatus;
     }
 
+    @Override
+    public Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(STATUS, mStatus.getText());
+        return map;
+    }
+
+    @Override
+    public String getKey() {
+        return mEmail;
+    }
 }

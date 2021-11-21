@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Firestore implementation of  Habit
  */
-public class FSHabit implements Habit {
+public class FSHabit implements Habit, FSDocument<FSHabit> {
     public static final String COLLECTION = "habits";
     public static final String TITLE = "title";
     public static final String REASON = "reason";
@@ -53,6 +53,23 @@ public class FSHabit implements Habit {
     }
 
     /**
+     * Creates an FSHabit from a QueryDocumentSnapshot
+     *
+     * @param doc Firestore document
+     */
+    public FSHabit(QueryDocumentSnapshot doc) {
+        this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
+                FirestoreRepository.instantFromDoc(doc, DATE_STARTED),
+                getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
+                convertVisibility(doc.getBoolean(IS_PRIVATE)));
+    }
+
+    public FSHabit(Habit habit) {
+        this(habit.getId(), habit.getTitle(), habit.getReason(), habit.getDateStarted(),
+                habit.getDaysOfWeek(), habit.isPrivate());
+    }
+
+    /**
      * Creates a new FSHabit with a generated UUID
      *
      * @param title       Title of the Habit
@@ -64,6 +81,10 @@ public class FSHabit implements Habit {
     public FSHabit(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                    boolean isPrivate) {
         this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek, isPrivate);
+    }
+
+    private static boolean convertVisibility(Boolean bool) {
+        return bool != null && bool;
     }
 
     /**
@@ -79,45 +100,6 @@ public class FSHabit implements Habit {
             daysOfWeek[i] = dayList.get(i);
         }
         return daysOfWeek;
-    }
-
-    /**
-     * Creates an FSHabit instance from a DocumentSnapshot
-     *
-     * @param doc Firestore document
-     * @return FSHabit from the document
-     */
-    public static FSHabit fromSnapshot(QueryDocumentSnapshot doc) {
-        String id = doc.getId();
-        String title = doc.getString(TITLE);
-        String reason = doc.getString(REASON);
-        Instant dateStarted = FirestoreRepository.instantFromDoc(doc, DATE_STARTED);
-        List<Boolean> dayList = (List<Boolean>) doc.get(DAYS_OF_WEEK);
-        // habits are public by default
-        Boolean isPrivateBoxed = doc.getBoolean(IS_PRIVATE);
-        // automatically false if no data for isPrivate is available
-        boolean isPrivate = isPrivateBoxed != null && isPrivateBoxed;
-        return new FSHabit(id, title, reason, dateStarted, getDaysOfWeek(dayList), isPrivate);
-    }
-
-    /**
-     * Converts Habit fields to a Map
-     *
-     * @param habit Habit to convert
-     * @return Map of Habit fields
-     */
-    public static Map<String, Object> getMap(FSHabit habit) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(TITLE, habit.mTitle);
-        map.put(REASON, habit.mReason);
-        map.put(DATE_STARTED, habit.mDateStarted);
-        List<Boolean> days = new ArrayList<>();
-        for (boolean b : habit.mDaysOfWeek) {
-            days.add(b);
-        }
-        map.put(DAYS_OF_WEEK, days);
-        map.put(IS_PRIVATE, habit.mPrivate);
-        return map;
     }
 
     @Override
@@ -162,5 +144,30 @@ public class FSHabit implements Habit {
      */
     public void setHabitEvents(List<HabitEvent> habitEvents) {
         this.mHabitEvents = habitEvents;
+    }
+
+    /**
+     * Converts Habit fields to a Map
+     *
+     * @return Map of Habit fields
+     */
+    @Override
+    public Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(TITLE, mTitle);
+        map.put(REASON, mReason);
+        map.put(DATE_STARTED, mDateStarted);
+        List<Boolean> days = new ArrayList<>();
+        for (boolean b : mDaysOfWeek) {
+            days.add(b);
+        }
+        map.put(DAYS_OF_WEEK, days);
+        map.put(IS_PRIVATE, mPrivate);
+        return map;
+    }
+
+    @Override
+    public String getKey() {
+        return mId;
     }
 }

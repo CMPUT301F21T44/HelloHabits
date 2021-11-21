@@ -37,12 +37,11 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
      * @param failCallback    Callback for when the operation fails
      */
     @Override
-    public void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
-                       FirebaseTask.CatchFunction failCallback) {
-        final FSHabitEvent event = new FSHabitEvent(Instant.now(), habitId, comment);
-        getEventRef(event.getId(), habitId).set(FSHabitEvent.getMap(event))
-                .addOnSuccessListener(u -> successCallback.apply())
-                .addOnFailureListener(failCallback::apply);
+    public void insert(String habitId, String comment, ThenFunction successCallback,
+                       CatchFunction failCallback) {
+        FSDocument.set(new FSHabitEvent(Instant.now(), habitId, comment), failCallback,
+                getEventCollectionRef(habitId))
+                .addOnSuccessListener(u -> successCallback.apply());
     }
 
     /**
@@ -52,9 +51,9 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
      * @param failCallback Callback for when the operation fails
      */
     @Override
-    public void delete(HabitEvent habitEvent, FirebaseTask.CatchFunction failCallback) {
-        getEventRef(habitEvent.getId(), habitEvent.getHabitId()).delete()
-                .addOnFailureListener(failCallback::apply);
+    public void delete(HabitEvent habitEvent, CatchFunction failCallback) {
+        FSDocument.delete(new FSHabitEvent((habitEvent)), failCallback,
+                getEventCollectionRef(habitEvent.getHabitId()));
     }
 
     /**
@@ -69,11 +68,10 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
      */
     @Override
     public void update(String id, String habitId, Instant date, String comment,
-                       FirebaseTask.ResultFunction<HabitEvent> successCallback,
-                       FirebaseTask.CatchFunction failCallback) {
+                       ResultFunction<HabitEvent> successCallback,
+                       CatchFunction failCallback) {
         FSHabitEvent event = new FSHabitEvent(id, date, habitId, comment);
-        getEventRef(id, habitId).update(FSHabitEvent.getMap(event))
-                .addOnSuccessListener(u -> successCallback.apply(event))
-                .addOnFailureListener(failCallback::apply);
+        FSDocument.set(event, failCallback, getEventCollectionRef(habitId))
+                .addOnSuccessListener(u -> successCallback.apply(event));
     }
 }

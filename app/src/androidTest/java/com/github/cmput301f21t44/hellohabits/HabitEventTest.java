@@ -61,9 +61,8 @@ public class HabitEventTest {
         AtomicBoolean hasHabitEvent = new AtomicBoolean(false);
         habitId = habit.getId();
         sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
-                .document(habit.getId()).set(FSHabit.getMap(habit)).addOnSuccessListener(u -> {
-            hasHabitEvent.set(true);
-        });
+                .document(habit.getId()).set(habit.getMap()).addOnSuccessListener(u ->
+                hasHabitEvent.set(true));
         while (!hasHabitEvent.get()) {
             SystemClock.sleep(100);
         }

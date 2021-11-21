@@ -39,10 +39,10 @@ public class Authentication {
      * @param password a string of password
      */
     public void signup(String name, String email, String password,
-                       FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback) {
+                       ThenFunction successCallback, CatchFunction failCallback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
             FSUser user = new FSUser(name, email);
-            mDb.collection(FSUser.COLLECTION).document(email).set(FSUser.getMap(user))
+            FSDocument.set(user, failCallback, mDb.collection(FSUser.COLLECTION))
                     .addOnSuccessListener(u -> successCallback.apply());
         }).addOnFailureListener(failCallback::apply);
     }

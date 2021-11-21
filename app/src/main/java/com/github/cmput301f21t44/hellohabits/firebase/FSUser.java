@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FSUser implements User {
+public class FSUser implements User, FSDocument<FSUser> {
     public static final String COLLECTION = "users";
     public static final String NAME = "name";
     private final String mEmail;
@@ -22,17 +22,10 @@ public class FSUser implements User {
         this.mName = name;
     }
 
-    public static FSUser fromSnapshot(QueryDocumentSnapshot doc) {
-        String email = doc.getId();
-        String name = doc.getString(NAME);
-        return new FSUser(email, name);
+    public FSUser(QueryDocumentSnapshot doc) {
+        this(doc.getId(), doc.getString(NAME));
     }
 
-    public static Map<String, Object> getMap(FSUser user) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(NAME, user.getName());
-        return map;
-    }
 
     /**
      * @return The user's email address
@@ -96,5 +89,17 @@ public class FSUser implements User {
      */
     public void setHabits(List<Habit> habits) {
         this.mHabits = habits;
+    }
+
+    @Override
+    public Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(NAME, getName());
+        return map;
+    }
+
+    @Override
+    public String getKey() {
+        return mEmail;
     }
 }

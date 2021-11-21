@@ -41,7 +41,7 @@ public class Authentication {
     public void signup(String name, String email, String password,
                        ThenFunction successCallback, CatchFunction failCallback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
-            FSUser user = new FSUser(name, email);
+            FSUser user = new FSUser(email, name);
             FSDocument.set(user, failCallback, mDb.collection(FSUser.COLLECTION))
                     .addOnSuccessListener(u -> successCallback.apply());
         }).addOnFailureListener(failCallback::apply);

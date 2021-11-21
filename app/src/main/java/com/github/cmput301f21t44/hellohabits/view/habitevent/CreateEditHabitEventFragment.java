@@ -26,7 +26,7 @@ import java.util.Objects;
  * Fragment class for creating or editing a HabitEvent
  */
 public class CreateEditHabitEventFragment extends Fragment {
-    private static final int MAX_COMMENT_LEN = 20;
+    public static final int MAX_COMMENT_LEN = 20;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;

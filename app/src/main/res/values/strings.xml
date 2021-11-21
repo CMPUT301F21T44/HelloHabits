@@ -82,5 +82,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_habits">Hello Habits</string>
+    <string name="team_str">CMPUT 301 Fall 2021 Team 44</string>
 
 </resources>

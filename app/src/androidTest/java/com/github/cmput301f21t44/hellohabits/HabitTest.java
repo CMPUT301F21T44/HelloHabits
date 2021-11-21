@@ -4,15 +4,24 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment.MAX_TITLE_LEN;
 
+import android.os.SystemClock;
+import android.view.Gravity;
+
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.view.MainActivity;
@@ -36,7 +45,7 @@ public class HabitTest {
     public static final String NEW_HABIT_REASON = "New Test Reason";
     public static FirebaseAuth sAuth = FirebaseAuth.getInstance();
     public static FirebaseFirestore sDb = FirebaseFirestore.getInstance();
-
+    private static String newHabitTitle;
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -49,7 +58,7 @@ public class HabitTest {
 
     @Test
     public void A_test_addHabit() {
-        onView(withId(R.id.button_new_habit)).perform(click());
+        onView(withId(R.id.fab)).perform(click());
         onView(withId(R.id.edit_text_title)).perform(typeText(HABIT_TITLE), closeSoftKeyboard());
         onView(withId(R.id.edit_text_reason)).perform(typeText(HABIT_REASON), closeSoftKeyboard());
 
@@ -82,8 +91,9 @@ public class HabitTest {
         onView(withText(HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_edit_habit)).perform(click());
 
+        newHabitTitle =TestUtil.getRealTimeString(NEW_HABIT_TITLE, MAX_TITLE_LEN);
         onView(withId(R.id.edit_text_title))
-                .perform(clearText(), typeText(NEW_HABIT_TITLE), closeSoftKeyboard());
+                .perform(clearText(), typeText(newHabitTitle), closeSoftKeyboard());
         onView(withId(R.id.edit_text_reason))
                 .perform(clearText(), typeText(NEW_HABIT_REASON), closeSoftKeyboard());
 
@@ -95,7 +105,7 @@ public class HabitTest {
 
         onView(withId(R.id.button_add_habit)).perform(click());
 
-        onView(withId(R.id.view_title)).check(matches(withText(NEW_HABIT_TITLE)));
+        onView(withId(R.id.view_title)).check(matches(withText(newHabitTitle)));
         onView(withId(R.id.view_reason)).check(matches(withText(NEW_HABIT_REASON)));
         String everyDay = DaysOfWeek.toString(
                 new boolean[]{true, true, true, true, true, true, false});
@@ -105,10 +115,18 @@ public class HabitTest {
 
     @Test
     public void D_test_deleteHabit() {
-        onView(withText(NEW_HABIT_TITLE)).perform(click());
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.AllHabitsFragment));
+
+        // when you're pissed just double click
+        onView(withText(newHabitTitle)).perform(doubleClick());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
 
         onView(withId(R.id.button_delete_habit)).perform(click());
         onView(withText("YES")).perform(click());
-        onView(withText(NEW_HABIT_TITLE)).check(doesNotExist());
+        onView(withText(newHabitTitle)).check(doesNotExist());
     }
 }

@@ -33,8 +33,8 @@ import java.util.Objects;
 public class CreateEditHabitFragment extends Fragment {
     public static final String TOO_LONG_ERROR_MESSAGE = "Input is too long";
     public static final String EMPTY_ERROR_MESSAGE = "Input cannot be empty";
-    private static final int MAX_TITLE_LEN = 20;
-    private static final int MAX_REASON_LEN = 30;
+    public static final int MAX_TITLE_LEN = 20;
+    public static final int MAX_REASON_LEN = 30;
 
     private FragmentCreateEditHabitBinding binding;
     private HabitViewModel mHabitViewModel;

@@ -65,8 +65,7 @@ public class FSHabitEvent implements HabitEvent, FSDocument<FSHabitEvent> {
     }
 
     public FSHabitEvent(QueryDocumentSnapshot doc) {
-        this(doc.getId(), FirestoreRepository.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
-                doc.getString(COMMENT));
+        this(doc.getId(), (Instant) doc.get(DATE), doc.getString(HABIT_ID), doc.getString(COMMENT));
     }
 
     /**

@@ -9,11 +9,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,20 +32,6 @@ public abstract class FirestoreRepository {
     protected FirestoreRepository(FirebaseFirestore db, FirebaseAuth auth) {
         this.mDb = db;
         this.mAuth = auth;
-    }
-
-    /**
-     * Generate an instant object from a DocumentSnapshot field
-     *
-     * @param doc   DocumentSnapshot from which to get the Instant
-     * @param field Key of the Instant field
-     * @return Instant from the DocumentSnapshot
-     */
-    public static Instant instantFromDoc(DocumentSnapshot doc, String field) {
-        Long epochSeconds = doc.getLong(field + ".epochSecond");
-        Long nanoAdjustment = doc.getLong(field + ".nano");
-        return (epochSeconds != null && nanoAdjustment != null) ?
-                Instant.ofEpochSecond(epochSeconds, nanoAdjustment) : null;
     }
 
     /**
@@ -76,7 +60,7 @@ public abstract class FirestoreRepository {
      * @return CollectionReference to a user's Habits
      */
     protected CollectionReference getHabitCollectionRef(String email) {
-        return getUserCollectionRef(email, FSHabit.COLLECTION);
+        return getUserSubCollectionRef(email, FSHabit.COLLECTION);
     }
 
     /**
@@ -89,14 +73,24 @@ public abstract class FirestoreRepository {
     }
 
     /**
-     * Get a collection from a user document
+     * Get a DocumentReference to a User
+     *
+     * @param email The user's email
+     * @return DocumentReference to the user
+     */
+    protected DocumentReference getUserRef(String email) {
+        return mDb.collection(FSUser.COLLECTION).document(email);
+    }
+
+    /**
+     * Get a sub-collection from a user document
      *
      * @param email      The User's email
      * @param collection Name of collection
      * @return CollectionReference with the given collection name
      */
-    protected CollectionReference getUserCollectionRef(String email, String collection) {
-        return mDb.collection(FSUser.COLLECTION).document(email).collection(collection);
+    protected CollectionReference getUserSubCollectionRef(String email, String collection) {
+        return getUserRef(email).collection(collection);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import com.github.cmput301f21t44.hellohabits.model.Follow;
 import com.github.cmput301f21t44.hellohabits.model.User;
 import com.github.cmput301f21t44.hellohabits.model.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,12 +44,12 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      * @param collection FollowCollection from which to grab follows
      * @return LiveData of list of follows
      */
-    private LiveData<List<User.Follow>> getFollows(FSFollow.FollowCollection collection) {
-        final MediatorLiveData<List<User.Follow>> followLiveData = new MediatorLiveData<>();
-        getUserCollectionRef(getEmail(), collection.getName())
+    private LiveData<List<Follow>> getFollows(FSFollow.FollowCollection collection) {
+        final MediatorLiveData<List<Follow>> followLiveData = new MediatorLiveData<>();
+        getUserSubCollectionRef(getEmail(), collection.getName())
                 .addSnapshotListener((followSnapshots, err) -> {
                     if (followSnapshots == null) return;
-                    List<User.Follow> follows = new ArrayList<>();
+                    List<Follow> follows = new ArrayList<>();
                     for (QueryDocumentSnapshot snapshot : followSnapshots) {
                         follows.add(new FSFollow(snapshot));
                     }
@@ -64,7 +65,7 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      * @return List of followers
      */
     @Override
-    public LiveData<List<User.Follow>> getAllFollowers() {
+    public LiveData<List<Follow>> getAllFollowers() {
         return getFollows(FSFollow.FOLLOWER_COLLECTION);
     }
 
@@ -74,8 +75,34 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      * @return List of users being followed by the current user
      */
     @Override
-    public LiveData<List<User.Follow>> getAllFollowing() {
+    public LiveData<List<Follow>> getAllFollowing() {
         return getFollows(FSFollow.FOLLOWING_COLLECTION);
+    }
+
+    /**
+     * Get info of a specific user
+     *
+     * @param email The user's email
+     * @return LiveData of User if they are followed,
+     * value is null if not followed or the user doesn't exist
+     */
+    @Override
+    public LiveData<User> getUser(String email) {
+        MediatorLiveData<User> userLivedata = new MediatorLiveData<>();
+        getUserRef(email).addSnapshotListener((doc, err) -> {
+            // user not found
+            if (doc == null) return;
+            userLivedata.addSource(getAllFollowing(), follows -> {
+                // will set user to null if user is not followed
+                boolean visibleProfile = follows.stream()
+                        .anyMatch(d -> d.getEmail().equals(email) &&
+                                d.getStatus().equals(Follow.Status.ACCEPTED));
+                userLivedata.setValue(visibleProfile ?
+                        new FSUser((QueryDocumentSnapshot) doc) : null);
+            });
+        });
+
+        return userLivedata;
     }
 
     /**
@@ -89,15 +116,15 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    private void updateFollow(String follower, String following, User.Follow.Status status,
+    private void updateFollow(String follower, String following, Follow.Status status,
                               ThenFunction successCallback,
                               CatchFunction failCallback) {
         WriteBatch batch = mDb.batch();
-        DocumentReference followerRef = getUserCollectionRef(follower,
+        DocumentReference followerRef = getUserSubCollectionRef(follower,
                 FSFollow.FOLLOWING_COLLECTION.getName()).document(following);
-        DocumentReference followingRef = getUserCollectionRef(following,
+        DocumentReference followingRef = getUserSubCollectionRef(following,
                 FSFollow.FOLLOWER_COLLECTION.getName()).document(follower);
-        if (status != User.Follow.Status.REJECTED) {
+        if (status != Follow.Status.REJECTED) {
             // will either create or update
             batch.set(followerRef, new FSFollow(following, status), SetOptions.merge());
             batch.set(followingRef, new FSFollow(follower, status), SetOptions.merge());
@@ -120,7 +147,7 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      */
     @Override
     public void requestFollow(String email, ThenFunction successCallback, CatchFunction failCallback) {
-        updateFollow(getEmail(), email, User.Follow.Status.REQUESTED, successCallback, failCallback);
+        updateFollow(getEmail(), email, Follow.Status.REQUESTED, successCallback, failCallback);
     }
 
     /**
@@ -132,7 +159,7 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      */
     @Override
     public void cancelFollow(String email, ThenFunction successCallback, CatchFunction failCallback) {
-        updateFollow(getEmail(), email, User.Follow.Status.REJECTED, successCallback, failCallback);
+        updateFollow(getEmail(), email, Follow.Status.REJECTED, successCallback, failCallback);
 
     }
 
@@ -145,7 +172,7 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      */
     @Override
     public void acceptFollow(String email, ThenFunction successCallback, CatchFunction failCallback) {
-        updateFollow(email, getEmail(), User.Follow.Status.ACCEPTED, successCallback, failCallback);
+        updateFollow(email, getEmail(), Follow.Status.ACCEPTED, successCallback, failCallback);
     }
 
     /**
@@ -157,6 +184,6 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      */
     @Override
     public void rejectFollow(String email, ThenFunction successCallback, CatchFunction failCallback) {
-        updateFollow(email, getEmail(), User.Follow.Status.REJECTED, successCallback, failCallback);
+        updateFollow(email, getEmail(), Follow.Status.REJECTED, successCallback, failCallback);
     }
 }

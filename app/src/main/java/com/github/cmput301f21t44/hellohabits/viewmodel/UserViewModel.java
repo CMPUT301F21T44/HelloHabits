@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.model.Follow;
 import com.github.cmput301f21t44.hellohabits.model.User;
 import com.github.cmput301f21t44.hellohabits.model.UserRepository;
 
@@ -16,10 +17,10 @@ import java.util.List;
  */
 public class UserViewModel extends ViewModel {
     private final UserRepository mRepository;
-    private final LiveData<List<User.Follow>> mFollowers;
-    private final LiveData<List<User.Follow>> mFollowing;
+    private final LiveData<List<Follow>> mFollowers;
+    private final LiveData<List<Follow>> mFollowing;
 
-    private final MutableLiveData<User> mSelectedUser = new MutableLiveData<>();
+    private LiveData<User> mSelectedUser = new MutableLiveData<>();
 
     public UserViewModel(UserRepository userRepository) {
         this.mRepository = userRepository;
@@ -31,15 +32,15 @@ public class UserViewModel extends ViewModel {
         return mSelectedUser;
     }
 
-    public void setSelectedUser(User user) {
-        mSelectedUser.setValue(user);
+    public void setSelectedUser(String email) {
+        mSelectedUser = mRepository.getUser(email);
     }
 
-    public LiveData<List<User.Follow>> getFollowers() {
+    public LiveData<List<Follow>> getFollowers() {
         return mFollowers;
     }
 
-    public LiveData<List<User.Follow>> getFollowing() {
+    public LiveData<List<Follow>> getFollowing() {
         return mFollowing;
     }
 

@@ -1,11 +1,12 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import com.github.cmput301f21t44.hellohabits.model.Follow;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
+public class FSFollow implements Follow, FSDocument<FSFollow> {
     public static final FollowCollection FOLLOWER_COLLECTION =
             new FollowCollection("followers");
     public static final FollowCollection FOLLOWING_COLLECTION =
@@ -13,7 +14,7 @@ public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
     public static final String STATUS = "status";
 
     private final String mEmail;
-    private final FSUser.Follow.Status mStatus;
+    private final Follow.Status mStatus;
 
     public FSFollow(String email, Status status) {
         this.mEmail = email;

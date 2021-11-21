@@ -11,7 +11,6 @@ import java.util.Map;
 
 
 public interface FSDocument<T extends FSDocument<T>> {
-
     @NonNull
     static <T extends FSDocument<T>> T create(QueryDocumentSnapshot doc, Class<T> docClass) {
         if (docClass.isAssignableFrom(FSUser.class)) {

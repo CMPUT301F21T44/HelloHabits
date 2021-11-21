@@ -16,14 +16,21 @@ public interface UserRepository {
      *
      * @return List of followers
      */
-    LiveData<List<User.Follow>> getAllFollowers();
+    LiveData<List<Follow>> getAllFollowers();
 
     /**
      * Get list of users that the current user follows
      *
      * @return List of users being followed by the current user
      */
-    LiveData<List<User.Follow>> getAllFollowing();
+    LiveData<List<Follow>> getAllFollowing();
+
+    /**
+     * Get a user's info
+     *
+     * @param email The user's email
+     */
+    LiveData<User> getUser(String email);
 
     /**
      * Requests to follow a user

@@ -59,7 +59,7 @@ public class FSHabit implements Habit, FSDocument<FSHabit> {
      */
     public FSHabit(QueryDocumentSnapshot doc) {
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
-                FirestoreRepository.instantFromDoc(doc, DATE_STARTED),
+                (Instant) doc.get(DATE_STARTED),
                 getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
                 convertVisibility(doc.getBoolean(IS_PRIVATE)));
     }

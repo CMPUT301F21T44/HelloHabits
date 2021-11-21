@@ -9,7 +9,7 @@
         android:id="@+id/TodaysHabitsFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habit.TodaysHabitsFragment"
         android:label="@string/todays_habits_fragment_label"
-        tools:layout="@layout/fragment_todays_habits" />
+        tools:layout="@layout/fragment_habit_list" />
     <fragment
         android:id="@+id/HabitCreateEditFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment"
@@ -28,7 +28,7 @@
         android:id="@+id/AllHabitsFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habit.AllHabitsFragment"
         android:label="All Habits"
-        tools:layout="@layout/fragment_all_habits" />
+        tools:layout="@layout/fragment_habit_list" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.social.LoginFragment"

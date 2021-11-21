@@ -69,7 +69,7 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
     }
 
     @Override
-    public LiveData<List<Habit>> getUserHabits(String email) {
+    public LiveData<List<Habit>> getUserPublicHabits(String email) {
         return getUserHabits(email, false);
     }
 

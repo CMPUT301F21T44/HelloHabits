@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
-import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 
@@ -65,6 +65,16 @@ public class HabitViewModel extends ViewModel {
      */
     public LiveData<List<Habit>> getAllHabits() {
         return mAllHabits;
+    }
+
+    /**
+     * Get public habits of another user
+     *
+     * @param email Another user's email
+     * @return LiveData of the list of public habits
+     */
+    public LiveData<List<Habit>> getUserPublicHabits(String email) {
+        return mRepository.getUserPublicHabits(email);
     }
 
     /**

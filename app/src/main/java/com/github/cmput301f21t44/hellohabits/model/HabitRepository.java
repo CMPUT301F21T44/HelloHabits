@@ -26,7 +26,7 @@ public interface HabitRepository {
      * @param email The user's email
      * @return a list consisting of public habits
      */
-    LiveData<List<Habit>> getUserHabits(String email);
+    LiveData<List<Habit>> getUserPublicHabits(String email);
 
     /**
      * Creates a new Habit for the user

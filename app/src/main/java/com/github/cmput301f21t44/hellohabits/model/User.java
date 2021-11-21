@@ -39,19 +39,22 @@ public interface User {
 
         Status getStatus();
 
-
         /**
          * Enum for describing the follow relationship between users
          */
         enum Status {
             /**
-             * User has requested to follow
-             */
-            REQUESTED("requested"),
-            /**
              * User's follow request has been accepted
              */
-            ACCEPTED("accepted");
+            ACCEPTED("accepted"),
+            /**
+             * User's follow request has been rejected
+             */
+            REJECTED("rejected"),
+            /**
+             * User has requested to follow
+             */
+            REQUESTED("requested");
 
             /**
              * Constant map to easily convert between enum and text

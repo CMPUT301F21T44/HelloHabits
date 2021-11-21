@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
-    public static final String FOLLOWER_COLLECTION = "followers";
-    public static final String FOLLOWING_COLLECTION = "following";
+    public static final FollowCollection FOLLOWER_COLLECTION =
+            new FollowCollection("followers");
+    public static final FollowCollection FOLLOWING_COLLECTION =
+            new FollowCollection("following");
     public static final String STATUS = "status";
 
     private final String mEmail;
@@ -16,10 +18,6 @@ public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
     public FSFollow(String email, Status status) {
         this.mEmail = email;
         this.mStatus = status;
-    }
-
-    public FSFollow(String email) {
-        this(email, Status.REQUESTED);
     }
 
     public FSFollow(QueryDocumentSnapshot doc) {
@@ -51,5 +49,20 @@ public class FSFollow implements FSUser.Follow, FSDocument<FSFollow> {
     @Override
     public String getKey() {
         return mEmail;
+    }
+
+    /**
+     * Nominal type for Follow
+     */
+    static final class FollowCollection {
+        private final String name;
+
+        FollowCollection(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
     }
 }

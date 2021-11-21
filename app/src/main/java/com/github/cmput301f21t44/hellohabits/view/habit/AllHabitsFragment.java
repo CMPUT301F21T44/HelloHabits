@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -63,16 +62,16 @@ public class AllHabitsFragment extends Fragment {
         mPreviousListViewModel = provider.get(PreviousListViewModel.class);
         mAdapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.setSelectedHabit(habit);
-            mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
-            mNavController.navigate(R.id.action_allHabitsFragment_to_viewHabitFragment);
+            mPreviousListViewModel.setDestinationId(R.id.AllHabitsFragment);
+            mNavController.navigate(R.id.ViewHabitFragment);
         });
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBinding.buttonNewHabit.setOnClickListener(view1 -> {
             mHabitViewModel.setSelectedHabit(null);
-            mPreviousListViewModel.setDestinationId(R.id.allHabitsFragment);
-            mNavController.navigate(R.id.action_allHabitsFragment_to_newHabitFragment);
+            mPreviousListViewModel.setDestinationId(R.id.AllHabitsFragment);
+            mNavController.navigate(R.id.HabitCreateEditFragment);
         });
     }
 
@@ -86,22 +85,6 @@ public class AllHabitsFragment extends Fragment {
             List<Habit> allHabits = new ArrayList<>(habitList);
             mAdapter.submitList(allHabits);
         });
-
-    }
-
-    /**
-     * This function handle the back button event when the fragment is on resume
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        mNavController.navigate(R.id.TodaysHabitsFragment);
-                    }
-                });
     }
 
     /**

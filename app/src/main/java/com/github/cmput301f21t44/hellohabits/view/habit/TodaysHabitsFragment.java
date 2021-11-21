@@ -89,7 +89,7 @@ public class TodaysHabitsFragment extends Fragment {
         mAdapter = HabitAdapter.newInstance((habit) -> {
             mHabitViewModel.setSelectedHabit(habit);
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
-            mNavController.navigate(R.id.action_todaysHabitsFragment_to_viewHabitFragment);
+            mNavController.navigate(R.id.ViewHabitFragment);
         });
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -97,12 +97,12 @@ public class TodaysHabitsFragment extends Fragment {
         mBinding.buttonNewHabit.setOnClickListener(view1 -> {
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
             mHabitViewModel.setSelectedHabit(null);
-            mNavController.navigate(R.id.action_todaysHabitsFragment_to_newHabitFragment);
+            mNavController.navigate(R.id.HabitCreateEditFragment);
         });
         mBinding.viewAllHabits.setOnClickListener(view1 -> {
             mHabitViewModel.setSelectedHabit(null);
             mPreviousListViewModel.setDestinationId(R.id.TodaysHabitsFragment);
-            mNavController.navigate(R.id.action_TodaysHabitsFragment_to_allHabitsFragment);
+            mNavController.navigate(R.id.AllHabitsFragment);
         });
         mBinding.social.setOnClickListener(v -> showSignOutDialog());
     }

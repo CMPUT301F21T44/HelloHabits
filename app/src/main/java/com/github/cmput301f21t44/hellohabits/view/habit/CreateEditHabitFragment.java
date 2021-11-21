@@ -155,7 +155,7 @@ public class CreateEditHabitFragment extends Fragment {
         int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
                 .getDestination().getId();
 
-        mNavController.navigate(mIsEdit ? R.id.viewHabitFragment : previousDest);
+        mNavController.navigate(mIsEdit ? R.id.ViewHabitFragment : previousDest);
 
     }
 

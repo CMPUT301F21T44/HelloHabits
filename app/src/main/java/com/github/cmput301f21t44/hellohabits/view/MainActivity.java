@@ -12,8 +12,15 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity {
+    private AppBarConfiguration mAppBarConfiguration;
+    private NavController mNavController;
+    private PreviousListViewModel mPreviousListViewModel;
+    private boolean mFromViewHabit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,16 +28,26 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.appBarMain.toolbar);
 
-        NavController navController = Navigation
+        mPreviousListViewModel = ViewModelFactory.getProvider(this)
+                .get(PreviousListViewModel.class);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.TodaysHabitsFragment,
+                R.id.AllHabitsFragment
+        )
+                .setOpenableLayout(binding.drawerLayout)
+                .build();
+
+        mNavController = Navigation
                 .findNavController(this, R.id.nav_host_fragment_content_main);
-
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
-
         NavigationUI
-                .setupActionBarWithNavController(this, navController, appBarConfiguration);
+                .setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, mNavController);
+
+        mPreviousListViewModel.getFromViewHabit()
+                .observe(this, val -> this.mFromViewHabit = val);
     }
 
     @Override
@@ -47,17 +64,20 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        if (id == R.id.action_settings) return true;
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        getOnBackPressedDispatcher().onBackPressed();
-        return super.onSupportNavigateUp();
+        if (mFromViewHabit) {
+            getOnBackPressedDispatcher().onBackPressed();
+            mPreviousListViewModel.setFromViewHabit(false);
+            return true;
+        }
+
+        return NavigationUI.navigateUp(mNavController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }

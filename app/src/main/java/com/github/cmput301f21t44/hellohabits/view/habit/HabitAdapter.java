@@ -102,6 +102,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         @Override
         public boolean areContentsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
             return oldItem.getReason().equals(newItem.getReason())
+                    && oldItem.getEvents().equals(newItem.getEvents())
                     && oldItem.getTitle().equals(newItem.getTitle())
                     && oldItem.getDateStarted().equals(newItem.getDateStarted())
                     && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);

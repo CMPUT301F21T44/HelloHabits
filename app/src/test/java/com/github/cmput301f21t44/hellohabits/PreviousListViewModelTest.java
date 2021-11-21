@@ -34,7 +34,7 @@ public class PreviousListViewModelTest {
 
     @Test
     public void test_destinationId() {
-        int id = R.id.allHabitsFragment;
+        int id = R.id.AllHabitsFragment;
         previousListViewModel.setDestinationId(id);
         //noinspection ConstantConditions
         assertEquals(id, (long) previousListViewModel.getDestinationId().getValue());

@@ -19,6 +19,8 @@ public class PreviousListViewModel extends ViewModel {
      */
     private final MutableLiveData<Integer> mDestinationId =
             new MutableLiveData<>(R.id.TodaysHabitsFragment);
+    private final MutableLiveData<Boolean> mFromViewHabit =
+            new MutableLiveData<>(false);
 
     public LiveData<Integer> getDestinationId() {
         return mDestinationId;
@@ -26,5 +28,13 @@ public class PreviousListViewModel extends ViewModel {
 
     public void setDestinationId(int id) {
         mDestinationId.setValue(id);
+    }
+
+    public LiveData<Boolean> getFromViewHabit() {
+        return mFromViewHabit;
+    }
+
+    public void setFromViewHabit(boolean fromViewHabit) {
+        mFromViewHabit.setValue(fromViewHabit);
     }
 }

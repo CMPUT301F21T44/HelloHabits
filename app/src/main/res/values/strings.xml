@@ -67,5 +67,11 @@
     <string name="check_box">check box</string>
     <string name="edit_button">Edit button</string>
     <string name="delete_button">Delete button</string>
+    <string name="today_s_habits">Today\'s Habits</string>
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="all_habits">All Habits</string>
 
 </resources>

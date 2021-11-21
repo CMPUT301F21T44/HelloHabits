@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask.CatchFunction;
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask.ResultFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
 

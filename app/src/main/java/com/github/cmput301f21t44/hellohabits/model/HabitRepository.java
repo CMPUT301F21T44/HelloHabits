@@ -2,7 +2,9 @@ package com.github.cmput301f21t44.hellohabits.model;
 
 import androidx.lifecycle.LiveData;
 
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,6 +21,14 @@ public interface HabitRepository {
     LiveData<List<Habit>> getAllHabits();
 
     /**
+     * Return a list of public habits of a user
+     *
+     * @param email The user's email
+     * @return a list consisting of public habits
+     */
+    LiveData<List<Habit>> getUserHabits(String email);
+
+    /**
      * Creates a new Habit for the user
      *
      * @param title           Title of the Habit
@@ -30,8 +40,8 @@ public interface HabitRepository {
      * @param failCallback    Callback for when the operation fails
      */
     void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                boolean isPrivate, FirebaseTask.ThenFunction successCallback,
-                FirebaseTask.CatchFunction failCallback);
+                boolean isPrivate, ThenFunction successCallback,
+                CatchFunction failCallback);
 
     /**
      * Delete the given Habit
@@ -40,8 +50,8 @@ public interface HabitRepository {
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    void delete(Habit habit, FirebaseTask.ThenFunction successCallback,
-                FirebaseTask.CatchFunction failCallback);
+    void delete(Habit habit, ThenFunction successCallback,
+                CatchFunction failCallback);
 
     /**
      * Updates a Habit with the given UUID
@@ -56,6 +66,6 @@ public interface HabitRepository {
      * @param failCallback    Callback for when the operation fails
      */
     void update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                boolean isPrivate, FirebaseTask.ResultFunction<Habit> successCallback,
-                FirebaseTask.CatchFunction failCallback);
+                boolean isPrivate, ResultFunction<Habit> successCallback,
+                CatchFunction failCallback);
 }

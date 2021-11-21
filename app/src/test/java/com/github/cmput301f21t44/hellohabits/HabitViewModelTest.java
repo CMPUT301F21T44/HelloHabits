@@ -8,7 +8,8 @@ import static org.mockito.Mockito.when;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.Habit;
 import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
@@ -58,9 +59,9 @@ public class HabitViewModelTest {
     @Captor
     ArgumentCaptor<Boolean> isPrivateCaptor;
     @Captor
-    ArgumentCaptor<FirebaseTask.ThenFunction> successCallbackCaptor;
+    ArgumentCaptor<ThenFunction> successCallbackCaptor;
     @Captor
-    ArgumentCaptor<FirebaseTask.CatchFunction> failCallbackCaptor;
+    ArgumentCaptor<CatchFunction> failCallbackCaptor;
 
     /**
      * HabitViewModel, the class being tested
@@ -88,9 +89,9 @@ public class HabitViewModelTest {
         String reason = "Test Reason";
         Instant dateStarted = Instant.now();
         boolean[] daysOfWeek = DaysOfWeek.emptyArray();
-        FirebaseTask.ThenFunction successCallback = () -> {
+        ThenFunction successCallback = () -> {
         };
-        FirebaseTask.CatchFunction failCallback = (e) -> {
+        CatchFunction failCallback = (e) -> {
         };
 
         // Call method to test

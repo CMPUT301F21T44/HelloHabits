@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -17,23 +19,19 @@ import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.view.InputValidator;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 /**
  * Fragment for logging in or signing up
  */
 public class LoginFragment extends Fragment {
     private static final int LONG_MESSAGE_THRESHOLD = 50;
     private FragmentLoginBinding binding;
+    private ActionBar mActionBar;
     private Authentication auth;
     private FirebaseAuth mAuth;
     private NavController mNav;
     private boolean mIsLogin;
-
-    /**
-     *
-     */
-    public LoginFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * This function set the basic creation
@@ -119,8 +117,13 @@ public class LoginFragment extends Fragment {
         String password = binding.password.getText().toString();
 
         auth.signIn(email, password)
-                .addOnSuccessListener(authResult -> mNav.navigate(R.id.TodaysHabitsFragment))
+                .addOnSuccessListener(authResult -> finish())
                 .addOnFailureListener(e -> showErrorToast("Failed to sign in", e));
+    }
+
+    private void finish() {
+        mActionBar.show();
+        mNav.navigate(R.id.TodaysHabitsFragment);
     }
 
     /**
@@ -134,8 +137,7 @@ public class LoginFragment extends Fragment {
         String name = binding.name.getText().toString();
         String email = binding.email.getText().toString();
         String password = binding.password.getText().toString();
-        auth.signup(name, email, password,
-                () -> mNav.navigate(R.id.TodaysHabitsFragment),
+        auth.signup(name, email, password, this::finish,
                 e -> showErrorToast("Failed to sign up", e));
     }
 
@@ -162,6 +164,10 @@ public class LoginFragment extends Fragment {
             NavHostFragment.findNavController(this)
                     .navigate(R.id.TodaysHabitsFragment);
         }
+        mActionBar = Objects.requireNonNull(((AppCompatActivity) requireActivity())
+                .getSupportActionBar());
+        // Remove action bar on login screen
+        mActionBar.hide();
     }
 
     /**

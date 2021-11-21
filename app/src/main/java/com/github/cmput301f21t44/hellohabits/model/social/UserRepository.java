@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.model;
+package com.github.cmput301f21t44.hellohabits.model.social;
 
 import androidx.lifecycle.LiveData;
 
@@ -24,6 +24,13 @@ public interface UserRepository {
      * @return List of users being followed by the current user
      */
     LiveData<List<Follow>> getAllFollowing();
+
+    /**
+     * Gets all application users
+     *
+     * @return List of all users
+     */
+    LiveData<List<User>> getAllUsers();
 
     /**
      * Get a user's info

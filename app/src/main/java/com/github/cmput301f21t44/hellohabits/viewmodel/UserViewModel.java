@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.model.Follow;
-import com.github.cmput301f21t44.hellohabits.model.User;
-import com.github.cmput301f21t44.hellohabits.model.UserRepository;
+import com.github.cmput301f21t44.hellohabits.model.social.Follow;
+import com.github.cmput301f21t44.hellohabits.model.social.User;
+import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -73,13 +73,22 @@ public abstract class FirestoreRepository {
     }
 
     /**
+     * Gets a CollectionReference to all users
+     *
+     * @return CollectionReference to all users
+     */
+    protected CollectionReference getAllUsersCollectionRef() {
+        return mDb.collection(FSUser.COLLECTION);
+    }
+
+    /**
      * Get a DocumentReference to a User
      *
      * @param email The user's email
      * @return DocumentReference to the user
      */
     protected DocumentReference getUserRef(String email) {
-        return mDb.collection(FSUser.COLLECTION).document(email);
+        return getAllUsersCollectionRef().document(email);
     }
 
     /**

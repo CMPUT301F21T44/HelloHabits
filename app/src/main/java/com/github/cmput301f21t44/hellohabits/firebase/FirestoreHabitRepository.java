@@ -3,9 +3,9 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
-import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;

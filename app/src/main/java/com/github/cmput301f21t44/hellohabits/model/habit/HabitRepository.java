@@ -1,10 +1,11 @@
-package com.github.cmput301f21t44.hellohabits.model;
+package com.github.cmput301f21t44.hellohabits.model.habit;
 
 import androidx.lifecycle.LiveData;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 
 import java.time.Instant;
 import java.util.List;

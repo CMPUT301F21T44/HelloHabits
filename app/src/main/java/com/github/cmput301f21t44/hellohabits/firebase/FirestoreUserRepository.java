@@ -2,10 +2,11 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.model.Follow;
-import com.github.cmput301f21t44.hellohabits.model.User;
-import com.github.cmput301f21t44.hellohabits.model.UserRepository;
+import com.github.cmput301f21t44.hellohabits.model.social.Follow;
+import com.github.cmput301f21t44.hellohabits.model.social.User;
+import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,6 +78,20 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
     @Override
     public LiveData<List<Follow>> getAllFollowing() {
         return getFollows(FSFollow.FOLLOWING_COLLECTION);
+    }
+
+    @Override
+    public LiveData<List<User>> getAllUsers() {
+        MutableLiveData<List<User>> usersLiveData = new MutableLiveData<>();
+        getAllUsersCollectionRef().addSnapshotListener((userSnapshots, err) -> {
+            if (userSnapshots == null) return;
+            final List<User> users = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : userSnapshots) {
+                users.add(new FSUser(doc));
+            }
+            usersLiveData.setValue(users);
+        });
+        return usersLiveData;
     }
 
     /**

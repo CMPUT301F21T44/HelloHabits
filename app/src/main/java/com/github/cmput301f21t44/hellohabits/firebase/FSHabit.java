@@ -1,7 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.Instant;

@@ -1,7 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
-import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 

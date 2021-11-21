@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
-import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
 
 import java.time.Instant;
 import java.util.List;

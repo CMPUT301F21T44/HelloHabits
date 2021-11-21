@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits.model;
+package com.github.cmput301f21t44.hellohabits.model.habitevent;
 
 /**
  * Interface to implement a HabitEvent Location

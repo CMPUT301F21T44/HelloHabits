@@ -10,9 +10,9 @@ import androidx.lifecycle.LiveData;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import org.junit.Before;

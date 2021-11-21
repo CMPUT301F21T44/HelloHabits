@@ -3,7 +3,7 @@ package com.github.cmput301f21t44.hellohabits;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

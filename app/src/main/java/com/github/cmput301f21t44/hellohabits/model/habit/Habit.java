@@ -1,4 +1,6 @@
-package com.github.cmput301f21t44.hellohabits.model;
+package com.github.cmput301f21t44.hellohabits.model.habit;
+
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 
 import java.time.Instant;
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.Location;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
 import java.io.Serializable;
 

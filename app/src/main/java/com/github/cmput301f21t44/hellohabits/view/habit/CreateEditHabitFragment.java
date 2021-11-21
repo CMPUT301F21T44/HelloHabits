@@ -16,8 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitBinding;
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
-import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 

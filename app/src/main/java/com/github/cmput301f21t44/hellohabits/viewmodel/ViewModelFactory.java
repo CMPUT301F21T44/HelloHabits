@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreEventRepository;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreHabitRepository;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreUserRepository;
-import com.github.cmput301f21t44.hellohabits.model.HabitEventRepository;
-import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
-import com.github.cmput301f21t44.hellohabits.model.UserRepository;
+import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 
 /**
  * Factory class for creating ViewModel instances

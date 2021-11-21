@@ -14,7 +14,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;

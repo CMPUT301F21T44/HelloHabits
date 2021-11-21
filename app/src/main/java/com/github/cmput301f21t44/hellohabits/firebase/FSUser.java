@@ -1,6 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.User;
+import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;

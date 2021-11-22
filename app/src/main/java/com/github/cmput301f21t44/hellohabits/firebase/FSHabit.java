@@ -21,7 +21,7 @@ public class FSHabit implements Habit, FSDocument {
     public static final String DATE_STARTED = "dateStarted";
     public static final String DAYS_OF_WEEK = "daysOfWeek";
     public static final String IS_PRIVATE = "isPrivate";
-    public static final String INDEX = "index";
+    public static final String HABIT_INDEX = "index";
 
     private final String mId;
     private final String mTitle;
@@ -61,13 +61,13 @@ public class FSHabit implements Habit, FSDocument {
      *
      * @param doc Firestore document
      */
+    @SuppressWarnings("unchecked")
     public FSHabit(QueryDocumentSnapshot doc) {
-        //noinspection unchecked
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
                 FSDocument.instantFromDoc(doc, DATE_STARTED),
                 getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
                 convertVisibility(doc.getBoolean(IS_PRIVATE)),
-                convertIndex(doc.getLong(INDEX))
+                convertIndex(doc.getLong(HABIT_INDEX))
         );
     }
 
@@ -180,7 +180,7 @@ public class FSHabit implements Habit, FSDocument {
         }
         map.put(DAYS_OF_WEEK, days);
         map.put(IS_PRIVATE, mPrivate);
-        map.put(INDEX, mIndex);
+        map.put(HABIT_INDEX, mIndex);
         return map;
     }
 

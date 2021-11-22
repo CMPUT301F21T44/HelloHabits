@@ -105,6 +105,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
                     && oldItem.getEvents().equals(newItem.getEvents())
                     && oldItem.getTitle().equals(newItem.getTitle())
                     && oldItem.getDateStarted().equals(newItem.getDateStarted())
+                    && oldItem.getIndex() == newItem.getIndex()
                     && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);
         }
     }
@@ -147,7 +148,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
 
             mItemBinding.lock.setVisibility(habit.isPrivate() ? VISIBLE : INVISIBLE);
             mItemBinding.getRoot().setOnClickListener(v -> listener.onItemClick(habit));
+            HabitIndexChange.setTags(mItemBinding.getRoot(), habit);
         }
-
     }
 }

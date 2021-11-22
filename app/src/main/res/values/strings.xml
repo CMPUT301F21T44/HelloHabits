@@ -86,4 +86,8 @@
     <string name="team_str">CMPUT 301 Fall 2021 Team 44</string>
     <string name="reorder_habits">Reorder habits</string>
 
+    <string name="priority">Priority</string>
+    <!-- Resource ID for tags -->
+    <id name="priority" />
+    <id name="habit_id" />
 </resources>

@@ -9,6 +9,7 @@ import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 
 import java.time.Instant;
 import java.util.List;
@@ -104,7 +105,7 @@ public class HabitViewModel extends ViewModel {
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
      * @param isPrivate       Whether the habit is invisible to followers
-     * @param  index The index of the
+     * @param index           The index of the
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
@@ -125,5 +126,15 @@ public class HabitViewModel extends ViewModel {
      */
     public void delete(Habit habit, ThenFunction successCallback, CatchFunction failCallback) {
         mRepository.delete(habit, successCallback, failCallback);
+    }
+
+    /**
+     * Updates the user's habit indices
+     *
+     * @param changeList   List of Habit index changes
+     * @param failCallback Callback for when the operation fails
+     */
+    public void updateIndices(List<HabitIndexChange> changeList, CatchFunction failCallback) {
+        mRepository.updateIndices(changeList, failCallback);
     }
 }

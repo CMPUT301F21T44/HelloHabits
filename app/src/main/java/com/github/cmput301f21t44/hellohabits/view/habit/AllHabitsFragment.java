@@ -9,6 +9,8 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,6 +41,7 @@ public class AllHabitsFragment extends HabitListFragment {
         super.onStart();
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> allHabits = new ArrayList<>(habitList);
+            Collections.sort(allHabits, Comparator.comparingInt(Habit::getIndex));
             mAdapter.submitList(allHabits);
         });
     }

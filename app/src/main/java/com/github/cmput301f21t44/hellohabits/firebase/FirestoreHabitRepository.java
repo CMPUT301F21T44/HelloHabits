@@ -1,11 +1,14 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import static com.github.cmput301f21t44.hellohabits.firebase.FSHabit.HABIT_INDEX;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -179,5 +182,20 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
         FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate, index);
         FSDocument.set(habit, failCallback, getHabitCollectionRef())
                 .addOnSuccessListener(u -> successCallback.apply(habit));
+    }
+
+    /**
+     * Updates the user's habit indices
+     *
+     * @param changeList   List of Habit index changes
+     * @param failCallback Callback for when the operation fails
+     */
+    @Override
+    public void updateIndices(List<HabitIndexChange> changeList, CatchFunction failCallback) {
+        WriteBatch batch = mDb.batch();
+        for (HabitIndexChange h : changeList) {
+            batch.update(getHabitRef(h.getHabitId()), HABIT_INDEX, h.getNewIndex());
+        }
+        batch.commit().addOnFailureListener(failCallback::apply);
     }
 }

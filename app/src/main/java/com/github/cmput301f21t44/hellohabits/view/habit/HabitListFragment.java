@@ -1,9 +1,11 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -12,7 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentHabitListBinding;
@@ -23,22 +27,32 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Fragment for viewing a list of habits
  */
 public abstract class HabitListFragment extends Fragment {
+    /**
+     * Touch Helper for dragging Habit items to reorder
+     */
+    private final ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new HabitTouchCallback());
+    private final List<HabitIndexChange> mIndexChangeList = new ArrayList<>();
     protected HabitViewModel mHabitViewModel;
     protected HabitAdapter mAdapter;
     protected FragmentHabitListBinding mBinding;
-
     protected PreviousListViewModel mPreviousListViewModel;
     protected NavController mNavController;
     protected boolean mReordering = false;
-
     private FloatingActionButton mNewHabitFab;
     private FloatingActionButton mReorderFab;
+
+    /**
+     * ItemAnimator to be preserved when being disabled
+     */
+    private RecyclerView.ItemAnimator mAnimator;
 
     /**
      * HabitList's onCreateView lifecycle method
@@ -99,6 +113,7 @@ public abstract class HabitListFragment extends Fragment {
         mAdapter = HabitAdapter.newInstance(listener);
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAnimator = mBinding.habitRecyclerView.getItemAnimator();
     }
 
     /**
@@ -134,12 +149,51 @@ public abstract class HabitListFragment extends Fragment {
         this.mReordering = !mReordering;
         actionBar.setDisplayHomeAsUpEnabled(!mReordering);
         if (mReordering) {
+            // enable RecyclerView animation when reordering
+            mBinding.habitRecyclerView.setItemAnimator(mAnimator);
+
+            mItemTouchHelper.attachToRecyclerView(mBinding.habitRecyclerView);
             mBinding.reorderFab.setImageResource(R.drawable.ic_baseline_check_circle_24);
             mBinding.newHabit.setVisibility(View.INVISIBLE);
         } else {
+            // check if order was changed here, update indices in FireStore
+            if (orderChanged()) updateIndices();
+
+            // needed to prevent weird swapping when changing indices
+            mBinding.habitRecyclerView.setItemAnimator(null);
+            mItemTouchHelper.attachToRecyclerView(null);
             mBinding.reorderFab.setImageResource(R.drawable.ic_baseline_reorder_24);
             mBinding.newHabit.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Updates the indices in FireStore
+     */
+    private void updateIndices() {
+        mHabitViewModel.updateIndices(mIndexChangeList, (e) -> Toast.makeText(getContext(),
+                "Failed to update in FireStore, changes will not be persisted.",
+                Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Checks if the list order has changed
+     *
+     * @return true if the order was changed, false if not
+     */
+    @SuppressLint("DefaultLocale")
+    private boolean orderChanged() {
+        RecyclerView.LayoutManager layoutManager = mBinding.habitRecyclerView.getLayoutManager();
+        if (layoutManager == null) return false;
+
+        int n = layoutManager.getChildCount();
+        mIndexChangeList.clear();
+        for (int i = 0; i < n; ++i) {
+            View habitView = Objects.requireNonNull(layoutManager.getChildAt(i));
+            mIndexChangeList.add(HabitIndexChange.fromView(habitView, i));
+        }
+
+        return mIndexChangeList.stream().anyMatch(c -> c.getOldIndex() != c.getNewIndex());
     }
 
     /**

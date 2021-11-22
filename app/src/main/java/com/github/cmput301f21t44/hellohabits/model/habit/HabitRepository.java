@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 
 import java.time.Instant;
 import java.util.List;
@@ -69,4 +70,12 @@ public interface HabitRepository {
     void update(String id, String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
                 boolean isPrivate, int index, ResultFunction<Habit> successCallback,
                 CatchFunction failCallback);
+
+    /**
+     * Updates the user's habit indices
+     *
+     * @param changeList   List of Habit index changes
+     * @param failCallback Callback for when the operation fails
+     */
+    void updateIndices(List<HabitIndexChange> changeList, CatchFunction failCallback);
 }

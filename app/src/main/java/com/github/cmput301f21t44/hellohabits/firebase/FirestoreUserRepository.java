@@ -21,7 +21,6 @@ import java.util.List;
  * Firestore Repository for Users
  */
 public class FirestoreUserRepository extends FirestoreRepository implements UserRepository {
-
     /**
      * Creates a new FirestoreUserRepository
      *
@@ -40,84 +39,49 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
     }
 
     /**
-     * Create a LiveData list of follows
+     * Get LiveData for a follow
      *
-     * @param collection FollowCollection from which to grab follows
-     * @return LiveData of list of follows
+     * @param email      The user's email
+     * @param collection The follow collection to fetch from
+     * @return LiveData of an FSFollow
      */
-    private LiveData<List<Follow>> getFollows(FSFollow.FollowCollection collection) {
-        final MediatorLiveData<List<Follow>> followLiveData = new MediatorLiveData<>();
-        getUserSubCollectionRef(getEmail(), collection.getName())
-                .addSnapshotListener((followSnapshots, err) -> {
-                    if (followSnapshots == null) return;
-                    List<Follow> follows = new ArrayList<>();
-                    for (QueryDocumentSnapshot snapshot : followSnapshots) {
-                        follows.add(new FSFollow(snapshot));
-                    }
-                    followLiveData.setValue(follows);
-                });
+    private LiveData<FSFollow> getFollowLiveData(String email,
+                                                 FSFollow.FollowCollection collection) {
+        MutableLiveData<FSFollow> followLiveData = new MutableLiveData<>();
+        getUserSubCollectionRef(email, collection.toString())
+                .document(getEmail()).addSnapshotListener((follow, e) -> {
+            if (follow == null) return;
+            if (follow.exists()) {
+                followLiveData.setValue(new FSFollow((QueryDocumentSnapshot) follow));
+            }
+        });
 
         return followLiveData;
     }
 
-    /**
-     * Get list of users that follow the current user
-     *
-     * @return List of followers
-     */
-    @Override
-    public LiveData<List<Follow>> getAllFollowers() {
-        return getFollows(FSFollow.FOLLOWER_COLLECTION);
-    }
-
-    /**
-     * Get list of users that the current user follows
-     *
-     * @return List of users being followed by the current user
-     */
-    @Override
-    public LiveData<List<Follow>> getAllFollowing() {
-        return getFollows(FSFollow.FOLLOWING_COLLECTION);
-    }
-
     @Override
     public LiveData<List<User>> getAllUsers() {
-        MutableLiveData<List<User>> usersLiveData = new MutableLiveData<>();
+        MediatorLiveData<List<User>> usersLiveData = new MediatorLiveData<>();
         getAllUsersCollectionRef().addSnapshotListener((userSnapshots, err) -> {
             if (userSnapshots == null) return;
             final List<User> users = new ArrayList<>();
             for (QueryDocumentSnapshot doc : userSnapshots) {
-                users.add(new FSUser(doc));
+                final FSUser user = new FSUser(doc);
+                // exclude self from list
+                if (user.getEmail().equals(getEmail())) continue;
+                LiveData<FSFollow> followingLiveData = getFollowLiveData(user.getEmail(),
+                        FSFollow.FOLLOWING_COLLECTION);
+                LiveData<FSFollow> followerLiveData = getFollowLiveData(user.getEmail(),
+                        FSFollow.FOLLOWER_COLLECTION);
+                usersLiveData.addSource(followingLiveData, fsFollow ->
+                        user.setFollowerStatus(fsFollow.getStatus()));
+                usersLiveData.addSource(followerLiveData, fsFollow ->
+                        user.setFollowingStatus(fsFollow.getStatus()));
+                users.add(user);
             }
             usersLiveData.setValue(users);
         });
         return usersLiveData;
-    }
-
-    /**
-     * Get info of a specific user
-     *
-     * @param email The user's email
-     * @return LiveData of User if they are followed,
-     * value is null if not followed or the user doesn't exist
-     */
-    @Override
-    public LiveData<User> getUser(String email) {
-        MediatorLiveData<User> userLivedata = new MediatorLiveData<>();
-        getUserRef(email).addSnapshotListener((doc, err) -> {
-            // user not found
-            if (doc == null) return;
-            userLivedata.addSource(getAllFollowing(), follows -> {
-                // will set user to null if user is not followed
-                boolean visibleProfile = follows.stream()
-                        .anyMatch(d -> d.getEmail().equals(email) &&
-                                d.getStatus().equals(Follow.Status.ACCEPTED));
-                userLivedata.setValue(visibleProfile ?
-                        new FSUser((QueryDocumentSnapshot) doc) : null);
-            });
-        });
-
-        return userLivedata;
     }
 
     /**
@@ -136,9 +100,9 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
                               CatchFunction failCallback) {
         WriteBatch batch = mDb.batch();
         DocumentReference followerRef = getUserSubCollectionRef(follower,
-                FSFollow.FOLLOWING_COLLECTION.getName()).document(following);
+                FSFollow.FOLLOWING_COLLECTION.toString()).document(following);
         DocumentReference followingRef = getUserSubCollectionRef(following,
-                FSFollow.FOLLOWER_COLLECTION.getName()).document(follower);
+                FSFollow.FOLLOWER_COLLECTION.toString()).document(follower);
         if (status != Follow.Status.REJECTED) {
             // will either create or update
             batch.set(followerRef, new FSFollow(following, status), SetOptions.merge());

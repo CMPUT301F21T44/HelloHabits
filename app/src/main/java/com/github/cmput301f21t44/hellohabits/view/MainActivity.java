@@ -40,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.TodaysHabitsFragment,
-                R.id.AllHabitsFragment
+                R.id.AllHabitsFragment,
+                R.id.FollowersFragment,
+                R.id.FollowingFragment,
+                R.id.AllUsersFragment
         )
                 .setOpenableLayout(binding.drawerLayout)
                 .build();
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void requireUser() {
         if (mAuth.getCurrentUser() == null) {
-            mNavController.navigate(R.id.loginFragment);
+            mNavController.navigate(R.id.LoginFragment);
         }
     }
 

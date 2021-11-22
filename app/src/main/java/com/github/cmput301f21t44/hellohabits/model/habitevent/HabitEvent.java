@@ -1,11 +1,13 @@
 package com.github.cmput301f21t44.hellohabits.model.habitevent;
 
+import com.github.cmput301f21t44.hellohabits.model.HasKey;
+
 import java.time.Instant;
 
 /**
  * Interface to implement habit event functions
  */
-public interface HabitEvent {
+public interface HabitEvent extends HasKey {
     /**
      * Get HabitEvent's UUID
      *

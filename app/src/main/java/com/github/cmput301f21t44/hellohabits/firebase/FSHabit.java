@@ -57,8 +57,8 @@ public class FSHabit implements Habit, FSDocument {
      *
      * @param doc Firestore document
      */
+    @SuppressWarnings("unchecked")
     public FSHabit(QueryDocumentSnapshot doc) {
-        //noinspection unchecked
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
                 FSDocument.instantFromDoc(doc, DATE_STARTED),
                 getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),

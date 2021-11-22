@@ -84,5 +84,15 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="hello_habits">Hello Habits</string>
     <string name="team_str">CMPUT 301 Fall 2021 Team 44</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="reorder_habits">Reorder habits</string>
 
+    <string name="priority">Priority</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="all_users">All Users</string>
+    <!-- Resource ID for tags -->
+    <id name="priority" />
+    <id name="habit_id" />
 </resources>

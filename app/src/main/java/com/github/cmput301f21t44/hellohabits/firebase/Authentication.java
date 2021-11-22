@@ -6,9 +6,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Handles authentication with Firebase
  */
@@ -42,11 +39,10 @@ public class Authentication {
      * @param password a string of password
      */
     public void signup(String name, String email, String password,
-                       FirebaseTask.ThenFunction successCallback, FirebaseTask.CatchFunction failCallback) {
+                       ThenFunction successCallback, CatchFunction failCallback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
-            Map<String, Object> user = new HashMap<>();
-            user.put("name", name);
-            mDb.collection("users").document(email).set(user)
+            FSUser user = new FSUser(email, name);
+            FSDocument.set(user, failCallback, mDb.collection(FSUser.COLLECTION))
                     .addOnSuccessListener(u -> successCallback.apply());
         }).addOnFailureListener(failCallback::apply);
     }
@@ -71,6 +67,7 @@ public class Authentication {
 
     /**
      * Gets the current signed in user
+     *
      * @return the current user, null if not signed in
      */
     public FirebaseUser getCurrentUser() {

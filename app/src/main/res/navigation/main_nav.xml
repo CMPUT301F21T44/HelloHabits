@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/TodaysHabitsFragment">
+
+    <fragment
+        android:id="@+id/TodaysHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.TodaysHabitsFragment"
+        android:label="@string/todays_habits_fragment_label"
+        tools:layout="@layout/fragment_habit_list" />
+    <fragment
+        android:id="@+id/HabitCreateEditFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment"
+        android:label="@string/create_edit_habit_fragment_label"
+        tools:layout="@layout/fragment_create_edit_habit" />
+    <fragment
+        android:id="@+id/ViewHabitFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.ViewHabitFragment"
+        android:label="View Habit"
+        tools:layout="@layout/fragment_view_habit" />
+    <fragment
+        android:id="@+id/EventCreateEditFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment"
+        android:label="Habit Event" />
+    <fragment
+        android:id="@+id/AllHabitsFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.AllHabitsFragment"
+        android:label="All Habits"
+        tools:layout="@layout/fragment_habit_list" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.social.LoginFragment"
+        android:label="LoginFragment" />
+</navigation>

@@ -1,7 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
-import com.github.cmput301f21t44.hellohabits.model.Location;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.Instant;
@@ -12,17 +12,17 @@ import java.util.UUID;
 /**
  * Firestore implementation of HabitEvent
  */
-public class FSHabitEvent implements HabitEvent {
+public class FSHabitEvent implements HabitEvent, FSDocument {
     public static final String COLLECTION = "events";
     public static final String HABIT_ID = "habitId";
     public static final String DATE = "date";
     public static final String COMMENT = "comment";
 
-    private final String id;
-    private final String habitId;
-    private final Instant date;
+    private final String mId;
+    private final String mHabitId;
+    private final Instant mDate;
 
-    private String comment;
+    private String mComment;
     private String photoPath;
     private Location location;
 
@@ -34,9 +34,9 @@ public class FSHabitEvent implements HabitEvent {
      * @param habitId UUID of the Habit parent
      */
     public FSHabitEvent(String id, Instant date, String habitId) {
-        this.id = id;
-        this.habitId = habitId;
-        this.date = date;
+        this.mId = id;
+        this.mHabitId = habitId;
+        this.mDate = date;
     }
 
     /**
@@ -49,8 +49,9 @@ public class FSHabitEvent implements HabitEvent {
      */
     public FSHabitEvent(String id, Instant date, String habitId, String comment) {
         this(id, date, habitId);
-        this.comment = comment;
+        this.mComment = comment;
     }
+
 
     /**
      * Creates a new FSHabitEvent with a comment and generated UUID
@@ -63,53 +64,39 @@ public class FSHabitEvent implements HabitEvent {
         this(UUID.randomUUID().toString(), date, habitId, comment);
     }
 
-    /**
-     * Creates an FSHabitEvent instance from a DocumentSnapshot
-     *
-     * @param doc Firestore document
-     * @return FSHabitEvent from the document
-     */
-    public static FSHabitEvent fromSnapshot(QueryDocumentSnapshot doc) {
-        String id = doc.getId();
-        String habitId = doc.getString(HABIT_ID);
-        Instant date = FirestoreRepository.instantFromDoc(doc, DATE);
-        String comment = doc.getString(COMMENT);
-        return new FSHabitEvent(id, date, habitId, comment);
+    public FSHabitEvent(QueryDocumentSnapshot doc) {
+        this(doc.getId(), FSDocument.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
+                doc.getString(COMMENT));
     }
 
     /**
-     * Converts HabitEvent fields to a Map
+     * TODO: Update for Location and Photo path
      *
-     * @param event HabitEvent to convert
-     * @return Map of HabitEvent fields
+     * @param event HabitEvent from which to create a new FSHabitEvent
      */
-    public static Map<String, Object> getMap(FSHabitEvent event) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(HABIT_ID, event.habitId);
-        map.put(DATE, event.date);
-        map.put(COMMENT, event.comment);
-        return map;
+    public FSHabitEvent(HabitEvent event) {
+        this(event.getId(), event.getDate(), event.getHabitId(), event.getComment());
     }
 
 
     @Override
     public String getId() {
-        return id;
+        return mId;
     }
 
     @Override
     public String getHabitId() {
-        return habitId;
+        return mHabitId;
     }
 
     @Override
     public Instant getDate() {
-        return date;
+        return mDate;
     }
 
     @Override
     public String getComment() {
-        return comment;
+        return mComment;
     }
 
     @Override
@@ -122,4 +109,22 @@ public class FSHabitEvent implements HabitEvent {
         return location;
     }
 
+    /**
+     * Converts HabitEvent fields to a Map
+     *
+     * @return Map of HabitEvent fields
+     */
+    @Override
+    public Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(HABIT_ID, mHabitId);
+        map.put(DATE, mDate);
+        map.put(COMMENT, mComment);
+        return map;
+    }
+
+    @Override
+    public String getKey() {
+        return mId;
+    }
 }

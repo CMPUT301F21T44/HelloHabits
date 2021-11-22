@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:contentDescription="@string/check_box"
-        app:srcCompat="@drawable/ic_check" />
+        app:srcCompat="@drawable/ic_baseline_check_circle_24" />
 
     <LinearLayout
         android:id="@+id/text_habit_event"

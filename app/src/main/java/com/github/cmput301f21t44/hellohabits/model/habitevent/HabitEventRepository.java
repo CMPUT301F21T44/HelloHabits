@@ -1,8 +1,10 @@
-package com.github.cmput301f21t44.hellohabits.model;
+package com.github.cmput301f21t44.hellohabits.model.habitevent;
 
 import androidx.lifecycle.LiveData;
 
-import com.github.cmput301f21t44.hellohabits.firebase.FirebaseTask;
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,8 +21,8 @@ public interface HabitEventRepository {
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    void insert(String habitId, String comment, FirebaseTask.ThenFunction successCallback,
-                FirebaseTask.CatchFunction failCallback);
+    void insert(String habitId, String comment, ThenFunction successCallback,
+                CatchFunction failCallback);
 
     /**
      * Deletes a given HabitEvent
@@ -28,7 +30,7 @@ public interface HabitEventRepository {
      * @param habitEvent   HabitEvent to delete
      * @param failCallback Callback for when the operation fails
      */
-    void delete(HabitEvent habitEvent, FirebaseTask.CatchFunction failCallback);
+    void delete(HabitEvent habitEvent, CatchFunction failCallback);
 
     /**
      * Returns a HabitEvent list owned by a Habit with a given ID
@@ -49,6 +51,6 @@ public interface HabitEventRepository {
      * @param failCallback    Callback for when the operation fails
      */
     void update(String id, String habitId, Instant date, String comment,
-                FirebaseTask.ResultFunction<HabitEvent> successCallback,
-                FirebaseTask.CatchFunction failCallback);
+                ResultFunction<HabitEvent> successCallback,
+                CatchFunction failCallback);
 }

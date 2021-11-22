@@ -4,16 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +22,6 @@ import java.util.Objects;
 public abstract class FirestoreRepository {
     protected final FirebaseFirestore mDb;
     protected final FirebaseAuth mAuth;
-    protected FirebaseUser mUser;
 
     /**
      * Creates a new FirestoreRepository
@@ -38,20 +35,8 @@ public abstract class FirestoreRepository {
     }
 
     /**
-     * Generate an instant object from a DocumentSnapshot field
-     * @param doc DocumentSnapshot from which to get the Instant
-     * @param field Key of the Instant field
-     * @return Instant from the DocumentSnapshot
-     */
-    public static Instant instantFromDoc(DocumentSnapshot doc, String field) {
-        Long epochSeconds = doc.getLong(field + ".epochSecond");
-        Long nanoAdjustment = doc.getLong(field + ".nano");
-        return (epochSeconds != null && nanoAdjustment != null) ?
-                Instant.ofEpochSecond(epochSeconds, nanoAdjustment) : null;
-    }
-
-    /**
      * Get current user
+     *
      * @return The current FireBaseUser
      */
     protected FirebaseUser getUser() {
@@ -60,6 +45,7 @@ public abstract class FirestoreRepository {
 
     /**
      * Get the current user's email
+     *
      * @return String representing the current user's email
      */
     @NonNull
@@ -68,25 +54,68 @@ public abstract class FirestoreRepository {
     }
 
     /**
-     * Get a DocumentReference for a HabitEvent
-     * @param eventId UUID of the HabitEvent
-     * @param habitId UUID of the parent Habit
-     * @return DocumentReference to the HabitEvent
+     * Get a CollectionReference for a user's Habits
+     *
+     * @param email The user's email
+     * @return CollectionReference to a user's Habits
      */
-    protected DocumentReference getEventRef(String eventId, String habitId) {
-        return getEventCollectionRef(habitId).document(eventId);
+    protected CollectionReference getHabitCollectionRef(String email) {
+        return getUserSubCollectionRef(email, FSHabit.COLLECTION);
     }
 
     /**
-     * Get a CollectionReference for a user's Habits
-     * @return CollectionReference to a user's Habits
+     * Get a CollectionReference for the current user's Habits
+     *
+     * @return CollectionReference to the current user's Habits
      */
     protected CollectionReference getHabitCollectionRef() {
-        return mDb.collection(User.COLLECTION).document(getEmail()).collection(FSHabit.COLLECTION);
+        return getHabitCollectionRef(getEmail());
+    }
+
+    /**
+     * Gets a CollectionReference to all users
+     *
+     * @return CollectionReference to all users
+     */
+    protected CollectionReference getAllUsersCollectionRef() {
+        return mDb.collection(FSUser.COLLECTION);
+    }
+
+    /**
+     * Get a DocumentReference to a User
+     *
+     * @param email The user's email
+     * @return DocumentReference to the user
+     */
+    protected DocumentReference getUserRef(String email) {
+        return getAllUsersCollectionRef().document(email);
+    }
+
+    /**
+     * Get a sub-collection from a user document
+     *
+     * @param email      The User's email
+     * @param collection Name of collection
+     * @return CollectionReference with the given collection name
+     */
+    protected CollectionReference getUserSubCollectionRef(String email, String collection) {
+        return getUserRef(email).collection(collection);
     }
 
     /**
      * Get a DocumentReference for a Habit
+     *
+     * @param habitId UUID of the Habit
+     * @param email   The User's email
+     * @return DocumentReference to the Habit
+     */
+    protected DocumentReference getHabitRef(String habitId, String email) {
+        return getHabitCollectionRef(email).document(habitId);
+    }
+
+    /**
+     * Get a DocumentReference for a Habit
+     *
      * @param habitId UUID of the Habit
      * @return DocumentReference to the Habit
      */
@@ -94,8 +123,21 @@ public abstract class FirestoreRepository {
         return getHabitCollectionRef().document(habitId);
     }
 
+
     /**
      * Get a CollectionReference for a Habit's HabitEvents
+     *
+     * @param habitId UUID of the Habit
+     * @param email   The User's email
+     * @return CollectionReference to the Habit's HabitEvents
+     */
+    protected CollectionReference getEventCollectionRef(String habitId, String email) {
+        return getHabitRef(habitId, email).collection(FSHabitEvent.COLLECTION);
+    }
+
+    /**
+     * Get a CollectionReference for a Habit's HabitEvents
+     *
      * @param habitId UUID of the Habit
      * @return CollectionReference to the Habit's HabitEvents
      */
@@ -105,19 +147,31 @@ public abstract class FirestoreRepository {
 
     /**
      * Create a LiveData List of HabitEvents from a Habit with the given UUID
+     *
      * @param habitId UUID of the Habit
+     * @param email   The User's email
      * @return a LiveData List of HabitEvents
      */
-    public LiveData<List<HabitEvent>> getEventsByHabitId(String habitId) {
+    public LiveData<List<HabitEvent>> getEventsByHabitId(String habitId, String email) {
         final MutableLiveData<List<HabitEvent>> eventLiveData = new MutableLiveData<>();
-        getEventCollectionRef(habitId).addSnapshotListener((eventSnapshots, err) -> {
+        getEventCollectionRef(habitId, email).addSnapshotListener((eventSnapshots, err) -> {
             if (eventSnapshots == null) return;
             final List<HabitEvent> habitEvents = new ArrayList<>();
             for (QueryDocumentSnapshot doc : eventSnapshots) {
-                habitEvents.add(FSHabitEvent.fromSnapshot(doc));
+                habitEvents.add(new FSHabitEvent(doc));
             }
             eventLiveData.setValue(habitEvents);
         });
         return eventLiveData;
+    }
+
+    /**
+     * Create a LiveData List of HabitEvents from a Habit with the given UUID
+     *
+     * @param habitId UUID of the Habit
+     * @return a LiveData List of HabitEvents
+     */
+    public LiveData<List<HabitEvent>> getEventsByHabitId(String habitId) {
+        return getEventsByHabitId(habitId, getEmail());
     }
 }

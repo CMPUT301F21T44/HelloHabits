@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
-import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 
 /**
@@ -102,6 +102,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         @Override
         public boolean areContentsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
             return oldItem.getReason().equals(newItem.getReason())
+                    && oldItem.getEvents().equals(newItem.getEvents())
                     && oldItem.getTitle().equals(newItem.getTitle())
                     && oldItem.getDateStarted().equals(newItem.getDateStarted())
                     && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);

@@ -1,8 +1,10 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import com.github.cmput301f21t44.hellohabits.model.Location;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
-class FSLocation implements Location {
+import java.io.Serializable;
+
+class FSLocation implements Location, Serializable {
     private final double longitude;
     private final double latitude;
     private final double accuracy;

@@ -4,22 +4,31 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment.MAX_TITLE_LEN;
+import static com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment.MAX_COMMENT_LEN;
 
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.Gravity;
 
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.cmput301f21t44.hellohabits.firebase.FSHabit;
-import com.github.cmput301f21t44.hellohabits.firebase.User;
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.firebase.FSUser;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,6 +54,8 @@ public class HabitEventTest {
     public static FirebaseAuth sAuth = FirebaseAuth.getInstance();
     public static FirebaseFirestore sDb = FirebaseFirestore.getInstance();
     private static String habitId;
+    private static String habitTitle;
+    private static String newComment;
 
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
@@ -53,33 +64,48 @@ public class HabitEventTest {
 
     @BeforeClass
     public static void setup() {
-        final FSHabit habit = new FSHabit(UUID.randomUUID().toString(), HabitTest.HABIT_TITLE,
+        Log.println(Log.ASSERT, "What", "h");
+        habitTitle = TestUtil.getRealTimeString(HabitTest.HABIT_TITLE, MAX_TITLE_LEN);
+        newComment = TestUtil.getRealTimeString(NEW_EVENT_COMMENT, MAX_COMMENT_LEN);
+        final FSHabit habit = new FSHabit(UUID.randomUUID().toString(), habitTitle,
                 HabitTest.HABIT_REASON, Instant.now(), DaysOfWeek.emptyArray(), true);
         TestUtil.initEmulators(sAuth, sDb);
         sAuth.signOut();
         TestUtil.login(sAuth);
-        AtomicBoolean hasHabitEvent = new AtomicBoolean(false);
+        AtomicBoolean hasHabit = new AtomicBoolean(false);
         habitId = habit.getId();
-        sDb.collection(User.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
-                .document(habit.getId()).set(FSHabit.getMap(habit)).addOnSuccessListener(u -> {
-            hasHabitEvent.set(true);
+        sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
+                .document(habit.getId()).set(habit.getMap()).addOnSuccessListener(u ->
+                hasHabit.set(true)).addOnFailureListener(e -> {
+            Log.println(Log.ASSERT, "Wh", e.getLocalizedMessage());
+            hasHabit.set(true);
         });
-        while (!hasHabitEvent.get()) {
+
+        while (!hasHabit.get()) {
             SystemClock.sleep(100);
         }
+        Log.println(Log.ASSERT, "What", "h");
     }
 
     @AfterClass
     public static void tearDown() {
-        sDb.collection(User.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
+        sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
                 .document(habitId).delete();
+    }
+
+    private void navigateToHabit() {
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.AllHabitsFragment));
+        onView(withText(habitTitle)).perform(doubleClick());
     }
 
 
     @Test
     public void A_test_addEvent() {
-        onView(withId(R.id.view_all_habits)).perform(click());
-        onView(withText(HabitTest.HABIT_TITLE)).perform(click());
+        navigateToHabit();
         onView(withId(R.id.button_new_habit_event)).perform(click());
         onView(withId(R.id.edit_text_comment)).perform(typeText(EVENT_COMMENT), closeSoftKeyboard());
         onView(withId(R.id.button_add_habit_event)).perform(click());
@@ -87,28 +113,26 @@ public class HabitEventTest {
 
     @Test
     public void B_test_viewEvent() {
-        onView(withId(R.id.view_all_habits)).perform(click());
-        onView(withText(HabitTest.HABIT_TITLE)).perform(click());
+        navigateToHabit();
         onView(withText(EVENT_COMMENT)).check(matches(isDisplayed()));
     }
 
     @Test
     public void C_test_editEvent() {
-        onView(withId(R.id.view_all_habits)).perform(click());
-        onView(withText(HabitTest.HABIT_TITLE)).perform(click());
+        navigateToHabit();
         onView(withId(R.id.button_edit)).perform(click());
         onView(withId(R.id.edit_text_comment))
-                .perform(clearText(), typeText(NEW_EVENT_COMMENT), closeSoftKeyboard());
+                .perform(clearText(), typeText(newComment), closeSoftKeyboard());
         onView(withId(R.id.button_add_habit_event)).perform(click());
-        onView(withText(NEW_EVENT_COMMENT)).check(matches(isDisplayed()));
+        onView(withText(newComment)).check(matches(isDisplayed()));
     }
 
     @Test
     public void D_test_deleteEvent() {
-        onView(withId(R.id.view_all_habits)).perform(click());
-        onView(withText(HabitTest.HABIT_TITLE)).perform(click());
+        navigateToHabit();
         onView(withId(R.id.button_delete)).perform(click());
         onView(withText("YES")).perform(click());
-        onView(withText(NEW_EVENT_COMMENT)).check(doesNotExist());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        onView(withText(newComment)).check(doesNotExist());
     }
 }

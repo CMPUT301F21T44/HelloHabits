@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentViewHabitBinding;
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.HabitEventAdapter;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
@@ -72,22 +72,21 @@ public class ViewHabitFragment extends Fragment {
     }
 
     /**
-     * Initialise button OnClick listeners
+     * Initialise button OnClick listeners and BackPressedCallback
      */
     private void initListeners() {
-        binding.buttonEditHabit.setOnClickListener(v -> mNavController
-                .navigate(R.id.action_viewHabitFragment_to_createEditHabitFragment));
-
-        binding.buttonNewHabitEvent.setOnClickListener(v -> mNavController
-                .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment));
-
+        binding.buttonEditHabit.setOnClickListener(v -> navigateOut(R.id.HabitCreateEditFragment));
         binding.buttonNewHabitEvent.setOnClickListener(v -> {
             mHabitEventViewModel.setSelectedEvent(null);
-            mNavController
-                    .navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+            navigateOut(R.id.EventCreateEditFragment);
         });
 
         binding.buttonDeleteHabit.setOnClickListener(this::createDeleteHabitDialog);
+    }
+
+    private void navigateOut(int resId) {
+        mPreviousListViewModel.setFromViewHabit(false);
+        mNavController.navigate(resId);
     }
 
     /**
@@ -105,10 +104,10 @@ public class ViewHabitFragment extends Fragment {
         mNavController = NavHostFragment.findNavController(this);
         mHabitEventAdapter = HabitEventAdapter.newInstance(habitEvent -> {
             mHabitEventViewModel.setSelectedEvent(habitEvent);
-            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+            navigateOut(R.id.EventCreateEditFragment);
         }, habitEvent -> {
             mHabitEventViewModel.setSelectedEvent(habitEvent);
-            mNavController.navigate(R.id.action_viewHabitFragment_to_createEditHabitEventFragment);
+            navigateOut(R.id.EventCreateEditFragment);
         }, this::deleteHabitEvent);
 
         binding.habitEventList.setAdapter(mHabitEventAdapter);
@@ -122,7 +121,7 @@ public class ViewHabitFragment extends Fragment {
      */
     private void deleteHabit() {
         mHabitViewModel.delete(mHabitViewModel.getSelectedHabit().getValue(),
-                () -> mNavController.navigate(mPreviousListDestId),
+                () -> navigateOut(mPreviousListDestId),
                 e -> Toast.makeText(requireActivity(),
                         "Failed to delete habit: " + e.getMessage(),
                         Toast.LENGTH_SHORT).show());
@@ -160,6 +159,14 @@ public class ViewHabitFragment extends Fragment {
                         mHabitEventAdapter.submitList(eventList);
                     });
         });
+
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                mNavController.navigate(mPreviousListDestId);
+            }
+        });
     }
 
     /**
@@ -168,14 +175,9 @@ public class ViewHabitFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        mNavController.navigate(mPreviousListDestId);
-                    }
-                });
-        mPreviousListViewModel.getDestinationId().observe(this, id -> this.mPreviousListDestId = id);
+        mPreviousListViewModel.getDestinationId()
+                .observe(this, id -> this.mPreviousListDestId = id);
+        mPreviousListViewModel.setFromViewHabit(true);
     }
 
     /**

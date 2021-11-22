@@ -67,5 +67,22 @@
     <string name="check_box">check box</string>
     <string name="edit_button">Edit button</string>
     <string name="delete_button">Delete button</string>
+    <string name="today_s_habits">Today\'s Habits</string>
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="all_habits">All Habits</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_habits">Hello Habits</string>
+    <string name="team_str">CMPUT 301 Fall 2021 Team 44</string>
 
 </resources>

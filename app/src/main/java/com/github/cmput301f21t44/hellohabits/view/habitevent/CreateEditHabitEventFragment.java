@@ -14,7 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitEventBinding;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
@@ -26,7 +26,7 @@ import java.util.Objects;
  * Fragment class for creating or editing a HabitEvent
  */
 public class CreateEditHabitEventFragment extends Fragment {
-    private static final int MAX_COMMENT_LEN = 20;
+    public static final int MAX_COMMENT_LEN = 20;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
@@ -101,7 +101,7 @@ public class CreateEditHabitEventFragment extends Fragment {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
         mHabitEventViewModel.insert(habitId, comment,
-                () -> mNavController.navigate(R.id.viewHabitFragment),
+                () -> mNavController.navigate(R.id.ViewHabitFragment),
                 e -> showErrorToast("Failed to add habit", e));
 
     }
@@ -116,7 +116,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                 mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
                 (updatedHabitEvent) -> {
                     mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
-                    mNavController.navigate(R.id.viewHabitFragment);
+                    mNavController.navigate(R.id.ViewHabitFragment);
                 },
                 (e) -> showErrorToast("Failed to update habit", e));
     }

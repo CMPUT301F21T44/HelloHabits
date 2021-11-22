@@ -16,8 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitBinding;
-import com.github.cmput301f21t44.hellohabits.model.DaysOfWeek;
-import com.github.cmput301f21t44.hellohabits.model.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
@@ -33,8 +33,8 @@ import java.util.Objects;
 public class CreateEditHabitFragment extends Fragment {
     public static final String TOO_LONG_ERROR_MESSAGE = "Input is too long";
     public static final String EMPTY_ERROR_MESSAGE = "Input cannot be empty";
-    private static final int MAX_TITLE_LEN = 20;
-    private static final int MAX_REASON_LEN = 30;
+    public static final int MAX_TITLE_LEN = 20;
+    public static final int MAX_REASON_LEN = 30;
 
     private FragmentCreateEditHabitBinding binding;
     private HabitViewModel mHabitViewModel;
@@ -155,7 +155,7 @@ public class CreateEditHabitFragment extends Fragment {
         int previousDest = Objects.requireNonNull(mNavController.getPreviousBackStackEntry())
                 .getDestination().getId();
 
-        mNavController.navigate(mIsEdit ? R.id.viewHabitFragment : previousDest);
+        mNavController.navigate(mIsEdit ? R.id.ViewHabitFragment : previousDest);
 
     }
 

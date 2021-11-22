@@ -3,9 +3,9 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
-import com.github.cmput301f21t44.hellohabits.model.Habit;
-import com.github.cmput301f21t44.hellohabits.model.HabitEvent;
-import com.github.cmput301f21t44.hellohabits.model.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,7 +37,6 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      */
     public FirestoreHabitRepository() {
         this(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance());
-
     }
 
     /**
@@ -47,20 +46,31 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      */
     @Override
     public LiveData<List<Habit>> getAllHabits() {
+        return getUserHabits(getEmail(), true);
+    }
+
+    private LiveData<List<Habit>> getUserHabits(String email, boolean includePrivate) {
         final MediatorLiveData<List<Habit>> habitLiveData = new MediatorLiveData<>();
-        getHabitCollectionRef().addSnapshotListener((habitSnapshots, err) -> {
+        getHabitCollectionRef(email).addSnapshotListener((habitSnapshots, err) -> {
             if (habitSnapshots == null) return;
             List<Habit> habits = new ArrayList<>();
             for (QueryDocumentSnapshot d : habitSnapshots) {
-                FSHabit habit = FSHabit.fromSnapshot(d);
-                LiveData<List<HabitEvent>> habitEvents = getEventsByHabitId(habit.getId());
-                habits.add(habit);
-                habitLiveData.addSource(habitEvents, habit::setHabitEvents);
+                FSHabit habit = new FSHabit(d);
+                LiveData<List<HabitEvent>> habitEvents = getEventsByHabitId(habit.getId(), email);
+                if (includePrivate || !habit.isPrivate()) {
+                    habits.add(habit);
+                    habitLiveData.addSource(habitEvents, habit::setHabitEvents);
+                }
             }
             habitLiveData.setValue(habits);
         });
 
         return habitLiveData;
+    }
+
+    @Override
+    public LiveData<List<Habit>> getUserPublicHabits(String email) {
+        return getUserHabits(email, false);
     }
 
 
@@ -71,18 +81,17 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      * @param reason          Reason for the Habit
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
-     * @param isPrivate Whether the habit is invisible to followers
+     * @param isPrivate       Whether the habit is invisible to followers
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     @Override
     public void insert(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                       boolean isPrivate, FirebaseTask.ThenFunction successCallback,
-                       FirebaseTask.CatchFunction failCallback) {
+                       boolean isPrivate, ThenFunction successCallback,
+                       CatchFunction failCallback) {
         FSHabit habit = new FSHabit(title, reason, dateStarted, daysOfWeek, isPrivate);
-        getHabitCollectionRef().document(habit.getId()).set(FSHabit.getMap(habit))
-                .addOnSuccessListener(u -> successCallback.apply())
-                .addOnFailureListener(failCallback::apply);
+        FSDocument.set(habit, failCallback, getHabitCollectionRef())
+                .addOnSuccessListener(u -> successCallback.apply());
     }
 
 
@@ -111,12 +120,10 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    private void deleteHabit(Habit habit, FirebaseTask.ThenFunction successCallback,
-                             FirebaseTask.CatchFunction failCallback) {
-
-        getHabitRef(habit.getId()).delete()
-                .addOnSuccessListener(u -> successCallback.apply())
-                .addOnFailureListener(failCallback::apply);
+    private void deleteHabit(Habit habit, ThenFunction successCallback,
+                             CatchFunction failCallback) {
+        FSDocument.delete(new FSHabit(habit), failCallback, getHabitCollectionRef())
+                .addOnSuccessListener(u -> successCallback.apply());
     }
 
     /**
@@ -127,13 +134,14 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      * @param failCallback    Callback for when the operation fails
      */
     @Override
-    public void delete(Habit habit, FirebaseTask.ThenFunction successCallback,
-                       FirebaseTask.CatchFunction failCallback) {
-
+    public void delete(Habit habit, ThenFunction successCallback,
+                       CatchFunction failCallback) {
         getEventCollectionRef(habit.getId()).get()
                 .addOnSuccessListener(eventSnapshots ->
                         deleteHabitWithEvents(eventSnapshots, habit.getId())
-                                .addOnSuccessListener(u -> successCallback.apply()))
+                                .addOnSuccessListener(u -> successCallback.apply())
+                                .addOnFailureListener(failCallback::apply)
+                )
                 // only delete the habit (no sub-collections)
                 .addOnFailureListener(err -> deleteHabit(habit, successCallback, failCallback));
     }
@@ -151,11 +159,10 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
      */
     @Override
     public void update(String id, String title, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, boolean isPrivate, FirebaseTask.ResultFunction<Habit> successCallback,
-                       FirebaseTask.CatchFunction failCallback) {
+                       boolean[] daysOfWeek, boolean isPrivate, ResultFunction<Habit> successCallback,
+                       CatchFunction failCallback) {
         FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate);
-        getHabitRef(habit.getId()).update(FSHabit.getMap(habit))
-                .addOnSuccessListener(u -> successCallback.apply(habit))
-                .addOnFailureListener(failCallback::apply);
+        FSDocument.set(habit, failCallback, getHabitCollectionRef())
+                .addOnSuccessListener(u -> successCallback.apply(habit));
     }
 }

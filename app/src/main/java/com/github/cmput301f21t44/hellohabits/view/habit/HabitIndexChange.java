@@ -21,12 +21,25 @@ public class HabitIndexChange {
         this.newIndex = newIndex;
     }
 
+    /**
+     * Creates a HabitIndexChange from a View and its index in the layout manager
+     *
+     * @param view        View containing the ID and index tags
+     * @param layoutIndex Index of the view in the LayoutManager
+     * @return HabitIndexChange of the given View
+     */
     public static HabitIndexChange fromView(View view, int layoutIndex) {
         String habitId = (String) view.getTag(HABIT_ID_TAG);
         int oldIndex = (int) view.getTag(HABIT_INDEX_TAG);
         return new HabitIndexChange(habitId, oldIndex, layoutIndex);
     }
 
+    /**
+     * Sets the ID and index tags for a view
+     *
+     * @param view  View to which to attach tags
+     * @param habit Habit from which to get information
+     */
     public static void setTags(View view, Habit habit) {
         view.setTag(HABIT_INDEX_TAG, habit.getIndex());
         view.setTag(HABIT_ID_TAG, habit.getId());

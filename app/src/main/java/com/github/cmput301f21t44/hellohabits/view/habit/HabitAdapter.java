@@ -23,7 +23,7 @@ import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 /**
- * Adapter class for displaying a Habitin a RecyclerView
+ * Adapter class for displaying a Habit in a RecyclerView
  */
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     public static int COLOUR_RED = Color.parseColor("#D12D2D");
@@ -47,8 +47,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     /**
      * Creates a new instance of the HabitAdapter
      *
-     * @param clickListener Listener callback for when the Habit body is clicked
-     * @return A HabitAdapter instance with the listener
+     * @param clickListener     OnItemClickListener callback for when the Habit body is clicked
+     * @param dragStartListener OnStartDragListener callback for when the Habit item handle is dragged
+     * @param viewModel         HabitViewModel for observing reordering state
+     * @param lifecycleOwner    LifeCycleOwner of the Fragment that this adapter is instantiated in
+     * @return A HabitAdapter instance with the listeners
      */
     public static HabitAdapter newInstance(OnItemClickListener<Habit> clickListener,
                                            OnStartDragListener dragStartListener,

@@ -1,6 +1,5 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +36,18 @@ public abstract class HabitListFragment extends Fragment {
     /**
      * Touch Helper for dragging Habit items to reorder
      */
-    private final ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new HabitTouchCallback());
+    private final ItemTouchHelper mItemTouchHelper = new HabitTouchHelper();
+    /**
+     * List to keep track of index changes to Habits
+     */
     private final List<HabitIndexChange> mIndexChangeList = new ArrayList<>();
+
     protected HabitViewModel mHabitViewModel;
+    protected PreviousListViewModel mPreviousListViewModel;
     protected HabitAdapter mAdapter;
     protected FragmentHabitListBinding mBinding;
-    protected PreviousListViewModel mPreviousListViewModel;
     protected NavController mNavController;
-    protected boolean mReordering = false;
-    private FloatingActionButton mNewHabitFab;
-    private FloatingActionButton mReorderFab;
+    private boolean mReordering = false;
 
     /**
      * ItemAnimator to be preserved when being disabled
@@ -83,10 +83,8 @@ public abstract class HabitListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.mNewHabitFab = mBinding.newHabit;
-        mNewHabitFab.setVisibility(View.GONE);
-        this.mReorderFab = mBinding.reorderFab;
-        mReorderFab.setVisibility(View.GONE);
+        mBinding.newHabit.setVisibility(View.GONE);
+        mBinding.reorderFab.setVisibility(View.GONE);
         mNavController = NavHostFragment.findNavController(this);
     }
 
@@ -110,7 +108,8 @@ public abstract class HabitListFragment extends Fragment {
      * @param listener onClickListener for Habit List items
      */
     protected void initAdapter(OnItemClickListener<Habit> listener) {
-        mAdapter = HabitAdapter.newInstance(listener, mItemTouchHelper::startDrag,  mHabitViewModel, this);
+        mAdapter = HabitAdapter.newInstance(listener, mItemTouchHelper::startDrag, mHabitViewModel,
+                this);
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAnimator = mBinding.habitRecyclerView.getItemAnimator();
@@ -131,25 +130,38 @@ public abstract class HabitListFragment extends Fragment {
             mPreviousListViewModel.setDestinationId(resId);
             mNavController.navigate(R.id.ViewHabitFragment);
         });
-
-        mNewHabitFab.setVisibility(View.VISIBLE);
-        mNewHabitFab.setOnClickListener(v -> {
+        mBinding.newHabit.setVisibility(View.VISIBLE);
+        mBinding.newHabit.setOnClickListener(v -> {
             mHabitViewModel.setSelectedHabit(null);
             mPreviousListViewModel.setDestinationId(resId);
             mNavController.navigate(R.id.HabitCreateEditFragment);
         });
 
-        mReorderFab.setVisibility(View.VISIBLE);
-        mReorderFab.setOnClickListener(v -> toggleReorder());
+        mBinding.reorderFab.setVisibility(View.VISIBLE);
+        mBinding.reorderFab.setOnClickListener(v -> updateReorderUI(toggleReorder()));
     }
 
-    private void toggleReorder() {
+    /**
+     * Toggles the Reorder state for the Habit list
+     *
+     * @return true if reordering, false if not
+     */
+    private boolean toggleReorder() {
         final ActionBar actionBar = Objects.requireNonNull(((AppCompatActivity) requireActivity())
                 .getSupportActionBar());
         this.mReordering = !mReordering;
         actionBar.setDisplayHomeAsUpEnabled(!mReordering);
         mHabitViewModel.setReordering(mReordering);
-        if (mReordering) {
+        return mReordering;
+    }
+
+    /**
+     * Updates the UI components, animations and event listeners depending on the reordering state
+     *
+     * @param reordering the current reordering state
+     */
+    private void updateReorderUI(boolean reordering) {
+        if (reordering) {
             // enable RecyclerView animation when reordering
             mBinding.habitRecyclerView.setItemAnimator(mAnimator);
 
@@ -160,8 +172,9 @@ public abstract class HabitListFragment extends Fragment {
             // check if order was changed here, update indices in FireStore
             if (orderChanged()) updateIndices();
 
-            // needed to prevent weird swapping when changing indices
+            // need to disable animations to prevent weird swapping when changing indices
             mBinding.habitRecyclerView.setItemAnimator(null);
+
             mItemTouchHelper.attachToRecyclerView(null);
             mBinding.reorderFab.setImageResource(R.drawable.ic_baseline_reorder_24);
             mBinding.newHabit.setVisibility(View.VISIBLE);
@@ -182,7 +195,6 @@ public abstract class HabitListFragment extends Fragment {
      *
      * @return true if the order was changed, false if not
      */
-    @SuppressLint("DefaultLocale")
     private boolean orderChanged() {
         RecyclerView.LayoutManager layoutManager = mBinding.habitRecyclerView.getLayoutManager();
         if (layoutManager == null) return false;

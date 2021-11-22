@@ -110,7 +110,7 @@ public abstract class HabitListFragment extends Fragment {
      * @param listener onClickListener for Habit List items
      */
     protected void initAdapter(OnItemClickListener<Habit> listener) {
-        mAdapter = HabitAdapter.newInstance(listener);
+        mAdapter = HabitAdapter.newInstance(listener, mItemTouchHelper::startDrag,  mHabitViewModel, this);
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAnimator = mBinding.habitRecyclerView.getItemAnimator();
@@ -148,6 +148,7 @@ public abstract class HabitListFragment extends Fragment {
                 .getSupportActionBar());
         this.mReordering = !mReordering;
         actionBar.setDisplayHomeAsUpEnabled(!mReordering);
+        mHabitViewModel.setReordering(mReordering);
         if (mReordering) {
             // enable RecyclerView animation when reordering
             mBinding.habitRecyclerView.setItemAnimator(mAnimator);

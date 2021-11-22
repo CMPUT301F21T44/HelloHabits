@@ -28,7 +28,6 @@ public class AllHabitsFragment extends HabitListFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        super.initListeners(R.id.AllHabitsFragment);
     }
 
     /**
@@ -39,6 +38,7 @@ public class AllHabitsFragment extends HabitListFragment {
     @Override
     public void onStart() {
         super.onStart();
+        super.initListeners(R.id.AllHabitsFragment);
         mHabitViewModel.getAllHabits().observe(this, habitList -> {
             List<Habit> allHabits = new ArrayList<>(habitList);
             Collections.sort(allHabits, Comparator.comparingInt(Habit::getIndex));

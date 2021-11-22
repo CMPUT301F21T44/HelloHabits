@@ -33,6 +33,11 @@ public class HabitViewModel extends ViewModel {
     private final MutableLiveData<Habit> mSelectedHabit = new MutableLiveData<>();
 
     /**
+     * Used to notify the Habit items in RecyclerView that the user is reordering habits
+     */
+    private final MutableLiveData<Boolean> mReordering = new MutableLiveData<>(false);
+
+    /**
      * Constructor for HabitViewModel
      * Accesses the data layer through dependency injection
      *
@@ -59,6 +64,22 @@ public class HabitViewModel extends ViewModel {
      */
     public void setSelectedHabit(Habit habit) {
         mSelectedHabit.setValue(habit);
+    }
+
+    /**
+     * @return Reordering state LiveData
+     */
+    public LiveData<Boolean> getReordering() {
+        return mReordering;
+    }
+
+    /**
+     * Set the reordering state to the given value
+     *
+     * @param value true if reordering, false if not
+     */
+    public void setReordering(boolean value) {
+        mReordering.setValue(value);
     }
 
     /**
@@ -105,7 +126,7 @@ public class HabitViewModel extends ViewModel {
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
      * @param isPrivate       Whether the habit is invisible to followers
-     * @param index           The index of the
+     * @param index           The index of the habit in the user's list
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */

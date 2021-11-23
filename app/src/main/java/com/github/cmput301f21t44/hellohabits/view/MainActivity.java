@@ -14,16 +14,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private NavController mNavController;
     private PreviousListViewModel mPreviousListViewModel;
     private boolean mFromViewHabit;
-    private FirebaseAuth mAuth;
+    private Authentication mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = new Authentication();
 
         mPreviousListViewModel = ViewModelFactory.getProvider(this)
                 .get(PreviousListViewModel.class);

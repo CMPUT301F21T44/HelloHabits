@@ -3,21 +3,27 @@ package com.github.cmput301f21t44.hellohabits.view.habit;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
+import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 /**
- * Adapter class for displaying a Habitin a RecyclerView
+ * Adapter class for displaying a Habit in a RecyclerView
  */
 public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     public static int COLOUR_RED = Color.parseColor("#D12D2D");
@@ -25,6 +31,9 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     public static int COLOUR_GREEN = Color.parseColor("#329548");
 
     private OnItemClickListener<Habit> mOnClickListener;
+    private OnStartDragListener mDragStartListener;
+    private HabitViewModel mViewModel;
+    private LifecycleOwner mLifeCycleOwner;
 
     /**
      * Constructor for HabitAdapter
@@ -38,12 +47,20 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     /**
      * Creates a new instance of the HabitAdapter
      *
-     * @param listener Listener callback for when the Habit body is clicked
-     * @return A HabitAdapter instance with the listener
+     * @param clickListener     OnItemClickListener callback for when the Habit body is clicked
+     * @param dragStartListener OnStartDragListener callback for when the Habit item handle is dragged
+     * @param viewModel         HabitViewModel for observing reordering state
+     * @param lifecycleOwner    LifeCycleOwner of the Fragment that this adapter is instantiated in
+     * @return A HabitAdapter instance with the listeners
      */
-    public static HabitAdapter newInstance(OnItemClickListener<Habit> listener) {
+    public static HabitAdapter newInstance(OnItemClickListener<Habit> clickListener,
+                                           OnStartDragListener dragStartListener,
+                                           HabitViewModel viewModel, LifecycleOwner lifecycleOwner) {
         HabitAdapter adapter = new HabitAdapter(new HabitDiff());
-        adapter.mOnClickListener = listener;
+        adapter.mOnClickListener = clickListener;
+        adapter.mDragStartListener = dragStartListener;
+        adapter.mViewModel = viewModel;
+        adapter.mLifeCycleOwner = lifecycleOwner;
         return adapter;
     }
 
@@ -70,10 +87,43 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
      * @param holder   ViewHolder for Habit item
      * @param position Position of Habit in the list
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Habit current = getItem(position);
         holder.bind(current, mOnClickListener);
+
+        // don't try to observe a null ViewModel
+        if (mViewModel == null) return;
+
+        // change lock icon depending on the reordering state
+        mViewModel.getReordering().observe(mLifeCycleOwner, isReordering -> {
+            ImageView handle = holder.mItemBinding.lock;
+            if (isReordering) {
+                handle.setVisibility(VISIBLE);
+                handle.setOnTouchListener((v, event) -> {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                    return false;
+                });
+                handle.setImageResource(R.drawable.ic_baseline_reorder_24);
+            } else {
+                handle.setOnTouchListener(null);
+                handle.setImageResource(R.drawable.ic_baseline_lock_24);
+                handle.setVisibility(current.isPrivate() ? VISIBLE : INVISIBLE);
+            }
+        });
+
+    }
+
+    interface OnStartDragListener {
+        /**
+         * Called when a view is requesting a start of a drag.
+         *
+         * @param viewHolder The holder of the view to drag.
+         */
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
     }
 
     /**
@@ -105,6 +155,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
                     && oldItem.getEvents().equals(newItem.getEvents())
                     && oldItem.getTitle().equals(newItem.getTitle())
                     && oldItem.getDateStarted().equals(newItem.getDateStarted())
+                    && oldItem.getIndex() == newItem.getIndex()
                     && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);
         }
     }
@@ -145,9 +196,8 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
                 mItemBinding.imageView.setColorFilter(COLOUR_GREEN);
             }
 
-            mItemBinding.lock.setVisibility(habit.isPrivate() ? VISIBLE : INVISIBLE);
             mItemBinding.getRoot().setOnClickListener(v -> listener.onItemClick(habit));
+            HabitIndexChange.setTags(mItemBinding.getRoot(), habit);
         }
-
     }
 }

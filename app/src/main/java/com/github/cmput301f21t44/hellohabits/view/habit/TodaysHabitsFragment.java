@@ -12,6 +12,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -28,7 +30,6 @@ public class TodaysHabitsFragment extends HabitListFragment {
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        super.initListeners(R.id.TodaysHabitsFragment);
     }
 
     /**
@@ -39,6 +40,7 @@ public class TodaysHabitsFragment extends HabitListFragment {
     @Override
     public void onStart() {
         super.onStart();
+        super.initListeners(R.id.TodaysHabitsFragment);
         mHabitViewModel.getAllHabits().observe(this, this::onHabitListChanged);
     }
 
@@ -57,6 +59,7 @@ public class TodaysHabitsFragment extends HabitListFragment {
                 todaysHabits.add(h);
             }
         }
+        Collections.sort(todaysHabits, Comparator.comparingInt(Habit::getIndex));
         mAdapter.submitList(todaysHabits);
     }
 }

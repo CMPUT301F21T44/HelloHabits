@@ -9,6 +9,7 @@ import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,6 +31,11 @@ public class HabitViewModel extends ViewModel {
      * LiveData class for keeping track of a single HabitEvent's data
      */
     private final MutableLiveData<Habit> mSelectedHabit = new MutableLiveData<>();
+
+    /**
+     * Used to notify the Habit items in RecyclerView that the user is reordering habits
+     */
+    private final MutableLiveData<Boolean> mReordering = new MutableLiveData<>(false);
 
     /**
      * Constructor for HabitViewModel
@@ -58,6 +64,22 @@ public class HabitViewModel extends ViewModel {
      */
     public void setSelectedHabit(Habit habit) {
         mSelectedHabit.setValue(habit);
+    }
+
+    /**
+     * @return Reordering state LiveData
+     */
+    public LiveData<Boolean> getReordering() {
+        return mReordering;
+    }
+
+    /**
+     * Set the reordering state to the given value
+     *
+     * @param value true if reordering, false if not
+     */
+    public void setReordering(boolean value) {
+        mReordering.setValue(value);
     }
 
     /**
@@ -104,15 +126,16 @@ public class HabitViewModel extends ViewModel {
      * @param dateStarted     The starting date for the Habit
      * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
      * @param isPrivate       Whether the habit is invisible to followers
+     * @param index           The index of the habit in the user's list
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     public void update(String id, String title, String reason, Instant dateStarted,
-                       boolean[] daysOfWeek, boolean isPrivate,
+                       boolean[] daysOfWeek, boolean isPrivate, int index,
                        ResultFunction<Habit> successCallback,
                        CatchFunction failCallback) {
-        mRepository.update(id, title, reason, dateStarted, daysOfWeek, isPrivate, successCallback,
-                failCallback);
+        mRepository.update(id, title, reason, dateStarted, daysOfWeek, isPrivate, index,
+                successCallback, failCallback);
     }
 
     /**
@@ -124,5 +147,15 @@ public class HabitViewModel extends ViewModel {
      */
     public void delete(Habit habit, ThenFunction successCallback, CatchFunction failCallback) {
         mRepository.delete(habit, successCallback, failCallback);
+    }
+
+    /**
+     * Updates the user's habit indices
+     *
+     * @param changeList   List of Habit index changes
+     * @param failCallback Callback for when the operation fails
+     */
+    public void updateIndices(List<HabitIndexChange> changeList, CatchFunction failCallback) {
+        mRepository.updateIndices(changeList, failCallback);
     }
 }

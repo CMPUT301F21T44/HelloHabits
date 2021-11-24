@@ -120,6 +120,8 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
                   final OnItemClickListener<User> rejectListener) {
             mItemBinding.userEmail.setText(user.getEmail());
             mItemBinding.userName.setText(user.getName());
+//            user.getFollowerStatus(); // null, Status.REQUESTED, Status.ACCEPTED
+//            user.getFollowingStatus(); // null, Status.REQUESTED, Status.ACCEPTED
             mItemBinding.userName.setOnClickListener(v -> viewListener.onItemClick(user));
             mItemBinding.userEmail.setOnClickListener(v -> viewListener.onItemClick(user));
             mItemBinding.accept.setOnClickListener(v -> acceptListener.onItemClick(user));

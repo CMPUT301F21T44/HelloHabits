@@ -35,6 +35,7 @@ public class AllUsersFragment extends UserListFragment {
         }, item -> {
         }, item -> {
         });
+        // unfollow / follow
         mUserViewModel.getAllUsers().observe(this, mAdapter::submitList);
     }
 }

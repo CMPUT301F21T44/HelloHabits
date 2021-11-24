@@ -35,6 +35,9 @@ public class FollowersFragment extends UserListFragment {
         }, item -> {
         }, item -> {
         });
+        // follower status = REQUESTED / ACCEPTED
+        // remove follower
+        // following status = null / REQUESTED / ACCEPTED
         mUserViewModel.getFollowers().observe(this, mAdapter::submitList);
     }
 }

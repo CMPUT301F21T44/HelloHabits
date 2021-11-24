@@ -23,14 +23,31 @@
     <fragment
         android:id="@+id/EventCreateEditFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment"
-        android:label="Habit Event" />
+        android:label="Habit Event"
+        tools:layout="@layout/fragment_create_edit_habit_event" />
     <fragment
         android:id="@+id/AllHabitsFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.habit.AllHabitsFragment"
         android:label="All Habits"
         tools:layout="@layout/fragment_habit_list" />
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/LoginFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.social.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/AllUsersFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.social.AllUsersFragment"
+        android:label="All Users"
+        tools:layout="@layout/fragment_user_list" />
+    <fragment
+        android:id="@+id/FollowersFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.social.FollowersFragment"
+        android:label="Followers"
+        tools:layout="@layout/fragment_user_list" />
+    <fragment
+        android:id="@+id/FollowingFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.social.FollowingFragment"
+        android:label="Following"
+        tools:layout="@layout/fragment_user_list" />
 </navigation>

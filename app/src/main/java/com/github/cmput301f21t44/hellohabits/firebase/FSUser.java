@@ -1,5 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -11,6 +12,9 @@ public class FSUser implements User, FSDocument {
     public static final String NAME = "name";
     private final String mEmail;
     private final String mName;
+
+    private Follow.Status mFollowerStatus;
+    private Follow.Status mFollowingStatus;
 
     public FSUser(String email, String name) {
         this.mEmail = email;
@@ -36,6 +40,24 @@ public class FSUser implements User, FSDocument {
     @Override
     public String getName() {
         return mName;
+    }
+
+    @Override
+    public Follow.Status getFollowingStatus() {
+        return mFollowingStatus;
+    }
+
+    public void setFollowingStatus(Follow.Status mFollowingStatus) {
+        this.mFollowingStatus = mFollowingStatus;
+    }
+
+    @Override
+    public Follow.Status getFollowerStatus() {
+        return mFollowerStatus;
+    }
+
+    public void setFollowerStatus(Follow.Status mFollowerStatus) {
+        this.mFollowerStatus = mFollowerStatus;
     }
 
     @Override

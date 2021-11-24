@@ -1,5 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import androidx.annotation.NonNull;
+
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -58,11 +60,13 @@ public class FSFollow implements Follow, FSDocument {
     static final class FollowCollection {
         private final String name;
 
-        FollowCollection(String name) {
+        private FollowCollection(String name) {
             this.name = name;
         }
 
-        public String getName() {
+        @NonNull
+        @Override
+        public String toString() {
             return this.name;
         }
     }

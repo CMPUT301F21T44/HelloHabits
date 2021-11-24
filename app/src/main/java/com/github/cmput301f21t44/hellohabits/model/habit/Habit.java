@@ -1,5 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.model.habit;
 
+import com.github.cmput301f21t44.hellohabits.model.HasKey;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 
 import java.time.Instant;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Interface to implement habit functions
  */
-public interface Habit {
+public interface Habit extends HasKey {
     /**
      * Check if Habit is scheduled today
      *

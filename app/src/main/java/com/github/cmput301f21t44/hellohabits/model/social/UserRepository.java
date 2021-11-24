@@ -12,32 +12,11 @@ import java.util.List;
  */
 public interface UserRepository {
     /**
-     * Get list of users that follow the current user
-     *
-     * @return List of followers
-     */
-    LiveData<List<Follow>> getAllFollowers();
-
-    /**
-     * Get list of users that the current user follows
-     *
-     * @return List of users being followed by the current user
-     */
-    LiveData<List<Follow>> getAllFollowing();
-
-    /**
      * Gets all application users
      *
      * @return List of all users
      */
     LiveData<List<User>> getAllUsers();
-
-    /**
-     * Get a user's info
-     *
-     * @param email The user's email
-     */
-    LiveData<User> getUser(String email);
 
     /**
      * Requests to follow a user

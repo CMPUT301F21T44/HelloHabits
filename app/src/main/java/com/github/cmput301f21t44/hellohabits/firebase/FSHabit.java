@@ -21,10 +21,12 @@ public class FSHabit implements Habit, FSDocument {
     public static final String DATE_STARTED = "dateStarted";
     public static final String DAYS_OF_WEEK = "daysOfWeek";
     public static final String IS_PRIVATE = "isPrivate";
+    public static final String HABIT_INDEX = "index";
 
     private final String mId;
     private final String mTitle;
     private final String mReason;
+    private final int mIndex;
     private final Instant mDateStarted;
     private final boolean[] mDaysOfWeek;
     private final boolean mPrivate;
@@ -40,9 +42,10 @@ public class FSHabit implements Habit, FSDocument {
      * @param dateStarted Date on which the Habit was started
      * @param daysOfWeek  Days of the week for when the Habit is scheduled
      * @param isPrivate   Whether the habit is invisible to followers
+     * @param index       Index of the Habit in the user's list
      */
     public FSHabit(String id, String title, String reason, Instant dateStarted,
-                   boolean[] daysOfWeek, boolean isPrivate) {
+                   boolean[] daysOfWeek, boolean isPrivate, int index) {
         this.mId = id;
         this.mTitle = title;
         this.mReason = reason;
@@ -50,6 +53,7 @@ public class FSHabit implements Habit, FSDocument {
         this.mDateStarted = dateStarted;
         this.mDaysOfWeek = daysOfWeek;
         this.mPrivate = isPrivate;
+        this.mIndex = index;
     }
 
     /**
@@ -62,12 +66,14 @@ public class FSHabit implements Habit, FSDocument {
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
                 FSDocument.instantFromDoc(doc, DATE_STARTED),
                 getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
-                convertVisibility(doc.getBoolean(IS_PRIVATE)));
+                convertVisibility(doc.getBoolean(IS_PRIVATE)),
+                convertIndex(doc.getLong(HABIT_INDEX))
+        );
     }
 
     public FSHabit(Habit habit) {
         this(habit.getId(), habit.getTitle(), habit.getReason(), habit.getDateStarted(),
-                habit.getDaysOfWeek(), habit.isPrivate());
+                habit.getDaysOfWeek(), habit.isPrivate(), habit.getIndex());
     }
 
     /**
@@ -78,14 +84,19 @@ public class FSHabit implements Habit, FSDocument {
      * @param dateStarted Date on which the Habit was started
      * @param daysOfWeek  Days of the week for when the Habit is scheduled
      * @param isPrivate   Whether the habit is invisible to followers
+     * @param index       Index of the Habit in the user's list
      */
     public FSHabit(String title, String reason, Instant dateStarted, boolean[] daysOfWeek,
-                   boolean isPrivate) {
-        this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek, isPrivate);
+                   boolean isPrivate, int index) {
+        this(UUID.randomUUID().toString(), title, reason, dateStarted, daysOfWeek, isPrivate, index);
     }
 
     private static boolean convertVisibility(Boolean bool) {
         return bool != null && bool;
+    }
+
+    private static int convertIndex(Long index) {
+        return index != null ? Math.toIntExact(index) : 0;
     }
 
     /**
@@ -121,6 +132,11 @@ public class FSHabit implements Habit, FSDocument {
     @Override
     public Instant getDateStarted() {
         return mDateStarted;
+    }
+
+    @Override
+    public int getIndex() {
+        return mIndex;
     }
 
     @Override
@@ -164,6 +180,7 @@ public class FSHabit implements Habit, FSDocument {
         }
         map.put(DAYS_OF_WEEK, days);
         map.put(IS_PRIVATE, mPrivate);
+        map.put(HABIT_INDEX, mIndex);
         return map;
     }
 

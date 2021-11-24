@@ -100,6 +100,8 @@ public interface Habit extends HasKey {
 
     Instant getDateStarted();
 
+    int getIndex();
+
     List<HabitEvent> getEvents();
 
     boolean[] getDaysOfWeek();

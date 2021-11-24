@@ -121,7 +121,7 @@ public class CreateEditHabitFragment extends Fragment {
 
         if (mIsEdit) {
             mHabitViewModel.update(mHabit.getId(), title, reason, mInstant,
-                    mDaysOfWeek, mIsPrivate, updatedHabit -> {
+                    mDaysOfWeek, mIsPrivate, mHabit.getIndex(), updatedHabit -> {
                         mHabitViewModel.setSelectedHabit(updatedHabit);
                         completeScreen();
                     }, e -> showErrorToast("update", e));

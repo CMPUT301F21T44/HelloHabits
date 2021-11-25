@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,9 +13,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentUserListBinding;
-import com.github.cmput301f21t44.hellohabits.model.social.User;
-import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
+import com.github.cmput301f21t44.hellohabits.databinding.ListUserItemBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
@@ -22,6 +24,7 @@ public abstract class UserListFragment extends Fragment {
     protected UserViewModel mUserViewModel;
     protected UserAdapter mAdapter;
     protected FragmentUserListBinding mBinding;
+    protected ListUserItemBinding cBinding;
 
     protected NavController mNavController;
 
@@ -41,6 +44,7 @@ public abstract class UserListFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = FragmentUserListBinding.inflate(inflater, container, false);
+        cBinding = ListUserItemBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
@@ -54,6 +58,7 @@ public abstract class UserListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
+        initAdapter();
     }
 
     /**
@@ -70,17 +75,33 @@ public abstract class UserListFragment extends Fragment {
     }
 
     /**
-     * Initializes the RecyclerView's userAdapter
+     * Initializes the RecyclerView's UserAdapter
      *
-     * @param viewListener onClickListener for Habit List items
      */
-    protected void initAdapter(OnItemClickListener<User> viewListener,
-                               OnItemClickListener<User> acceptListener,
-                               OnItemClickListener<User> rejectListener) {
-        mAdapter = UserAdapter.newInstance(viewListener, acceptListener, rejectListener);
+    protected void initAdapter() {
+        mAdapter = UserAdapter.newInstance(this, mUserViewModel, (user)-> {
+            mUserViewModel.setSelectedUser(user);
+            mNavController.navigate(R.id.UserHabitListFragment);
+        });
         mBinding.userRecyclerView.setAdapter(mAdapter);
         mBinding.userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
+    /**
+     * Show error message as Toast
+     *
+     * @param text Text to output
+     * @param e    Exception thrown
+     * @return
+     */
+    public CatchFunction showErrorToast(String text, Exception e) {
+        String message = text + ": " + e.getLocalizedMessage();
+        int duration = message.length() > 20
+                ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+        Toast.makeText(requireContext(), message, duration).show();
+        return null;
+    }
+
 
     /**
      * UserList's onDestroyView lifecycle method
@@ -91,5 +112,6 @@ public abstract class UserListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+        cBinding = null;
     }
 }

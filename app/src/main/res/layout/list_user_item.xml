@@ -9,6 +9,7 @@
 
 
     <LinearLayout
+        android:id="@+id/user_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="4"
@@ -29,25 +30,23 @@
 
     </LinearLayout>
 
-    <ImageView
+    <Button
         android:id="@+id/accept"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:contentDescription="@string/accept"
-        android:padding="0dp"
-        app:srcCompat="@drawable/ic_baseline_person_add_alt_1_24" />
+        android:text="@string/request"
+        android:padding="0dp"/>
 
-    <ImageView
+    <Button
         android:id="@+id/reject"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:contentDescription="@string/reject"
-        android:padding="0dp"
-        app:srcCompat="@drawable/ic_baseline_person_remove_24" />
+        android:text="@string/cancel"
+        android:padding="0dp" />
 
 
 </LinearLayout>

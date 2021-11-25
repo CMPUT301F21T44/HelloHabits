@@ -22,6 +22,10 @@ public class UserHabitListFragment extends HabitListFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserViewModel = ViewModelFactory.getProvider(requireActivity()).get(UserViewModel.class);
+        initAdapter((habit) -> {
+            // do nothing, the user should not be able to view other details
+            // about the other user's habits
+        });
     }
 
     /**

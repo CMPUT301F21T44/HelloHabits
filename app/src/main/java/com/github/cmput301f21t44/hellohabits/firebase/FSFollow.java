@@ -3,6 +3,7 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 import androidx.annotation.NonNull;
 
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class FSFollow implements Follow, FSDocument {
         this.mStatus = status;
     }
 
-    public FSFollow(QueryDocumentSnapshot doc) {
+    public FSFollow(DocumentSnapshot doc) {
         this(doc.getId(), convertStatus(doc.getString(STATUS)));
     }
 

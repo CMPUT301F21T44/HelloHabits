@@ -92,6 +92,10 @@
     <string name="followers">Followers</string>
     <string name="following">Following</string>
     <string name="all_users">All Users</string>
+    <string name="cancel">Cancel</string>
+    <string name="request">Request</string>
+    <string name="follow">Follow</string>
+    <string name="requested">Requested</string>
     <!-- Resource ID for tags -->
     <id name="priority" />
     <id name="habit_id" />

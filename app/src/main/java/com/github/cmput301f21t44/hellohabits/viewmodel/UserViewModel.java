@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * ViewModel class for viewing other users
@@ -29,16 +32,24 @@ public class UserViewModel extends ViewModel {
         this.mAllUsers = mRepository.getAllUsers();
         this.mFollowers = new MediatorLiveData<>();
         this.mFollowing = new MediatorLiveData<>();
-        listenToLiveData(mFollowers, u -> u.getFollowerStatus() != null);
-        listenToLiveData(mFollowing, u -> u.getFollowingStatus() != null);
+        listenToLiveData(mFollowers, mRepository.getFollowers());
+        listenToLiveData(mFollowing, mRepository.getFollowing());
     }
 
     private void listenToLiveData(MediatorLiveData<List<User>> liveData,
-                                  UserCallback userCallback) {
-        liveData.addSource(mAllUsers, users -> {
-            List<User> filteredList = users.stream().filter(userCallback::hasFollow)
-                    .collect(Collectors.toList());
-            mFollowing.setValue(filteredList);
+                                  LiveData<List<Follow>> followLiveData) {
+        liveData.addSource(followLiveData, follows -> {
+            List<User> users = mAllUsers.getValue();
+            if (users == null) return;
+            Map<String, User> userMap = new HashMap<>();
+            for (User user : users) {
+                userMap.put(user.getEmail(), user);
+            }
+            List<User> userFollows = new ArrayList<>();
+            for (Follow follow : follows) {
+                userFollows.add(userMap.get(follow.getEmail()));
+            }
+            liveData.setValue(userFollows);
         });
     }
 

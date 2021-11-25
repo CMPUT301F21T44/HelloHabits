@@ -53,4 +53,8 @@ public interface UserRepository {
      * @param failCallback    Callback for when the operation fails
      */
     void rejectFollow(String email, ThenFunction successCallback, CatchFunction failCallback);
+
+    LiveData<List<Follow>> getFollowers();
+
+    LiveData<List<Follow>> getFollowing();
 }

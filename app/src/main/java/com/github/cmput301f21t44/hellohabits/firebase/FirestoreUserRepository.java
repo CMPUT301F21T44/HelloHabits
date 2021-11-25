@@ -130,8 +130,8 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
                 FSFollow.FOLLOWER_COLLECTION.toString()).document(follower);
         if (status != Follow.Status.REJECTED) {
             // will either create or update
-            batch.set(followerRef, new FSFollow(following, status), SetOptions.merge());
-            batch.set(followingRef, new FSFollow(follower, status), SetOptions.merge());
+            batch.set(followerRef, new FSFollow(following, status).getMap(), SetOptions.merge());
+            batch.set(followingRef, new FSFollow(follower, status).getMap(), SetOptions.merge());
         } else {
             // delete rejected follow
             batch.delete(followerRef);

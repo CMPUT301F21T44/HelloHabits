@@ -52,11 +52,36 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
                 .document(getEmail()).addSnapshotListener((follow, e) -> {
             if (follow == null) return;
             if (follow.exists()) {
-                followLiveData.setValue(new FSFollow((QueryDocumentSnapshot) follow));
+                followLiveData.setValue(new FSFollow(follow));
             }
         });
 
         return followLiveData;
+    }
+
+    private LiveData<List<Follow>> getFollowLiveData(FSFollow.FollowCollection collection) {
+        MutableLiveData<List<Follow>> followLiveData = new MutableLiveData<>();
+        getUserSubCollectionRef(getEmail(), collection.toString())
+                .addSnapshotListener((follows, e) -> {
+                    if (follows == null) return;
+                    List<Follow> followList = new ArrayList<>();
+                    for (QueryDocumentSnapshot follow : follows) {
+                        followList.add(new FSFollow(follow));
+                    }
+                    followLiveData.setValue(followList);
+                });
+
+        return followLiveData;
+    }
+
+    @Override
+    public LiveData<List<Follow>> getFollowers() {
+        return getFollowLiveData(FSFollow.FOLLOWER_COLLECTION);
+    }
+
+    @Override
+    public LiveData<List<Follow>> getFollowing() {
+        return getFollowLiveData(FSFollow.FOLLOWING_COLLECTION);
     }
 
     @Override

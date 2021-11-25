@@ -17,9 +17,6 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentUserListBinding;
 import com.github.cmput301f21t44.hellohabits.databinding.ListUserItemBinding;
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
-import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.model.social.User;
-import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
@@ -61,6 +58,7 @@ public abstract class UserListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
+        initAdapter();
     }
 
     /**
@@ -77,21 +75,22 @@ public abstract class UserListFragment extends Fragment {
     }
 
     /**
-     * Initializes the RecyclerView's userAdapter
+     * Initializes the RecyclerView's UserAdapter
      *
-     * @param viewListener onClickListener for Habit List items
      */
-    protected void initAdapter(OnItemClickListener<User> viewListener,
-                               OnItemClickListener<User> acceptListener,
-                               OnItemClickListener<User> rejectListener) {
-        mAdapter = UserAdapter.newInstance(viewListener, acceptListener, rejectListener);
+    protected void initAdapter() {
+        mAdapter = UserAdapter.newInstance(this, mUserViewModel, (user)-> {
+            mUserViewModel.setSelectedUser(user);
+            mNavController.navigate(R.id.UserHabitListFragment);
+        });
         mBinding.userRecyclerView.setAdapter(mAdapter);
         mBinding.userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
      * Show error message as Toast
-     *  @param text Text to output
+     *
+     * @param text Text to output
      * @param e    Exception thrown
      * @return
      */

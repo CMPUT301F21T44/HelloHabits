@@ -31,6 +31,11 @@
         android:label="All Habits"
         tools:layout="@layout/fragment_habit_list" />
     <fragment
+        android:id="@+id/UserHabitListFragment"
+        android:name="com.github.cmput301f21t44.hellohabits.view.habit.UserHabitListFragment"
+        android:label="User Habits"
+        tools:layout="@layout/fragment_habit_list" />
+    <fragment
         android:id="@+id/LoginFragment"
         android:name="com.github.cmput301f21t44.hellohabits.view.social.LoginFragment"
         android:label="LoginFragment"

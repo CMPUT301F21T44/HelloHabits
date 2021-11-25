@@ -1,33 +1,47 @@
 package com.github.cmput301f21t44.hellohabits.view.social;
 
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ListUserItemBinding;
+import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
+import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 
 public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
-    private OnItemClickListener<User> mViewListener;
-    private OnItemClickListener<User> mAcceptListener;
-    private OnItemClickListener<User> mRejectListener;
+    private LifecycleOwner mlifeCycleOwner;
+    private UserViewModel mViewModel;
+    private OnItemClickListener<User> mOnClickUser;
 
     public UserAdapter(@NonNull DiffUtil.ItemCallback<User> diffCallback) {
         super(diffCallback);
     }
 
-    public static UserAdapter newInstance(OnItemClickListener<User> viewListener,
-                                          OnItemClickListener<User> acceptListener,
-                                          OnItemClickListener<User> rejectListener) {
+    /**
+     * Creates a new instance of UserAdapter
+     *
+     * @param lifecycleOwner Lifecycle owner of the fragment
+     * @param viewModel      UserViewModel to be used by the adapter
+     * @param onClickUser    Callback for when the user body is clicked (navigate)
+     * @return a UserAdapter instance
+     */
+    public static UserAdapter newInstance(LifecycleOwner lifecycleOwner, UserViewModel viewModel,
+                                          OnItemClickListener<User> onClickUser) {
         UserAdapter adapter = new UserAdapter(new UserDiff());
-        adapter.mViewListener = viewListener;
-        adapter.mAcceptListener = acceptListener;
-        adapter.mRejectListener = rejectListener;
+        adapter.mlifeCycleOwner = lifecycleOwner;
+        adapter.mViewModel = viewModel;
+        adapter.mOnClickUser = onClickUser;
         return adapter;
     }
 
@@ -57,7 +71,26 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User current = getItem(position);
-        holder.bind(current, mViewListener, mAcceptListener, mRejectListener);
+        holder.bind(current, user -> {
+            if (user.getFollowingStatus() != Follow.Status.ACCEPTED) return;
+            mOnClickUser.onItemClick(user);
+        }, user -> {
+            // accept button
+            mViewModel.acceptFollow(user.getEmail(), () -> {
+            }, (e) -> {
+            });
+        }, user -> {
+            // reject button
+            if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
+                mViewModel.rejectFollow(user.getEmail(), () -> {
+                }, (e) -> {
+                });
+            } else {
+                mViewModel.requestFollow(user.getEmail(), () -> {
+                }, (e) -> {
+                });
+            }
+        });
     }
 
     /**
@@ -120,12 +153,33 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
                   final OnItemClickListener<User> rejectListener) {
             mItemBinding.userEmail.setText(user.getEmail());
             mItemBinding.userName.setText(user.getName());
-//            user.getFollowerStatus(); // null, Status.REQUESTED, Status.ACCEPTED
-//            user.getFollowingStatus(); // null, Status.REQUESTED, Status.ACCEPTED
-            mItemBinding.userName.setOnClickListener(v -> viewListener.onItemClick(user));
-            mItemBinding.userEmail.setOnClickListener(v -> viewListener.onItemClick(user));
+
+            mItemBinding.userBody.setOnClickListener(v -> viewListener.onItemClick(user));
             mItemBinding.accept.setOnClickListener(v -> acceptListener.onItemClick(user));
             mItemBinding.reject.setOnClickListener(v -> rejectListener.onItemClick(user));
+
+            // either accept or reject, don't add option to follow just yet
+            if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
+                mItemBinding.accept.setText(R.string.accept);
+                mItemBinding.reject.setText(R.string.reject);
+                return;
+            }
+
+
+            mItemBinding.accept.setVisibility(View.INVISIBLE);
+            Follow.Status status = user.getFollowingStatus();
+            // add option to follow
+            if (status == null) {
+                mItemBinding.reject.setText(R.string.follow);
+            } else if (status == Follow.Status.REQUESTED) {
+                // all buttons are gone
+                mItemBinding.reject.setText(R.string.requested);
+                mItemBinding.reject.setBackgroundColor(Color.parseColor("#CCCCCC"));
+                mItemBinding.reject.setEnabled(false);
+            } else if (status == Follow.Status.ACCEPTED) {
+                mItemBinding.accept.setVisibility(View.INVISIBLE);
+                mItemBinding.reject.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

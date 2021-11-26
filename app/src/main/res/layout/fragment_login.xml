@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE792"
     android:paddingLeft="@dimen/fragment_horizontal_margin"
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
@@ -18,10 +19,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="420dp"
         android:layout_marginEnd="24dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/name"
         android:inputType="textPersonName|textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,10 +34,12 @@
         android:layout_width="376dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
@@ -43,12 +48,14 @@
         android:layout_width="376dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
@@ -60,7 +67,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="64dp"
         android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
         android:text="@string/action_sign_in_short"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.781"
@@ -70,11 +79,12 @@
 
     <TextView
         android:id="@+id/toggle"
-        android:layout_width="91dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="4dp"
+        android:layout_width="69dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="8dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
+        android:fontFamily="@font/caveat"
         android:text="@string/action_register_short"
         android:textColor="#2196F3"
         android:textSize="24sp"
@@ -83,10 +93,11 @@
 
     <TextView
         android:id="@+id/guide1"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="31dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="75dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
         android:text="No account yet?"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,13 +105,15 @@
 
     <TextView
         android:id="@+id/guide2"
-        android:layout_width="0dp"
-        android:layout_height="22dp"
+        android:layout_width="58dp"
+        android:layout_height="26dp"
         android:layout_marginStart="4dp"
+        android:fontFamily="@font/caveat"
         android:text="now!"
         android:textSize="17sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/guide1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/toggle" />
 
     <ImageView
@@ -116,6 +129,7 @@
         android:id="@+id/imageView5"
         android:layout_width="177dp"
         android:layout_height="97dp"
+        android:background="#FFE792"
         android:src="@drawable/hellohabits_slogan3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />

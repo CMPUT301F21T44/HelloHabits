@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#FFE792"
     android:padding="8dp">
 
     <ImageView
@@ -21,20 +22,23 @@
 
         <TextView
             android:id="@+id/title_view"
-            android:layout_width="wrap_content"
+            android:layout_width="51dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/black"
+            android:textSize="24sp"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/reason_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textSize="16sp"
+            android:textSize="20sp"
             tools:text="Reason" />
 
     </LinearLayout>

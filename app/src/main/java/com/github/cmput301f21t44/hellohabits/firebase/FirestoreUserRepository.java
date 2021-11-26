@@ -15,7 +15,9 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Firestore Repository for Users
@@ -36,27 +38,6 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
      */
     public FirestoreUserRepository() {
         this(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance());
-    }
-
-    /**
-     * Get LiveData for a follow
-     *
-     * @param email      The user's email
-     * @param collection The follow collection to fetch from
-     * @return LiveData of an FSFollow
-     */
-    private LiveData<FSFollow> getFollowLiveData(String email,
-                                                 FSFollow.FollowCollection collection) {
-        MutableLiveData<FSFollow> followLiveData = new MutableLiveData<>();
-        getUserSubCollectionRef(email, collection.toString())
-                .document(getEmail()).addSnapshotListener((follow, e) -> {
-            if (follow == null) return;
-            if (follow.exists()) {
-                followLiveData.setValue(new FSFollow(follow));
-            }
-        });
-
-        return followLiveData;
     }
 
     private LiveData<List<Follow>> getFollowLiveData(FSFollow.FollowCollection collection) {
@@ -86,27 +67,49 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
 
     @Override
     public LiveData<List<User>> getAllUsers() {
-        MediatorLiveData<List<User>> usersLiveData = new MediatorLiveData<>();
+        MediatorLiveData<List<User>> usersListLiveData = new MediatorLiveData<>();
+        MediatorLiveData<HashMap<String, FSUser>> usersMapLiveData = new MediatorLiveData<>();
+
+        LiveData<List<Follow>> followingLiveData = getFollowLiveData(FSFollow.FOLLOWING_COLLECTION);
+        LiveData<List<Follow>> followerLiveData = getFollowLiveData(FSFollow.FOLLOWER_COLLECTION);
+
+        usersListLiveData.addSource(usersMapLiveData, userMap ->
+                usersListLiveData.setValue(new ArrayList<>(userMap.values())));
+
         getAllUsersCollectionRef().addSnapshotListener((userSnapshots, err) -> {
             if (userSnapshots == null) return;
-            final List<User> users = new ArrayList<>();
+            final HashMap<String, FSUser> users = new HashMap<>();
             for (QueryDocumentSnapshot doc : userSnapshots) {
                 final FSUser user = new FSUser(doc);
                 // exclude self from list
                 if (user.getEmail().equals(getEmail())) continue;
-                LiveData<FSFollow> followingLiveData = getFollowLiveData(user.getEmail(),
-                        FSFollow.FOLLOWING_COLLECTION);
-                LiveData<FSFollow> followerLiveData = getFollowLiveData(user.getEmail(),
-                        FSFollow.FOLLOWER_COLLECTION);
-                usersLiveData.addSource(followingLiveData, fsFollow ->
-                        user.setFollowerStatus(fsFollow.getStatus()));
-                usersLiveData.addSource(followerLiveData, fsFollow ->
-                        user.setFollowingStatus(fsFollow.getStatus()));
-                users.add(user);
+                users.put(user.getEmail(), user);
             }
-            usersLiveData.setValue(users);
+            usersMapLiveData.setValue(users);
         });
-        return usersLiveData;
+
+        usersMapLiveData.addSource(followingLiveData, following -> {
+            if (following == null) return;
+            final HashMap<String, FSUser> users = usersMapLiveData.getValue();
+            if (users == null) return;
+            for (Follow follow : following)
+                Objects.requireNonNull(users.get(follow.getEmail())).setFollowingStatus(follow.getStatus());
+
+            usersMapLiveData.setValue(users);
+        });
+
+        usersMapLiveData.addSource(followerLiveData, follower -> {
+            if (follower == null) return;
+            final HashMap<String, FSUser> users = usersMapLiveData.getValue();
+            if (users == null) return;
+            for (Follow follow : follower)
+                Objects.requireNonNull(users.get(follow.getEmail())).setFollowerStatus(follow.getStatus());
+
+            usersMapLiveData.setValue(users);
+        });
+
+
+        return usersListLiveData;
     }
 
     /**
@@ -164,7 +167,6 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
     @Override
     public void cancelFollow(String email, ThenFunction successCallback, CatchFunction failCallback) {
         updateFollow(getEmail(), email, Follow.Status.REJECTED, successCallback, failCallback);
-
     }
 
     /**

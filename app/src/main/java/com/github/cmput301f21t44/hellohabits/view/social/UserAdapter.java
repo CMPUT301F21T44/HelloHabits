@@ -31,8 +31,8 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     /**
      * Creates a new instance of UserAdapter
      *
-     * @param viewModel      UserViewModel to be used by the adapter
-     * @param onClickUser    Callback for when the user body is clicked (navigate)
+     * @param viewModel   UserViewModel to be used by the adapter
+     * @param onClickUser Callback for when the user body is clicked (navigate)
      * @return a UserAdapter instance
      */
     public static UserAdapter newInstance(UserViewModel viewModel,
@@ -81,6 +81,10 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
             // reject button
             if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
                 mViewModel.rejectFollow(user.getEmail(), () -> {
+                }, (e) -> {
+                });
+            } else if (user.getFollowingStatus() == Follow.Status.REQUESTED) {
+                mViewModel.cancelFollowRequest(user.getEmail(), () -> {
                 }, (e) -> {
                 });
             } else {
@@ -175,10 +179,11 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
                 // all buttons are gone
                 mItemBinding.reject.setText(R.string.requested);
                 mItemBinding.reject.setBackgroundColor(Color.parseColor("#CCCCCC"));
-                mItemBinding.reject.setEnabled(false);
             } else if (status == Follow.Status.ACCEPTED) {
                 mItemBinding.accept.setVisibility(View.INVISIBLE);
                 mItemBinding.reject.setVisibility(View.INVISIBLE);
+                // click the entire view to view habit
+                mItemBinding.getRoot().setOnClickListener(v -> viewListener.onItemClick(user));
             }
         }
     }

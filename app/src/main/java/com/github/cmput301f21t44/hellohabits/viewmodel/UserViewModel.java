@@ -93,8 +93,4 @@ public class UserViewModel extends ViewModel {
                              CatchFunction failCallback) {
         mRepository.rejectFollow(email, successCallback, failCallback);
     }
-
-    interface UserCallback {
-        boolean hasFollow(User user);
-    }
 }

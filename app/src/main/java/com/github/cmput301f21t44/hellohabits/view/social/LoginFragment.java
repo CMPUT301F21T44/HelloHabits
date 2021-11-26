@@ -98,9 +98,13 @@ public class LoginFragment extends Fragment {
         if (mIsLogin) {
             binding.toggle.setText(R.string.action_register_short);
             binding.submit.setText(R.string.action_sign_in_short);
+            binding.guide1.setText("No account yet?");
+            binding.guide2.setVisibility(View.VISIBLE);
         } else {
             binding.toggle.setText(R.string.action_sign_in_short);
             binding.submit.setText(R.string.action_register_short);
+            binding.guide1.setText("          Back to");
+            binding.guide2.setVisibility(View.INVISIBLE);
         }
         toggleNameFieldVisibility();
     }

@@ -171,7 +171,6 @@
         tools:itemCount="5"
         tools:listitem="@layout/list_habit_event_item" />
 
-
     <Button
         android:id="@+id/button_new_habit_event"
         android:layout_width="match_parent"
@@ -196,6 +195,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_new_habit_event" />
 
+
     <Button
         android:id="@+id/button_delete_habit"
         android:layout_width="match_parent"
@@ -205,8 +205,12 @@
         android:text="@string/delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_edit_habit" />
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

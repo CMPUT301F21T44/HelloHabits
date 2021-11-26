@@ -130,7 +130,7 @@
         android:layout_width="177dp"
         android:layout_height="97dp"
         android:background="#FFE792"
-        android:src="@drawable/hellohabits_slogan3"
+        android:src="@drawable/slogan_new"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 

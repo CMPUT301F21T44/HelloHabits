@@ -34,16 +34,6 @@ public class LoginFragment extends Fragment {
     private boolean mIsLogin;
 
     /**
-     * This function set the basic creation
-     *
-     * @param savedInstanceState a default Bundle
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    /**
      * When the view is created, connect the layout to the class using binding
      *
      * @param inflater           a default LayoutInflater

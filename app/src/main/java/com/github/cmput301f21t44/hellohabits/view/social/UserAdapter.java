@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,8 +18,9 @@ import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 
+import java.util.Objects;
+
 public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
-    private LifecycleOwner mlifeCycleOwner;
     private UserViewModel mViewModel;
     private OnItemClickListener<User> mOnClickUser;
 
@@ -31,15 +31,13 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     /**
      * Creates a new instance of UserAdapter
      *
-     * @param lifecycleOwner Lifecycle owner of the fragment
      * @param viewModel      UserViewModel to be used by the adapter
      * @param onClickUser    Callback for when the user body is clicked (navigate)
      * @return a UserAdapter instance
      */
-    public static UserAdapter newInstance(LifecycleOwner lifecycleOwner, UserViewModel viewModel,
+    public static UserAdapter newInstance(UserViewModel viewModel,
                                           OnItemClickListener<User> onClickUser) {
         UserAdapter adapter = new UserAdapter(new UserDiff());
-        adapter.mlifeCycleOwner = lifecycleOwner;
         adapter.mViewModel = viewModel;
         adapter.mOnClickUser = onClickUser;
         return adapter;
@@ -117,9 +115,11 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
          * @return whether the two Users have the same contents
          */
         @Override
-        public boolean areContentsTheSame(@NonNull User oldItem,
-                                          @NonNull User newItem) {
-            return oldItem.getName().equals(newItem.getName());
+        public boolean areContentsTheSame(@NonNull User oldItem, @NonNull User newItem) {
+            return oldItem.getName().equals(newItem.getName()) &&
+                    // use Objects.equals because these members are nullable
+                    Objects.equals(oldItem.getFollowerStatus(), newItem.getFollowerStatus()) &&
+                    Objects.equals(oldItem.getFollowingStatus(), newItem.getFollowingStatus());
         }
     }
 

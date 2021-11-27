@@ -76,7 +76,7 @@
         android:focusable="true"
         android:minHeight="48dp"
         android:text="@string/action_register_short"
-        android:textColor="#2196F3"
+        android:textColor="@color/teal_200"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

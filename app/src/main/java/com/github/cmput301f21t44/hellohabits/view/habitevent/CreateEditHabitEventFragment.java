@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -19,6 +20,7 @@ import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.Objects;
 
@@ -147,7 +149,12 @@ public class CreateEditHabitEventFragment extends Fragment {
      * TODO: Implement
      */
     private void getLocation() {
-        Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
+        SetLocationFragment nextFrag= new SetLocationFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(((ViewGroup)getView().getParent()).getId(), nextFrag, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+        //Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -1,7 +1,5 @@
 package com.github.cmput301f21t44.hellohabits.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -48,7 +46,7 @@ public class HabitViewModel extends ViewModel {
     /**
      * LiveData list of the user's habits today
      */
-    private  final MediatorLiveData<List<Habit>> mTodaysHabits = new MediatorLiveData<>();
+    private final MediatorLiveData<List<Habit>> mTodaysHabits = new MediatorLiveData<>();
 
     /**
      * Constructor for HabitViewModel
@@ -110,18 +108,14 @@ public class HabitViewModel extends ViewModel {
             // traverse all h in habitList, and only masks in those who matches the checkBox
             // checkBox implementation can be seen in isInDay() from Habit.java
             for (Habit h : habits) {
-                Log.e("HabitList SUBMIT", String.format("%s - %s ", h.toString(), h.getEvents()));
                 if (Habit.isInDay(today, h.getDaysOfWeek())) {
                     todaysHabits.add(h);
                 }
             }
             Collections.sort(todaysHabits, Comparator.comparingInt(Habit::getIndex));
-            for (Habit h : todaysHabits) {
-                Log.e("TodaysList SUBMIT", String.format("%s - %s %f", h.toString(), h.getEvents(), Habit.getConsistency(h)));
-            }
             mTodaysHabits.setValue(todaysHabits);
         });
-        return  mTodaysHabits;
+        return mTodaysHabits;
     }
 
     /**

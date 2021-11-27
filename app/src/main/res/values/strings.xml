@@ -96,6 +96,7 @@
     <string name="request">Request</string>
     <string name="follow">Follow</string>
     <string name="requested">Requested</string>
+    <string name="reorder_list">Reorder List</string>
     <!-- Resource ID for tags -->
     <id name="priority" />
     <id name="habit_id" />

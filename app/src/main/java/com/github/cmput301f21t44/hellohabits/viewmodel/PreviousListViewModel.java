@@ -19,6 +19,9 @@ public class PreviousListViewModel extends ViewModel {
      */
     private final MutableLiveData<Integer> mDestinationId =
             new MutableLiveData<>(R.id.TodaysHabitsFragment);
+    /**
+     * LiveData object keeping track if previous screen was the ViewHabitFragment
+     */
     private final MutableLiveData<Boolean> mFromViewHabit =
             new MutableLiveData<>(false);
 

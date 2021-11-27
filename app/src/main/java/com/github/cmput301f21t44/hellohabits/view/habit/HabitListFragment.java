@@ -85,6 +85,7 @@ public abstract class HabitListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mBinding.newHabit.setVisibility(View.GONE);
         mBinding.reorderFab.setVisibility(View.GONE);
+        mBinding.dragHint.setVisibility(View.GONE);
         mNavController = NavHostFragment.findNavController(this);
     }
 
@@ -118,7 +119,7 @@ public abstract class HabitListFragment extends Fragment {
     /**
      * Initializes the listeners for the HabitAdapter
      * <p>
-     * Also makes the floating action buttons visible
+     * Makes the floating action buttons visible
      *
      * @param resId destination ID for the PreviousListViewModel
      */
@@ -138,6 +139,7 @@ public abstract class HabitListFragment extends Fragment {
         });
 
         mBinding.reorderFab.setVisibility(View.VISIBLE);
+        mBinding.dragHint.setVisibility(View.VISIBLE);
         mBinding.reorderFab.setOnClickListener(v -> updateReorderUI(toggleReorder()));
     }
 

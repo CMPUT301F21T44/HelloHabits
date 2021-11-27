@@ -1,5 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.model.habit;
 
+import android.util.Log;
+
 import com.github.cmput301f21t44.hellohabits.model.HasKey;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 
@@ -89,6 +91,7 @@ public interface Habit extends HasKey {
             days--;
         }
         totalDays = totalDays + numRecurrenceDays * days / 7;
+        Log.e("Total days", String.format("%s - %d, %f", habit.getTitle(), totalDays, (double) events.size() / totalDays));
         return totalDays != 0 ? (double) events.size() / totalDays : 1;
     }
 

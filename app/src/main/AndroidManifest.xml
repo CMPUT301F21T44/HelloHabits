@@ -3,6 +3,8 @@
     package="com.github.cmput301f21t44.hellohabits">
 
     <!-- usesClearTextTraffic is needed for Firebase Emulator testing, remove on release -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

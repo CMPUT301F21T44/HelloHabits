@@ -1,4 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.view.habitevent;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +11,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentSetLocationBinding;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +22,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 public class SetLocationFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
@@ -26,6 +32,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
     private double longitude;
     private String eventID;
     private FragmentSetLocationBinding binding;
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
 
     public SetLocationFragment() {
     }
@@ -35,6 +42,11 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSetLocationBinding.inflate(inflater, container, false);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new
+                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        }
+
         return binding.getRoot();
     }
 
@@ -49,10 +61,10 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
 
         //on click listener for set location button
         setLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
+          @Override
+        public void onClick(View v) {
+          getActivity().finish();
+        }
         });
 
     }
@@ -76,10 +88,18 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new
+                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        }
+        else {
+            map.setMyLocationEnabled(true);
+        }
+        //map.setMyLocationEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);
         map.getUiSettings().setZoomGesturesEnabled(true);
-
+        //map.getUiSettings().setMyLocationButtonEnabled(true);
         // Add an initial marker in Edmonton and move the camera to it
         LatLng edmonton = new LatLng(53.5461, -113.4938);
         map.addMarker(new MarkerOptions().position(edmonton).title("Exchange location"));

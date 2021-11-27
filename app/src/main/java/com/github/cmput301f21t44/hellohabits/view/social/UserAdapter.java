@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ListUserItemBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
@@ -29,6 +30,7 @@ import java.util.Objects;
 public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     private UserViewModel mViewModel;
     private OnItemClickListener<User> mOnClickUser;
+    private OnError mErrorCallback;
 
     /**
      * Constructor for UserAdapter
@@ -47,10 +49,12 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
      * @return a UserAdapter instance
      */
     public static UserAdapter newInstance(UserViewModel viewModel,
-                                          OnItemClickListener<User> onClickUser) {
+                                          OnItemClickListener<User> onClickUser,
+                                          OnError errorCallback) {
         UserAdapter adapter = new UserAdapter(new UserDiff());
         adapter.mViewModel = viewModel;
         adapter.mOnClickUser = onClickUser;
+        adapter.mErrorCallback = errorCallback;
         return adapter;
     }
 
@@ -80,34 +84,51 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User current = getItem(position);
-        holder.bind(current, user -> {
+        ThenFunction onSuccess = () -> notifyItemChanged(position);
+
+        OnItemClickListener<User> viewListener = user -> {
             if (user.getFollowingStatus() != ACCEPTED) return;
             mOnClickUser.onItemClick(user);
-        }, user -> {
-            // accept button
-            mViewModel.acceptFollow(user.getEmail(), () -> {
-                notifyItemChanged(position);
-            }, (e) -> {
-            });
-        }, user -> {
-            // reject button
+        };
+
+        OnItemClickListener<User> acceptListener = user -> mViewModel
+                .acceptFollow(user.getEmail(), onSuccess, e ->
+                        displayError(e, "accept follow request"));
+
+        // Reject button can be reject, or request/cancel follow
+        OnItemClickListener<User> rejectListener = user -> {
             if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
-                mViewModel.rejectFollow(user.getEmail(), () -> {
-                    notifyItemChanged(position);
-                }, (e) -> {
-                });
+                mViewModel.rejectFollow(user.getEmail(), onSuccess, e ->
+                        displayError(e, "reject follow request"));
             } else if (user.getFollowingStatus() == Follow.Status.REQUESTED) {
-                mViewModel.cancelFollowRequest(user.getEmail(), () -> {
-                    notifyItemChanged(position);
-                }, (e) -> {
-                });
+                mViewModel.cancelFollowRequest(user.getEmail(), onSuccess, e ->
+                        displayError(e, "cancel follow request"));
             } else {
-                mViewModel.requestFollow(user.getEmail(), () -> {
-                    notifyItemChanged(position);
-                }, (e) -> {
-                });
+                mViewModel.requestFollow(user.getEmail(), onSuccess, (e) ->
+                        displayError(e, "request follow"));
             }
-        });
+        };
+
+        holder.bind(current, viewListener, acceptListener, rejectListener);
+    }
+
+    /**
+     * Displays an error through the callback
+     * @param e Exception thrown
+     * @param operation Name of failed operation
+     */
+    private void displayError(Exception e, String operation) {
+        mErrorCallback.displayMessage(String.format("Failed to %s: %s", operation,
+                e.getLocalizedMessage()));
+    }
+
+    interface OnError {
+        /**
+         * Called when there is an error in the UserViewModel operation
+         *
+         * @param message String message to display
+         */
+        void displayMessage(String message);
     }
 
     /**

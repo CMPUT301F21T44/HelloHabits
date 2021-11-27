@@ -99,8 +99,8 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         // change lock icon depending on the reordering state
         mViewModel.getReordering().observe(mLifeCycleOwner, isReordering -> {
             ImageView handle = holder.mItemBinding.lock;
+            handle.setVisibility(isReordering || current.isPrivate() ? VISIBLE : INVISIBLE);
             if (isReordering) {
-                handle.setVisibility(VISIBLE);
                 handle.setOnTouchListener((v, event) -> {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         mDragStartListener.onStartDrag(holder);
@@ -111,7 +111,6 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             } else {
                 handle.setOnTouchListener(null);
                 handle.setImageResource(R.drawable.ic_baseline_lock_24);
-                handle.setVisibility(current.isPrivate() ? VISIBLE : INVISIBLE);
             }
         });
 
@@ -185,6 +184,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         void bind(@NonNull final Habit habit, final OnItemClickListener<Habit> listener) {
             mItemBinding.titleView.setText(habit.getTitle());
             mItemBinding.reasonView.setText(habit.getReason());
+            mItemBinding.lock.setVisibility(INVISIBLE);
             // check level of consistency
             double consistency = Habit.getConsistency(habit);
 

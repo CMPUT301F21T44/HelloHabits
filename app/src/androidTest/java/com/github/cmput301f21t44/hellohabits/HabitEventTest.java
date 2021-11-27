@@ -16,7 +16,6 @@ import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFr
 import static com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment.MAX_COMMENT_LEN;
 
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
@@ -64,7 +63,6 @@ public class HabitEventTest {
 
     @BeforeClass
     public static void setup() {
-        Log.println(Log.ASSERT, "What", "h");
         habitTitle = TestUtil.getRealTimeString(HabitTest.HABIT_TITLE, MAX_TITLE_LEN);
         newComment = TestUtil.getRealTimeString(NEW_EVENT_COMMENT, MAX_COMMENT_LEN);
         final FSHabit habit = new FSHabit(UUID.randomUUID().toString(), habitTitle,
@@ -76,15 +74,11 @@ public class HabitEventTest {
         habitId = habit.getId();
         sDb.collection(FSUser.COLLECTION).document(LoginTest.EMAIL).collection(FSHabit.COLLECTION)
                 .document(habit.getId()).set(habit.getMap()).addOnSuccessListener(u ->
-                hasHabit.set(true)).addOnFailureListener(e -> {
-            Log.println(Log.ASSERT, "Wh", e.getLocalizedMessage());
-            hasHabit.set(true);
-        });
+                hasHabit.set(true)).addOnFailureListener(e -> hasHabit.set(true));
 
         while (!hasHabit.get()) {
             SystemClock.sleep(100);
         }
-        Log.println(Log.ASSERT, "What", "h");
     }
 
     @AfterClass

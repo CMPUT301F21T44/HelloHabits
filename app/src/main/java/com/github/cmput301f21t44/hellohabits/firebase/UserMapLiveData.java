@@ -1,7 +1,5 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
@@ -85,8 +83,6 @@ class UserMapLiveData extends MediatorLiveData<Map<String, FSUser>> {
                 updatedUsers.put(userKey, user);
             }
 
-            Log.d("FollowLiveData", String.format("%s %s", following.toString(),
-                    updatedUsers.values().toString()));
             this.setValue(updatedUsers);
         });
     }

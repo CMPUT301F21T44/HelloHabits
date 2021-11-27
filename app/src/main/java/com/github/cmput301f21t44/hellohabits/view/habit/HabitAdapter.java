@@ -5,7 +5,6 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -219,8 +218,6 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             mItemBinding.reasonView.setText(habit.getReason());
             mItemBinding.lock.setVisibility(INVISIBLE);
             // check level of consistency
-            Log.e("HabitBind", String.format("%s - %s ", habit.toString(), habit.getEvents()));
-
             double consistency = Habit.getConsistency(habit);
             if (consistency < 0.5) {
                 mItemBinding.imageView.setColorFilter(COLOUR_RED);

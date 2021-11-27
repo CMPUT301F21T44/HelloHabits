@@ -1,7 +1,6 @@
 package com.github.cmput301f21t44.hellohabits;
 
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,13 +22,9 @@ public class TestUtil {
         AtomicBoolean signInFailed = new AtomicBoolean(false);
         auth.signInWithEmailAndPassword(LoginTest.EMAIL, LoginTest.PASSWORD)
                 .addOnSuccessListener(u -> isSignedIn.set(true))
-                .addOnFailureListener(e -> {
-                    Log.println(Log.ASSERT, "oop", e.getLocalizedMessage());
-                    signInFailed.set(true);
-                });
+                .addOnFailureListener(e -> signInFailed.set(true));
 
         while (!isSignedIn.get() && !signInFailed.get()) {
-            Log.println(Log.ASSERT, "oop", "waiting");
             SystemClock.sleep(100);
         }
     }

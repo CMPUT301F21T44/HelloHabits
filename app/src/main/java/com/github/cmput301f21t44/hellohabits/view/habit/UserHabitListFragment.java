@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
+import java.util.Objects;
+
 public class UserHabitListFragment extends HabitListFragment {
     private UserViewModel mUserViewModel;
 
@@ -22,10 +24,6 @@ public class UserHabitListFragment extends HabitListFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserViewModel = ViewModelFactory.getProvider(requireActivity()).get(UserViewModel.class);
-        initAdapter((habit) -> {
-            // do nothing, the user should not be able to view other details
-            // about the other user's habits
-        });
     }
 
     /**
@@ -36,8 +34,13 @@ public class UserHabitListFragment extends HabitListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mUserViewModel.getSelectedUser().observe(this, user ->
-                mHabitViewModel.getUserPublicHabits(user.getEmail()).observe(this,
-                        mAdapter::submitList));
+        initAdapter(() ->
+                        mHabitViewModel.getUserPublicHabits(
+                                Objects.requireNonNull(
+                                        mUserViewModel.getSelectedUser().getValue()).getEmail()),
+                (habit) -> {
+                    // do nothing, the user should not be able to view other details
+                    // about the other user's habits
+                });
     }
 }

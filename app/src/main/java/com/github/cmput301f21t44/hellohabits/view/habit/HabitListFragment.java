@@ -26,6 +26,8 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -106,14 +108,19 @@ public abstract class HabitListFragment extends Fragment {
     /**
      * Initializes the RecyclerView's HabitAdapter
      *
-     * @param listener onClickListener for Habit List items
+     * @param habitListGetter Callback for getting the habit list
+     * @param listener        onClickListener for Habit List items
      */
-    protected void initAdapter(OnItemClickListener<Habit> listener) {
+    protected void initAdapter(HabitAdapter.GetHabitList habitListGetter, OnItemClickListener<Habit> listener) {
         mAdapter = HabitAdapter.newInstance(listener, mItemTouchHelper::startDrag, mHabitViewModel,
-                this);
+                this, habitListGetter);
         mBinding.habitRecyclerView.setAdapter(mAdapter);
         mBinding.habitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAnimator = mBinding.habitRecyclerView.getItemAnimator();
+        habitListGetter.getHabits().observe(this, habits -> {
+            Collections.sort(habits, Comparator.comparingInt(Habit::getIndex));
+            mAdapter.submitList(habits);
+        });
     }
 
     /**
@@ -123,8 +130,8 @@ public abstract class HabitListFragment extends Fragment {
      *
      * @param resId destination ID for the PreviousListViewModel
      */
-    protected void initListeners(int resId) {
-        initAdapter((habit) -> {
+    protected void initListeners(int resId, HabitAdapter.GetHabitList habitListGetter) {
+        initAdapter(habitListGetter, (habit) -> {
             if (mReordering) return;
 
             mHabitViewModel.setSelectedHabit(habit);

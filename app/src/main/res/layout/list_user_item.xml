@@ -19,13 +19,16 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:fontFamily="@font/caveat"
+            android:textSize="24sp"
             tools:text="Test User" />
 
         <TextView
             android:id="@+id/user_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
+            android:textSize="16sp"
             tools:text="testuser@example.com" />
 
     </LinearLayout>
@@ -36,8 +39,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
+        android:padding="0dp"
         android:text="@string/request"
-        android:padding="0dp"/>
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/reject"
@@ -45,8 +51,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
+        android:padding="0dp"
         android:text="@string/cancel"
-        android:padding="0dp" />
+        android:textSize="18sp" />
 
 
 </LinearLayout>

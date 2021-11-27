@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE792"
     tools:context=".view.habit.AllHabitsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -44,9 +45,10 @@
         android:layout_width="74dp"
         android:layout_height="24dp"
         android:layout_marginBottom="16dp"
+        android:fontFamily="@font/caveat"
         android:text="reorder ---"
-        android:textColor="#FF9800"
-        android:textSize="16sp"
+        android:textColor="@color/teal_200"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/reorder_fab"
         app:layout_constraintEnd_toStartOf="@+id/reorder_fab" />
 

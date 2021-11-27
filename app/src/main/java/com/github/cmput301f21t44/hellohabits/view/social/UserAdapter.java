@@ -1,6 +1,9 @@
 package com.github.cmput301f21t44.hellohabits.view.social;
 
 
+import static com.github.cmput301f21t44.hellohabits.model.social.Follow.Status.ACCEPTED;
+import static com.github.cmput301f21t44.hellohabits.model.social.Follow.Status.REQUESTED;
+
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +23,18 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 
 import java.util.Objects;
 
+/**
+ * Adapter class for displaying a User in a RecyclerView
+ */
 public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     private UserViewModel mViewModel;
     private OnItemClickListener<User> mOnClickUser;
 
+    /**
+     * Constructor for UserAdapter
+     *
+     * @param diffCallback Callback used for comparing two Users
+     */
     public UserAdapter(@NonNull DiffUtil.ItemCallback<User> diffCallback) {
         super(diffCallback);
     }
@@ -70,25 +81,29 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User current = getItem(position);
         holder.bind(current, user -> {
-            if (user.getFollowingStatus() != Follow.Status.ACCEPTED) return;
+            if (user.getFollowingStatus() != ACCEPTED) return;
             mOnClickUser.onItemClick(user);
         }, user -> {
             // accept button
             mViewModel.acceptFollow(user.getEmail(), () -> {
+                notifyItemChanged(position);
             }, (e) -> {
             });
         }, user -> {
             // reject button
             if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
                 mViewModel.rejectFollow(user.getEmail(), () -> {
+                    notifyItemChanged(position);
                 }, (e) -> {
                 });
             } else if (user.getFollowingStatus() == Follow.Status.REQUESTED) {
                 mViewModel.cancelFollowRequest(user.getEmail(), () -> {
+                    notifyItemChanged(position);
                 }, (e) -> {
                 });
             } else {
                 mViewModel.requestFollow(user.getEmail(), () -> {
+                    notifyItemChanged(position);
                 }, (e) -> {
                 });
             }
@@ -144,6 +159,38 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
         }
 
         /**
+         * Updates the buttons appearance depending on the following/follower status
+         *
+         * @param followingStatus Status of follow request (this user - follow -> current user)
+         * @param followerStatus  Status of follow request (current user - follow -> this user)
+         */
+        void updateAppearance(Follow.Status followingStatus, Follow.Status followerStatus) {
+            mItemBinding.accept.setBackgroundColor(Color.parseColor("#FF6200EE"));
+            mItemBinding.reject.setBackgroundColor(Color.parseColor("#FF6200EE"));
+
+            // either accept or reject, don't add option to follow just yet
+            if (followerStatus == Follow.Status.REQUESTED) {
+                mItemBinding.accept.setText(R.string.accept);
+                mItemBinding.reject.setText(R.string.reject);
+                return;
+            }
+
+            mItemBinding.accept.setVisibility(View.INVISIBLE);
+            if (followingStatus == ACCEPTED) {
+                // Remove buttons
+                mItemBinding.accept.setVisibility(View.INVISIBLE);
+                mItemBinding.reject.setVisibility(View.INVISIBLE);
+            } else if (followingStatus == REQUESTED) {
+                // Cancel Follow Request
+                mItemBinding.reject.setText(R.string.requested);
+                mItemBinding.reject.setBackgroundColor(Color.parseColor("#CCCCCC"));
+            } else {
+                // Send Follow Request
+                mItemBinding.reject.setText(R.string.follow);
+            }
+        }
+
+        /**
          * Binds a User to the ViewHolder
          *
          * @param user           User data to bind
@@ -162,29 +209,13 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.ViewHolder> {
             mItemBinding.accept.setOnClickListener(v -> acceptListener.onItemClick(user));
             mItemBinding.reject.setOnClickListener(v -> rejectListener.onItemClick(user));
 
-            // either accept or reject, don't add option to follow just yet
-            if (user.getFollowerStatus() == Follow.Status.REQUESTED) {
-                mItemBinding.accept.setText(R.string.accept);
-                mItemBinding.reject.setText(R.string.reject);
-                return;
-            }
-
-
-            mItemBinding.accept.setVisibility(View.INVISIBLE);
-            Follow.Status status = user.getFollowingStatus();
-            // add option to follow
-            if (status == null) {
-                mItemBinding.reject.setText(R.string.follow);
-            } else if (status == Follow.Status.REQUESTED) {
-                // all buttons are gone
-                mItemBinding.reject.setText(R.string.requested);
-                mItemBinding.reject.setBackgroundColor(Color.parseColor("#CCCCCC"));
-            } else if (status == Follow.Status.ACCEPTED) {
-                mItemBinding.accept.setVisibility(View.INVISIBLE);
-                mItemBinding.reject.setVisibility(View.INVISIBLE);
-                // click the entire view to view habit
+            if (user.getFollowingStatus() == ACCEPTED &&
+                    user.getFollowerStatus() != Follow.Status.REQUESTED) {
+                // Add view habit list to entire view
                 mItemBinding.getRoot().setOnClickListener(v -> viewListener.onItemClick(user));
             }
+
+            updateAppearance(user.getFollowingStatus(), user.getFollowerStatus());
         }
     }
 }

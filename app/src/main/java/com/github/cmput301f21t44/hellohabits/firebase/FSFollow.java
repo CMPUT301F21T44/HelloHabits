@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +52,12 @@ public class FSFollow implements Follow, FSDocument {
     @Override
     public String getKey() {
         return mEmail;
+    }
+
+    @Override
+    @NonNull
+    public String toString() {
+        return String.format("(%s: %s)", getEmail(), getStatus());
     }
 
     /**

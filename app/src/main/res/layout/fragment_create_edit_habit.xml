@@ -9,12 +9,18 @@
 
     <TextView
         android:id="@+id/reminder_label"
-        android:layout_width="382dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_margin="32dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:text="Which days of the week would you like to do it?"
+        android:textAlignment="center"
+        android:textAllCaps="false"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/date_started_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_started_layout" />
 
     <EditText
@@ -26,7 +32,9 @@
         android:hint="@string/reason"
         android:minHeight="48dp"
         android:textColorHint="#757575"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_title" />
 
     <EditText
@@ -37,8 +45,8 @@
         android:ems="10"
         android:hint="@string/title"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintEnd_toStartOf="@+id/private_checkbox"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -72,7 +80,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/reminder_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reminder_label">
 
         <TextView
@@ -92,32 +102,41 @@
 
     <Button
         android:id="@+id/button_add_habit"
-        android:layout_width="359dp"
-        android:layout_height="94dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
-        android:layout_marginBottom="108dp"
+        android:layout_marginTop="32dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:text="@string/add_habit"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/reminder_layout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.599"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reminder_layout" />
 
     <CheckBox
         android:id="@+id/private_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:text="@string/isPrivate"
         app:layout_constraintBaseline_toBaselineOf="@+id/edit_text_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/edit_text_title" />
 
     <TextView
         android:id="@+id/date_started_label"
         android:layout_width="285dp"
         android:layout_height="0dp"
-        android:layout_marginTop="84dp"
-        android:text="When do you want to start it?"
+        android:layout_marginTop="32dp"
+        android:text="When do you want to start this habit?"
+        android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_reason"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_reason" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

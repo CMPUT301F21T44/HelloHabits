@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits;
+package com.github.cmput301f21t44.hellohabits.viewmodel;
 
 import static org.junit.Assert.assertNotNull;
 

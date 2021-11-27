@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits;
+package com.github.cmput301f21t44.hellohabits.viewmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,8 +7,10 @@ import static org.junit.Assert.assertTrue;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
+import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +33,7 @@ public class PreviousListViewModelTest {
     public void test_isDefined() {
         assertNotNull(previousListViewModel);
         //noinspection ConstantConditions
-        assertEquals(R.id.TodaysHabitsFragment, (long) previousListViewModel.getDestinationId().getValue());
+        Assert.assertEquals(R.id.TodaysHabitsFragment, (long) previousListViewModel.getDestinationId().getValue());
         //noinspection ConstantConditions
         assertFalse(previousListViewModel.getFromViewHabit().getValue());
     }

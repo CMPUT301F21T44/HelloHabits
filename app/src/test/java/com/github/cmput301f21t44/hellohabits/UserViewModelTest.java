@@ -11,7 +11,6 @@ import androidx.lifecycle.LiveData;
 
 import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
-import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
@@ -70,8 +69,6 @@ public class UserViewModelTest {
     ArgumentCaptor<ThenFunction> thenCallbackCaptor;
     @Captor
     ArgumentCaptor<CatchFunction> failCallbackCaptor;
-    @Captor
-    ArgumentCaptor<HabitEvent> habitEventCaptor;
 
     /**
      * UserViewModel, the class being tested

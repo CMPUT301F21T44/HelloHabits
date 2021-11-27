@@ -149,11 +149,13 @@ public class CreateEditHabitEventFragment extends Fragment {
      * TODO: Implement
      */
     private void getLocation() {
-        SetLocationFragment nextFrag= new SetLocationFragment();
+        mNavController.navigate(R.id.setLocationFragment);
+        /*SetLocationFragment nextFrag= new SetLocationFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(((ViewGroup)getView().getParent()).getId(), nextFrag, "findThisFragment")
                 .addToBackStack(null)
                 .commit();
+        */
         //Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 

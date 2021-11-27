@@ -1,5 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -65,7 +66,7 @@ public class FSHabit implements Habit, FSDocument {
     public FSHabit(QueryDocumentSnapshot doc) {
         this(doc.getId(), doc.getString(TITLE), doc.getString(REASON),
                 FSDocument.instantFromDoc(doc, DATE_STARTED),
-                getDaysOfWeek((List<Boolean>) doc.get(DAYS_OF_WEEK)),
+                DaysOfWeek.fromList((List<Boolean>) doc.get(DAYS_OF_WEEK)),
                 convertVisibility(doc.getBoolean(IS_PRIVATE)),
                 convertIndex(doc.getLong(HABIT_INDEX))
         );
@@ -97,21 +98,6 @@ public class FSHabit implements Habit, FSDocument {
 
     private static int convertIndex(Long index) {
         return index != null ? Math.toIntExact(index) : 0;
-    }
-
-    /**
-     * Convert a Boolean List to a boolean array
-     *
-     * @param dayList List of Booleans
-     * @return Array of booleans
-     */
-    private static boolean[] getDaysOfWeek(List<Boolean> dayList) {
-        boolean[] daysOfWeek = new boolean[7];
-        assert dayList != null;
-        for (int i = 0; i < 7; ++i) {
-            daysOfWeek[i] = dayList.get(i);
-        }
-        return daysOfWeek;
     }
 
     @Override
@@ -174,11 +160,7 @@ public class FSHabit implements Habit, FSDocument {
         map.put(TITLE, mTitle);
         map.put(REASON, mReason);
         map.put(DATE_STARTED, mDateStarted);
-        List<Boolean> days = new ArrayList<>();
-        for (boolean b : mDaysOfWeek) {
-            days.add(b);
-        }
-        map.put(DAYS_OF_WEEK, days);
+        map.put(DAYS_OF_WEEK, DaysOfWeek.toList(mDaysOfWeek));
         map.put(IS_PRIVATE, mPrivate);
         map.put(HABIT_INDEX, mIndex);
         return map;

@@ -13,7 +13,6 @@ import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
-import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;

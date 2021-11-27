@@ -4,14 +4,9 @@ import static org.junit.Assert.assertNotNull;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
-import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
-import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
-import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import org.junit.Before;
 import org.junit.Rule;

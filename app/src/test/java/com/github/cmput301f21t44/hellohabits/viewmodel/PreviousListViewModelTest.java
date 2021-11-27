@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 
 import org.junit.Assert;
 import org.junit.Before;

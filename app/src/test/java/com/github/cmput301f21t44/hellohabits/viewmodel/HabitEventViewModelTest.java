@@ -14,7 +14,6 @@ import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
-import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;

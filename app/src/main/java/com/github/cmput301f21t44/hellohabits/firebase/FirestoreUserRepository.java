@@ -83,10 +83,16 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
     @Override
     public LiveData<User> getCurrentUser() {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
-        getUserRef(getEmail()).addSnapshotListener((userSnapshot, e) -> {
-            if (userSnapshot == null) return;
-            userLiveData.setValue(new FSUser(userSnapshot));
+        getAllUsersCollectionRef().addSnapshotListener((users, e) -> {
+            if (users == null) return;
+            for (QueryDocumentSnapshot q : users) {
+                if (q.getId().equals(getEmail())) {
+                    userLiveData.setValue(new FSUser(q));
+                }
+            }
+
         });
+
         return userLiveData;
     }
 

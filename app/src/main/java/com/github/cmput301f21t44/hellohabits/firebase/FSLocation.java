@@ -5,28 +5,32 @@ import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 import java.io.Serializable;
 
 class FSLocation implements Location, Serializable {
-    private final double longitude;
-    private final double latitude;
-    private final double accuracy;
+    private double mLongitude;
+    private double mLatitude;
+    private double mAccuracy;
+
+    public FSLocation() {
+        // Needed for Firestore conversions
+    }
 
     public FSLocation(double longitude, double latitude, double accuracy) {
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.accuracy = accuracy;
+        this.mLongitude = longitude;
+        this.mLatitude = latitude;
+        this.mAccuracy = accuracy;
     }
 
     @Override
     public double getLongitude() {
-        return longitude;
+        return mLongitude;
     }
 
     @Override
     public double getLatitude() {
-        return latitude;
+        return mLatitude;
     }
 
     @Override
     public double getAccuracy() {
-        return accuracy;
+        return mAccuracy;
     }
 }

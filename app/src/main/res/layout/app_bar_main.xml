@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE792"
+    android:backgroundTint="#FFE792"
     tools:context=".view.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,11 +17,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/teal_200"
             app:popupTheme="@style/Theme.HelloHabits.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        layout="@layout/content_main"
+        android:background="#FFE792" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

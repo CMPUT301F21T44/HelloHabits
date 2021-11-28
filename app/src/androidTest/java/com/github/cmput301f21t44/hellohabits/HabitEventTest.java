@@ -8,7 +8,6 @@ import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -16,10 +15,7 @@ import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFr
 import static com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment.MAX_COMMENT_LEN;
 
 import android.os.SystemClock;
-import android.view.Gravity;
 
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -88,11 +84,7 @@ public class HabitEventTest {
     }
 
     private void navigateToHabit() {
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.AllHabitsFragment));
+        TestUtil.navigateFromSidebar(R.id.AllHabitsFragment);
         onView(withText(habitTitle)).perform(doubleClick());
     }
 
@@ -127,6 +119,7 @@ public class HabitEventTest {
         onView(withId(R.id.button_delete)).perform(click());
         onView(withText("YES")).perform(click());
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        SystemClock.sleep(1000);
         onView(withText(newComment)).check(doesNotExist());
     }
 }

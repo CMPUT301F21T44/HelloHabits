@@ -8,15 +8,10 @@ import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment.MAX_TITLE_LEN;
 
-import android.view.Gravity;
-
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -114,11 +109,7 @@ public class HabitTest {
 
     @Test
     public void D_test_deleteHabit() {
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.AllHabitsFragment));
+        TestUtil.navigateFromSidebar(R.id.AllHabitsFragment);
 
         // when you're pissed just double click
         onView(withText(newHabitTitle)).perform(doubleClick());

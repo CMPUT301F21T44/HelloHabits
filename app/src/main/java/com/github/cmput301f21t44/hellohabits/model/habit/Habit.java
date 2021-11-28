@@ -88,7 +88,7 @@ public interface Habit extends HasKey {
             }
             days--;
         }
-        totalDays = totalDays + numRecurrenceDays * days / 7;
+        totalDays +=  numRecurrenceDays * days / 7;
         return totalDays != 0 ? (double) events.size() / totalDays : 1;
     }
 

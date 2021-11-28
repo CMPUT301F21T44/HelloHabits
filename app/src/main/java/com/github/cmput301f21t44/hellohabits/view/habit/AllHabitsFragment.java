@@ -6,12 +6,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Fragment for viewing all habits
@@ -38,11 +32,6 @@ public class AllHabitsFragment extends HabitListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        super.initListeners(R.id.AllHabitsFragment);
-        mHabitViewModel.getAllHabits().observe(this, habitList -> {
-            List<Habit> allHabits = new ArrayList<>(habitList);
-            Collections.sort(allHabits, Comparator.comparingInt(Habit::getIndex));
-            mAdapter.submitList(allHabits);
-        });
+        super.initListeners(R.id.AllHabitsFragment, () -> mHabitViewModel.getAllHabits());
     }
 }

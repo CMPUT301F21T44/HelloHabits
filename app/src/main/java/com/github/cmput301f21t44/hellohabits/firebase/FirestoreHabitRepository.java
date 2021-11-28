@@ -7,7 +7,6 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
-import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,10 +17,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Firestore Repository for Habits
@@ -55,24 +55,30 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
     }
 
     private LiveData<List<Habit>> getUserHabits(String email, boolean includePrivate) {
-        final MediatorLiveData<List<Habit>> habitLiveData = new MediatorLiveData<>();
+        final MediatorLiveData<List<Habit>> habitListLiveData = new MediatorLiveData<>();
+
+
+        final HabitMapLiveData habitMapLiveData = new HabitMapLiveData(habitId ->
+                getEventsByHabitId(habitId, email));
+
+        habitListLiveData.addSource(habitMapLiveData, habitMap -> habitListLiveData
+                .setValue(habitMap.values().stream()
+                        .sorted(Comparator.comparingInt(Habit::getIndex))
+                        .collect(Collectors.toList())));
+
         getHabitCollectionRef(email).addSnapshotListener((habitSnapshots, err) -> {
             if (habitSnapshots == null) return;
-            List<Habit> habits = new ArrayList<>();
+            Map<String, FSHabit> habits = new HashMap<>();
             for (QueryDocumentSnapshot d : habitSnapshots) {
                 FSHabit habit = new FSHabit(d);
-                LiveData<List<HabitEvent>> habitEvents = getEventsByHabitId(habit.getId(), email);
                 if (includePrivate || !habit.isPrivate()) {
-                    habits.add(habit);
-                    habitLiveData.addSource(habitEvents, habit::setHabitEvents);
+                    habits.put(habit.getId(), habit);
                 }
             }
-            // sort by index
-            Collections.sort(habits, Comparator.comparingInt(Habit::getIndex));
-            habitLiveData.setValue(habits);
+            habitMapLiveData.mergeMap(habits);
         });
 
-        return habitLiveData;
+        return habitListLiveData;
     }
 
     @Override

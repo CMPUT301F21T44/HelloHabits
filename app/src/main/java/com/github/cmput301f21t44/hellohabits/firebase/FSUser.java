@@ -1,11 +1,14 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import androidx.annotation.NonNull;
+
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FSUser implements User, FSDocument {
     public static final String COLLECTION = "users";
@@ -70,5 +73,13 @@ public class FSUser implements User, FSDocument {
     @Override
     public String getKey() {
         return mEmail;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format("%s %s %s %s", mName, mEmail,
+                Objects.toString(mFollowerStatus, "null"),
+                Objects.toString(mFollowingStatus, "null"));
     }
 }

@@ -15,19 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentUserListBinding;
-import com.github.cmput301f21t44.hellohabits.databinding.ListUserItemBinding;
-import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
 import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 public abstract class UserListFragment extends Fragment {
     protected UserViewModel mUserViewModel;
     protected UserAdapter mAdapter;
-    protected FragmentUserListBinding mBinding;
-    protected ListUserItemBinding cBinding;
-
-    protected NavController mNavController;
-
+    private FragmentUserListBinding mBinding;
+    private NavController mNavController;
 
     /**
      * UserList's onCreateView lifecycle method
@@ -44,7 +39,6 @@ public abstract class UserListFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = FragmentUserListBinding.inflate(inflater, container, false);
-        cBinding = ListUserItemBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
@@ -58,50 +52,23 @@ public abstract class UserListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mNavController = NavHostFragment.findNavController(this);
+        // attach the provider to activity instead of fragment so the fragments can share data
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mUserViewModel = provider.get(UserViewModel.class);
         initAdapter();
     }
 
     /**
-     * UserList's onStart lifecycle method
-     * <p>
-     * Initializes the ViewModels
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        // attach the provider to activity instead of fragment so the fragments can share data
-        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
-        mUserViewModel = provider.get(UserViewModel.class);
-    }
-
-    /**
      * Initializes the RecyclerView's UserAdapter
-     *
      */
     protected void initAdapter() {
-        mAdapter = UserAdapter.newInstance(this, mUserViewModel, (user)-> {
+        mAdapter = UserAdapter.newInstance(mUserViewModel, (user) -> {
             mUserViewModel.setSelectedUser(user);
             mNavController.navigate(R.id.UserHabitListFragment);
-        });
+        }, message -> Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show());
         mBinding.userRecyclerView.setAdapter(mAdapter);
         mBinding.userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-
-    /**
-     * Show error message as Toast
-     *
-     * @param text Text to output
-     * @param e    Exception thrown
-     * @return
-     */
-    public CatchFunction showErrorToast(String text, Exception e) {
-        String message = text + ": " + e.getLocalizedMessage();
-        int duration = message.length() > 20
-                ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
-        Toast.makeText(requireContext(), message, duration).show();
-        return null;
-    }
-
 
     /**
      * UserList's onDestroyView lifecycle method
@@ -112,6 +79,5 @@ public abstract class UserListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
-        cBinding = null;
     }
 }

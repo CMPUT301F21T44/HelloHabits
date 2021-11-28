@@ -1,5 +1,8 @@
 package com.github.cmput301f21t44.hellohabits.view.social;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,16 +35,6 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private NavController mNav;
     private boolean mIsLogin;
-
-    /**
-     * This function set the basic creation
-     *
-     * @param savedInstanceState a default Bundle
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -87,7 +80,7 @@ public class LoginFragment extends Fragment {
      * This function sets the visibility of name field by whether the user is login or sign-up
      */
     private void toggleNameFieldVisibility() {
-        binding.name.setVisibility(mIsLogin ? View.INVISIBLE : View.VISIBLE);
+        binding.name.setVisibility(mIsLogin ? INVISIBLE : VISIBLE);
     }
 
     /**
@@ -98,13 +91,13 @@ public class LoginFragment extends Fragment {
         if (mIsLogin) {
             binding.toggle.setText(R.string.action_register_short);
             binding.submit.setText(R.string.action_sign_in_short);
-            binding.guide1.setText("No account yet?");
-            binding.guide2.setVisibility(View.VISIBLE);
+            binding.guide1.setText(R.string.no_account_yet);
+            binding.guide2.setVisibility(VISIBLE);
         } else {
             binding.toggle.setText(R.string.action_sign_in_short);
             binding.submit.setText(R.string.action_register_short);
-            binding.guide1.setText("          Back to");
-            binding.guide2.setVisibility(View.INVISIBLE);
+            binding.guide1.setText(R.string.back_to);
+            binding.guide2.setVisibility(INVISIBLE);
         }
         toggleNameFieldVisibility();
     }

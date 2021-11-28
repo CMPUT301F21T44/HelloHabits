@@ -1,6 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,6 +13,11 @@ import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -36,6 +42,11 @@ public class HabitViewModel extends ViewModel {
      * Used to notify the Habit items in RecyclerView that the user is reordering habits
      */
     private final MutableLiveData<Boolean> mReordering = new MutableLiveData<>(false);
+
+    /**
+     * LiveData list of the user's habits today
+     */
+    private final MediatorLiveData<List<Habit>> mTodaysHabits = new MediatorLiveData<>();
 
     /**
      * Constructor for HabitViewModel
@@ -87,6 +98,24 @@ public class HabitViewModel extends ViewModel {
      */
     public LiveData<List<Habit>> getAllHabits() {
         return mAllHabits;
+    }
+
+    public LiveData<List<Habit>> getTodaysHabits(Instant now) {
+        mTodaysHabits.removeSource(mAllHabits);
+        mTodaysHabits.addSource(mAllHabits, habits -> {
+            List<Habit> todaysHabits = new ArrayList<>();
+            ZonedDateTime today = now.atZone(ZoneId.systemDefault());
+            // traverse all h in habitList, and only masks in those who matches the checkBox
+            // checkBox implementation can be seen in isInDay() from Habit.java
+            for (Habit h : habits) {
+                if (Habit.isInDay(today, h.getDaysOfWeek())) {
+                    todaysHabits.add(h);
+                }
+            }
+            Collections.sort(todaysHabits, Comparator.comparingInt(Habit::getIndex));
+            mTodaysHabits.setValue(todaysHabits);
+        });
+        return mTodaysHabits;
     }
 
     /**

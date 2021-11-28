@@ -28,6 +28,7 @@ import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.io.File;
@@ -39,18 +40,20 @@ import java.util.Objects;
  */
 public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
-    private FragmentCreateEditHabitEventBinding binding;
-    private HabitViewModel mHabitViewModel;
-    private HabitEventViewModel mHabitEventViewModel;
-    private HabitEvent mHabitEvent;
-    private boolean isEdit;
-    private NavController mNavController;
     public static final int REQUEST_CODE_CAMERA = 1;
     public static final int REQUEST_CODE_GALLERY = 0;
     public static final String TAG = "tag";
     public Uri imageUri;
     public String imageBase64;
     public ImageView eventImage;
+    private FragmentCreateEditHabitEventBinding binding;
+    private HabitViewModel mHabitViewModel;
+    private HabitEventViewModel mHabitEventViewModel;
+    private HabitEvent mHabitEvent;
+    private boolean isEdit;
+    private NavController mNavController;
+    private PhotoViewModel mPhotoViewModel;
+    private String mPicName;
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -80,7 +83,6 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void showErrorToast(String text, Exception error) {
         Toast.makeText(requireActivity(), text + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * Validates and returns the input from the comment field
@@ -173,9 +175,6 @@ public class CreateEditHabitEventFragment extends Fragment {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
-
-    private String mPicName;
-
     /**
      * Get a photo to attach to the event by taking a photo from camera
      */
@@ -191,22 +190,22 @@ public class CreateEditHabitEventFragment extends Fragment {
     }
 
 
-
     public void doTakePhoto() {
+        mPicName = "afdjsjfdkalsfdasjfkdlsafjfkldasfdas" + ".jpg";
         File imageTemp = new File(requireActivity().getExternalCacheDir(), mPicName);
-        if (imageTemp.exists()){
+        if (imageTemp.exists()) {
             imageTemp.delete();
             //TODO: Instead of deleting the file, change the file name (relative to datetime)
         }
         try {
             imageTemp.createNewFile();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (Build.VERSION.SDK_INT > 24) {
             // contentProvider
-            imageUri = FileProvider.getUriForFile(requireContext(), "github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
+            imageUri = FileProvider.getUriForFile(requireContext(), "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
         } else {
             imageUri = Uri.fromFile(imageTemp);
         }
@@ -217,9 +216,6 @@ public class CreateEditHabitEventFragment extends Fragment {
     }
 
 
-
-
-
     /**
      * Get a photo to attach to the event by choosing photo from gallery
      * TODO: Implement
@@ -228,7 +224,7 @@ public class CreateEditHabitEventFragment extends Fragment {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
-    public void doChsGly(){
+    public void doChsGly() {
 
     }
 
@@ -241,6 +237,14 @@ public class CreateEditHabitEventFragment extends Fragment {
         // Observe the current event object being observed
         mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(),
                 this::onHabitEventChanged);
+
+        mPhotoViewModel = ViewModelFactory.getProvider(requireActivity()).get(PhotoViewModel.class);
+        mPhotoViewModel.getTakePhoto().observe(requireActivity(), takePhoto -> {
+            if (takePhoto) {
+                doTakePhoto();
+                mPhotoViewModel.setChoosePhoto(false);
+            }
+        });
     }
 
     /**

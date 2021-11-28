@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,9 +27,9 @@ import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
 import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.ImageUtil;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private NavController mNavController;
     private PreviousListViewModel mPreviousListViewModel;
+    private PhotoViewModel mPhotoViewModel;
     private boolean mFromViewHabit;
     private ActivityMainBinding mBinding;
     private Authentication mAuth;
@@ -52,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mBinding.appBarMain.toolbar);
         mAuth = new Authentication();
 
-        mPreviousListViewModel = ViewModelFactory.getProvider(this).get(PreviousListViewModel.class);
+        ViewModelProvider provider = ViewModelFactory.getProvider(this);
+        mPreviousListViewModel = provider.get(PreviousListViewModel.class);
+        mPhotoViewModel = provider.get(PhotoViewModel.class);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.TodaysHabitsFragment,
@@ -102,15 +106,15 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
 
-        if (requestCode == createEditHabitEventFragment.REQUEST_CODE_CAMERA) {
+        if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createEditHabitEventFragment.doTakePhoto();
+                mPhotoViewModel.setTakePhoto(true);
             } else {
                 Toast.makeText(this, "We have no permission to camera! (T▽T) ...", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == createEditHabitEventFragment.REQUEST_CODE_GALLERY) {
+        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createEditHabitEventFragment.doChsGly();
+                mPhotoViewModel.setChoosePhoto(true);
             } else {
                 Toast.makeText(this, "We have no permission to gallery! (T▽T) ...", Toast.LENGTH_SHORT).show();
             }
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
         ImageView eventImage = createEditHabitEventFragment.eventImage;
-        if (requestCode == createEditHabitEventFragment.REQUEST_CODE_CAMERA) {
+        if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
             if (resultCode == RESULT_OK) {
                 // obtain the photo taken
                 try {
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-        } else if (requestCode == createEditHabitEventFragment.REQUEST_CODE_GALLERY) {
+        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
 
             if (Build.VERSION.SDK_INT < 19) {
                 ImageUtil.handleImageBeforeApi19(this, eventImage, data);

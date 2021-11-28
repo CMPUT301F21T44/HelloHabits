@@ -86,6 +86,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new HabitEventViewModel(mHabitEventRepository);
         } else if (modelClass.isAssignableFrom(PreviousListViewModel.class)) {
             return (T) new PreviousListViewModel();
+        } else if (modelClass.isAssignableFrom(PhotoViewModel.class)) {
+            return (T) new PhotoViewModel();
         } else if (modelClass.isAssignableFrom(UserViewModel.class)) {
             return (T) new UserViewModel(mUserRepository);
         }

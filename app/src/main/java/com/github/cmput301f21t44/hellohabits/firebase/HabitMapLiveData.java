@@ -48,6 +48,7 @@ public class HabitMapLiveData extends MediatorLiveData<Map<String, FSHabit>> {
 
         for (String habitId : Objects.requireNonNull(this.getValue()).keySet()) {
             LiveData<List<HabitEvent>> events = this.mListenCallback.getHabitEventLiveData(habitId);
+            mHabitEventLiveDataMap.removeSource(events);
             mHabitEventLiveDataMap.addSource(events, habitEvents -> {
                 Map<String, LiveData<List<HabitEvent>>> habitEventLiveDataMap =
                         mHabitEventLiveDataMap.getValue();

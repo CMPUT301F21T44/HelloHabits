@@ -47,6 +47,22 @@ public class MainActivity extends AppCompatActivity {
         this.mImageUri = uri;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageUri != null) {
+            outState.putString("cameraImageUri", mImageUri.toString());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("cameraImageUri")) {
+            mImageUri = Uri.parse(savedInstanceState.getString("cameraImageUri"));
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

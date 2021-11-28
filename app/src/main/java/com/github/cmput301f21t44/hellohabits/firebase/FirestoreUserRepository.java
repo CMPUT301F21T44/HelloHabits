@@ -80,6 +80,16 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
         return getFollowLiveData(FSFollow.FOLLOWER_COLLECTION);
     }
 
+    @Override
+    public LiveData<User> getCurrentUser() {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+        getUserRef(getEmail()).addSnapshotListener((userSnapshot, e) -> {
+            if (userSnapshot == null) return;
+            userLiveData.setValue(new FSUser(userSnapshot));
+        });
+        return userLiveData;
+    }
+
     /**
      * Get list of all users
      *
@@ -189,4 +199,14 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
         updateFollow(email, getEmail(), Follow.Status.REJECTED, successCallback, failCallback);
     }
 
+    /**
+     * Follows a user with no need for requests, used for testing only
+     *
+     * @param email           The email of the user to follow
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
+    public void followUser(String email, ThenFunction successCallback, CatchFunction failCallback) {
+        updateFollow(getEmail(), email, Follow.Status.ACCEPTED, successCallback, failCallback);
+    }
 }

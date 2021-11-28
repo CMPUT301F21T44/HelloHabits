@@ -215,4 +215,15 @@ public class FirestoreUserRepository extends FirestoreRepository implements User
     public void followUser(String email, ThenFunction successCallback, CatchFunction failCallback) {
         updateFollow(getEmail(), email, Follow.Status.ACCEPTED, successCallback, failCallback);
     }
+
+    /**
+     * Get a follow request from another user, used for testing only
+     *
+     * @param email           The email of the user from which to get a follow request
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     */
+    public void getFollowRequest(String email, ThenFunction successCallback, CatchFunction failCallback) {
+        updateFollow(email, getEmail(), Follow.Status.REQUESTED, successCallback, failCallback);
+    }
 }

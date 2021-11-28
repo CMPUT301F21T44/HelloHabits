@@ -2,8 +2,6 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 
 import static com.github.cmput301f21t44.hellohabits.firebase.FSHabit.HABIT_INDEX;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
@@ -23,7 +21,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -64,19 +61,10 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
         final HabitMapLiveData habitMapLiveData = new HabitMapLiveData(habitId ->
                 getEventsByHabitId(habitId, email));
 
-        habitListLiveData.addSource(habitMapLiveData, habitMap -> {
-            Log.e("HabitMap", habitMap.toString());
-            for (Habit h : habitMap.values()) {
-                Log.e("Habit", String.format("%s - %s ", h.toString(), h.getEvents()));
-            }
-            habitListLiveData
-                    .setValue(habitMap.values().stream()
-                            .sorted(Comparator.comparingInt(Habit::getIndex))
-                            .collect(Collectors.toList()));
-            for (Habit h : Objects.requireNonNull(habitListLiveData.getValue())) {
-                Log.e("HabitList", String.format("%s - %s ", h.toString(), h.getEvents()));
-            }
-        });
+        habitListLiveData.addSource(habitMapLiveData, habitMap -> habitListLiveData
+                .setValue(habitMap.values().stream()
+                        .sorted(Comparator.comparingInt(Habit::getIndex))
+                        .collect(Collectors.toList())));
 
         getHabitCollectionRef(email).addSnapshotListener((habitSnapshots, err) -> {
             if (habitSnapshots == null) return;

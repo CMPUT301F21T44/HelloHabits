@@ -111,7 +111,8 @@ public abstract class HabitListFragment extends Fragment {
      * @param habitListGetter Callback for getting the habit list
      * @param listener        onClickListener for Habit List items
      */
-    protected void initAdapter(HabitAdapter.GetHabitList habitListGetter, OnItemClickListener<Habit> listener) {
+    protected void initAdapter(HabitAdapter.GetHabitList habitListGetter,
+                               OnItemClickListener<Habit> listener) {
         mAdapter = HabitAdapter.newInstance(listener, mItemTouchHelper::startDrag, mHabitViewModel,
                 this, habitListGetter);
         mBinding.habitRecyclerView.setAdapter(mAdapter);

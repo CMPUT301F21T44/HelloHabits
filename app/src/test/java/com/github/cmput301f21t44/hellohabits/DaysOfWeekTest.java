@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.List;
+
 @RunWith(JUnit4.class)
 public class DaysOfWeekTest {
     @Test
@@ -35,6 +37,19 @@ public class DaysOfWeekTest {
             assertEquals(
                     DaysOfWeek.shorthandDays[i] + " " + DaysOfWeek.shorthandDays[i + 1],
                     DaysOfWeek.toString(daysOfWeek));
+        }
+    }
+
+    @Test
+    public void test_toFromList() {
+        boolean[] daysOfWeek = DaysOfWeek.emptyArray();
+        daysOfWeek[3] = true;
+        // we don't care how it's stored in the List, as long as the values stay the same when
+        // converted back to an array
+        List<Boolean> daysList = DaysOfWeek.toList(daysOfWeek);
+        boolean[] convertedArray = DaysOfWeek.fromList(daysList);
+        for (int i = 0; i < daysOfWeek.length; ++i) {
+            assertEquals(daysOfWeek[i], convertedArray[i]);
         }
     }
 }

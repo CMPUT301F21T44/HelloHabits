@@ -9,6 +9,9 @@ import java.util.List;
  * Class to store the days of week for habits
  */
 public final class DaysOfWeek {
+    /**
+     * Array of String literals for representing days as text
+     */
     public static final String[] shorthandDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
     /**
@@ -56,11 +59,17 @@ public final class DaysOfWeek {
         return daysOfWeek;
     }
 
+    /**
+     * Convert a boolean array to a Boolean List
+     *
+     * @param daysOfWeek boolean array
+     * @return List of Booleans
+     */
     public static List<Boolean> toList(boolean[] daysOfWeek) {
         List<Boolean> days = new ArrayList<>();
         for (boolean b : daysOfWeek) {
             days.add(b);
         }
-        return  days;
+        return days;
     }
 }

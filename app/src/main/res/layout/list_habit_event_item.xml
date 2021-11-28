@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/fragment_vertical_margin"
+    android:background="#FFE792"
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="51dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:contentDescription="@string/check_box"
@@ -16,24 +17,27 @@
 
     <LinearLayout
         android:id="@+id/text_habit_event"
-        android:layout_width="wrap_content"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/date_denoted"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="20sp"
+            android:textSize="24sp"
             tools:text="11/3/21" />
 
         <TextView
             android:id="@+id/comment"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="18sp"
             tools:text="This is an optional comment." />
     </LinearLayout>
 

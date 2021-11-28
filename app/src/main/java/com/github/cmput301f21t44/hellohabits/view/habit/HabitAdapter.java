@@ -5,7 +5,6 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -24,6 +23,8 @@ import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,6 +126,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         });
         // for resetting the consistencies
         mHabitListGetter.getHabits().observe(mLifeCycleOwner, habits -> {
+            Collections.sort(habits, Comparator.comparingInt(Habit::getIndex));
             for (Habit h : habits) {
                 if (h.getId().equals(current.getId())) {
                     double consistency = Habit.getConsistency(h);
@@ -137,6 +139,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
                     }
                 }
             }
+            submitList(habits);
         });
     }
 
@@ -219,8 +222,6 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             mItemBinding.reasonView.setText(habit.getReason());
             mItemBinding.lock.setVisibility(INVISIBLE);
             // check level of consistency
-            Log.e("HabitBind", String.format("%s - %s ", habit.toString(), habit.getEvents()));
-
             double consistency = Habit.getConsistency(habit);
             if (consistency < 0.5) {
                 mItemBinding.imageView.setColorFilter(COLOUR_RED);

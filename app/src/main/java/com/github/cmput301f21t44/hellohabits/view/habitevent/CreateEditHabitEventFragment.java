@@ -3,6 +3,8 @@ package com.github.cmput301f21t44.hellohabits.view.habitevent;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +35,10 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -189,14 +195,18 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     }
 
+    private String getDateString() {
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
+        Instant instant = Instant.now();
+        return formatter.format(instant);
+    }
 
     public void doTakePhoto() {
-        mPicName = "afdjsjfdkalsfdasjfkdlsafjfkldasfdas" + ".jpg";
+        String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
+                .getId();
+        mPicName = String.format("%s_%s.jpg", habitId, getDateString());
         File imageTemp = new File(requireActivity().getExternalCacheDir(), mPicName);
-        if (imageTemp.exists()) {
-            imageTemp.delete();
-            //TODO: Instead of deleting the file, change the file name (relative to datetime)
-        }
         try {
             imageTemp.createNewFile();
         } catch (IOException e) {
@@ -205,14 +215,15 @@ public class CreateEditHabitEventFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT > 24) {
             // contentProvider
-            imageUri = FileProvider.getUriForFile(requireContext(), "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
+            mPhotoViewModel.setPhotoUri(FileProvider.getUriForFile(requireContext(),
+                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp));
         } else {
-            imageUri = Uri.fromFile(imageTemp);
+            mPhotoViewModel.setPhotoUri(Uri.fromFile(imageTemp));
         }
         Intent intent = new Intent();
         intent.setAction("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        getActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+        requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
     }
 
 
@@ -244,6 +255,10 @@ public class CreateEditHabitEventFragment extends Fragment {
                 doTakePhoto();
                 mPhotoViewModel.setChoosePhoto(false);
             }
+        });
+        mPhotoViewModel.getPhotoDone().observe(requireActivity(), inputStream -> {
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            eventImage.setImageBitmap(bitmap);
         });
     }
 

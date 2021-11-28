@@ -15,10 +15,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
-import androidx.fragment.app.Fragment;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,6 +75,18 @@ public class ImageUtil {
 
         displayImage(imageView, imagePath);
     }
+    public static String getImagePath(Activity activity, Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = activity.getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
 
     public static String resolveMSFContent(Activity activity, ImageView imageView, Uri uri, String documentId) {
         // return this function to imageBase64 in CreateEditHabitEventFragment
@@ -108,21 +119,16 @@ public class ImageUtil {
     }
 
 
-    public static String getImagePath(Activity activity, Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = activity.getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-            }
-            cursor.close();
-        }
-        return path;
-    }
 
     public static String displayImage( ImageView imageView, String imagePath) {
         // return this to imageBase64 in CreateEditHabitEventFragment.java
         Log.d("tag", "displayImage: ------------" + imagePath);
+
+        try {
+            new FileInputStream(imagePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bitmap);

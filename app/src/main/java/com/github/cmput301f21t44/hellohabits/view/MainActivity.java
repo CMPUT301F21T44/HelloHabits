@@ -2,13 +2,13 @@ package com.github.cmput301f21t44.hellohabits.view;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +32,6 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
 
         if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -125,29 +123,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
-        ImageView eventImage = createEditHabitEventFragment.eventImage;
         if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
             if (resultCode == RESULT_OK) {
                 // obtain the photo taken
                 try {
-                    InputStream inputStream = getContentResolver().openInputStream(createEditHabitEventFragment.imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    eventImage.setImageBitmap(bitmap);
-                    String imageToBase64 = ImageUtil.imageToBase64(bitmap);
-                    createEditHabitEventFragment.imageBase64 = imageToBase64;
+                    mPhotoViewModel.setPhotoDone(getContentResolver()
+                            .openInputStream(mPhotoViewModel.getPhotoUri().getValue()));
                 } catch (FileNotFoundException e) {
 
                 }
             }
         } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
 
-            if (Build.VERSION.SDK_INT < 19) {
-                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
-            } else {
-                ImageUtil.handleImageOnApi19(this, eventImage, data);
-            }
+//            if (Build.VERSION.SDK_INT < 19) {
+//                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
+//            } else {
+//                ImageUtil.handleImageOnApi19(this, eventImage, data);
+//            }
 
         }
+    }
+
+    public String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
     }
 
 

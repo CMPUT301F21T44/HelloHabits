@@ -31,6 +31,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitEventBinding;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
@@ -54,10 +55,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
     public static final int REQUEST_CODE_CAMERA = 123123;
     public static final int REQUEST_CODE_GALLERY = 0;
-    public static final String TAG = "tag";
-    public Uri imageUri;
-    public String imageBase64;
-    public ImageView eventImage;
+    private ImageView eventImage;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
@@ -134,13 +132,13 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
-        if (imageUri == null) {
+        if (mImageUri == null) {
             mHabitEventViewModel.insert(habitId, comment, null, null,
                     () -> mNavController.navigate(R.id.ViewHabitFragment),
                     e -> showErrorToast("Failed to add habit event", e));
         } else {
-            mPhotoViewModel.uploadPhoto(imageUri, () -> {
-                mHabitEventViewModel.insert(habitId, comment, imageUri.getLastPathSegment(),
+            mPhotoViewModel.uploadPhoto(mImageUri, () -> {
+                mHabitEventViewModel.insert(habitId, comment, mImageUri.getLastPathSegment(),
                         null, () -> mNavController.navigate(R.id.ViewHabitFragment),
                         e -> showErrorToast("Failed to add habit event", e));
             }, e -> showErrorToast("Failed to upload photo", e));
@@ -224,10 +222,10 @@ public class CreateEditHabitEventFragment extends Fragment {
                 .getId();
         String newPicName = String.format("%s_%s.jpg", habitId, getDateString());
         setImageUri(newPicName);
-        Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", imageUri.getLastPathSegment()));
+        Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", mImageUri.getLastPathSegment()));
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
             requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
         }
     }
@@ -291,10 +289,11 @@ public class CreateEditHabitEventFragment extends Fragment {
         }
         if (Build.VERSION.SDK_INT > 24) {
             // contentProvider
-            imageUri = FileProvider.getUriForFile(requireContext(),
-                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
+            ((MainActivity) requireActivity()).setImageUri(
+                    FileProvider.getUriForFile(requireContext(),
+                            "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp));
         } else {
-            imageUri = Uri.fromFile(imageTemp);
+            ((MainActivity) requireActivity()).setImageUri(Uri.fromFile(imageTemp));
         }
     }
 
@@ -311,15 +310,9 @@ public class CreateEditHabitEventFragment extends Fragment {
             binding.editTextComment.setText(habitEvent.getComment());
             if (habitEvent.getPhotoPath() != null) {
                 setImageUri(habitEvent.getPhotoPath());
-                Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", imageUri.getLastPathSegment()));
-                mPhotoViewModel.downloadPhoto(imageUri, () -> {
-                    try {
-                        InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
-                        eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
-                    } catch (FileNotFoundException e) {
-                        showErrorToast("Failed to create file for photo", e);
-                    }
-                }, e -> showErrorToast("Failed to download photo", e));
+                Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", mImageUri.getLastPathSegment()));
+                mPhotoViewModel.downloadPhoto(mImageUri, this::setImageView,
+                        e -> showErrorToast("Failed to download photo", e));
             }
         }
 
@@ -334,10 +327,11 @@ public class CreateEditHabitEventFragment extends Fragment {
      */
     private void setImageView() {
         try {
+            Uri imageUri = ((MainActivity) requireActivity()).getImageUri();
             InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
             eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
         } catch (FileNotFoundException e) {
-            showErrorToast("Failed to find photo",e);
+            showErrorToast("Failed to find photo", e);
         }
 
     }
@@ -353,8 +347,8 @@ public class CreateEditHabitEventFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) {
                 // obtain the photo taken
-            }
-        } else if (requestCode == REQUEST_CODE_GALLERY) {
+                setImageView();
+            } else if (requestCode == REQUEST_CODE_GALLERY) {
 
 //            if (Build.VERSION.SDK_INT < 19) {
 //                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
@@ -362,6 +356,7 @@ public class CreateEditHabitEventFragment extends Fragment {
 //                ImageUtil.handleImageOnApi19(this, eventImage, data);
 //            }
 
+            }
         }
     }
 }

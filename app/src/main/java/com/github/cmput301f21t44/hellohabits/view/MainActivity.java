@@ -37,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private boolean mFromViewHabit;
     private ActivityMainBinding mBinding;
     private Authentication mAuth;
+    private Uri mImageUri;
+
+    public Uri getImageUri() {
+        return mImageUri;
+    }
+
+    public void setImageUri(Uri uri) {
+        this.mImageUri = uri;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

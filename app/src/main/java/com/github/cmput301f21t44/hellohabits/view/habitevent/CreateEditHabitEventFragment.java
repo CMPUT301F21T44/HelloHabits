@@ -6,7 +6,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -66,7 +65,6 @@ public class CreateEditHabitEventFragment extends Fragment {
     private boolean isEdit;
     private NavController mNavController;
     private PhotoViewModel mPhotoViewModel;
-    private String mPicName;
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -216,54 +214,24 @@ public class CreateEditHabitEventFragment extends Fragment {
         return formatter.format(instant);
     }
 
+
+    /**
+     * Take photo
+     */
+    @SuppressLint("QueryPermissionsNeeded") // Permission is already granted at this point
     public void doTakePhoto() {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
-        mPicName = String.format("%s_%s.jpg", habitId, getDateString());
-        File imageTemp = new File(requireActivity().getExternalCacheDir(), mPicName);
-        try {
-            imageTemp.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (Build.VERSION.SDK_INT > 24) {
-            // contentProvider
-            imageUri = FileProvider.getUriForFile(requireContext(),
-                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
-            mPhotoViewModel.setPhotoUri(imageUri);
-        } else {
-            imageUri = Uri.fromFile(imageTemp);
-            mPhotoViewModel.setPhotoUri(imageUri);
-        }
+        String newPicName = String.format("%s_%s.jpg", habitId, getDateString());
+        setImageUri(newPicName);
         Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", imageUri.getLastPathSegment()));
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (hasStoragePermission(REQUEST_CODE_CAMERA)) {
-            if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
-            }
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
         }
     }
 
-    private boolean hasStoragePermission(int requestCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (requireContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED &&
-                    requireContext().checkSelfPermission(Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        requestCode);
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-
-        }
-    }
 
     /**
      * Get a photo to attach to the event by choosing photo from gallery
@@ -295,15 +263,6 @@ public class CreateEditHabitEventFragment extends Fragment {
                 mPhotoViewModel.setChoosePhoto(false);
             }
         });
-        mPhotoViewModel.getPhotoDone().observe(requireActivity(), inputStream -> {
-            try {
-                Log.println(Log.ASSERT, "observer", String.format("bytes - %d", inputStream.available()));
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                eventImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     /**
@@ -318,6 +277,28 @@ public class CreateEditHabitEventFragment extends Fragment {
     }
 
     /**
+     * Sets the image URI for the Habit Event
+     *
+     * @param path File path
+     */
+    private void setImageUri(String path) {
+        File imageTemp = new File(requireActivity().getExternalCacheDir(), path);
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            imageTemp.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT > 24) {
+            // contentProvider
+            imageUri = FileProvider.getUriForFile(requireContext(),
+                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
+        } else {
+            imageUri = Uri.fromFile(imageTemp);
+        }
+    }
+
+    /**
      * Updates the UI to the currently observed HabitEvent
      *
      * @param habitEvent The current HabitEvent to be shown on screen, null for new HabitEvent
@@ -329,7 +310,7 @@ public class CreateEditHabitEventFragment extends Fragment {
             mHabitEvent = habitEvent;
             binding.editTextComment.setText(habitEvent.getComment());
             if (habitEvent.getPhotoPath() != null) {
-                imageUri = Uri.fromFile(new File(habitEvent.getPhotoPath()));
+                setImageUri(habitEvent.getPhotoPath());
                 Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", imageUri.getLastPathSegment()));
                 mPhotoViewModel.downloadPhoto(imageUri, () -> {
                     try {
@@ -348,6 +329,19 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.habitTitle.setText(habitTitle);
     }
 
+    /**
+     * Sets the ImageView to the current URI
+     */
+    private void setImageView() {
+        try {
+            InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
+            eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
+        } catch (FileNotFoundException e) {
+            showErrorToast("Failed to find photo",e);
+        }
+
+    }
+
     @SuppressLint("DefaultLocale")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -359,12 +353,6 @@ public class CreateEditHabitEventFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) {
                 // obtain the photo taken
-                try {
-                    InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
-                    eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
             }
         } else if (requestCode == REQUEST_CODE_GALLERY) {
 

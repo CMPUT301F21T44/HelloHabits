@@ -120,48 +120,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-//    @SuppressLint("DefaultLocale")
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
-//        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("request code: %d", requestCode));
-//        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("result code: %d", resultCode));
-//        if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
-//            if (resultCode == RESULT_OK) {
-//                // obtain the photo taken
-//                try {
-//                    if (data == null) {
-//                        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", "INTENT DATA IS NULL");
-//                        return;
-//                    }
-//                    Uri uri = data.getData();
-//                    Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
-//                            String.format("uri: %s", uri));
-//                    if (uri != null) {
-//                        Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
-//                                String.format("uri path: %s", uri.getLastPathSegment()));
-//
-//                    }
-//
-//                    mPhotoViewModel.setPhotoDone(getContentResolver()
-//                            .openInputStream(uri));
-//                } catch (FileNotFoundException e) {
-//
-//                }
-//            }
-//        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
-//
-////            if (Build.VERSION.SDK_INT < 19) {
-////                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
-////            } else {
-////                ImageUtil.handleImageOnApi19(this, eventImage, data);
-////            }
-//
-//        }
-//    }
-
     public String getImagePath(Uri uri, String selection) {
         String path = null;
         Cursor cursor = getContentResolver().query(uri, null, selection, null, null);

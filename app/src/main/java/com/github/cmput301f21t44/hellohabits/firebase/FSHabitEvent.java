@@ -17,14 +17,50 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
     public static final String HABIT_ID = "habitId";
     public static final String DATE = "date";
     public static final String COMMENT = "comment";
+    public static final String PHOTO_PATH = "photoPath";
+    public static final String LOCATION = "location";
 
     private final String mId;
     private final String mHabitId;
     private final Instant mDate;
 
     private String mComment;
-    private String photoPath;
-    private Location location;
+    private String mPhotoPath;
+    private Location mLocation;
+
+    /**
+     * Creates a new FSHabitEvent
+     *
+     * @param id        UUID of the HabitEvent
+     * @param date      Date of when the HabitEvent is denoted
+     * @param habitId   UUID of the Habit parent
+     * @param comment   Optional comment
+     * @param photoPath Optional photo path
+     * @param location  Optional location
+     */
+    public FSHabitEvent(String id, Instant date, String habitId, String comment, String photoPath,
+                        Location location) {
+        this.mId = id;
+        this.mDate = date;
+        this.mHabitId = habitId;
+        this.mComment = comment;
+        this.mPhotoPath = photoPath;
+        this.mLocation = location;
+    }
+
+    /**
+     * Creates a new FSHabitEvent with a generated UUID
+     *
+     * @param date      Date of when the HabitEvent is denoted
+     * @param habitId   UUID of the Habit parent
+     * @param comment   Optional comment
+     * @param photoPath Optional photo path
+     * @param location  Optional location
+     */
+    public FSHabitEvent(Instant date, String habitId, String comment, String photoPath,
+                        Location location) {
+        this(UUID.randomUUID().toString(), date, habitId, comment, photoPath, location);
+    }
 
     /**
      * Creates a new FSHabitEvent
@@ -66,7 +102,8 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
 
     public FSHabitEvent(QueryDocumentSnapshot doc) {
         this(doc.getId(), FSDocument.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
-                doc.getString(COMMENT));
+                doc.getString(COMMENT), doc.getString(PHOTO_PATH),
+                doc.get(LOCATION, FSLocation.class));
     }
 
     /**
@@ -101,12 +138,12 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
 
     @Override
     public String getPhotoPath() {
-        return photoPath;
+        return mPhotoPath;
     }
 
     @Override
     public Location getLocation() {
-        return location;
+        return mLocation;
     }
 
     /**
@@ -120,6 +157,8 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
         map.put(HABIT_ID, mHabitId);
         map.put(DATE, mDate);
         map.put(COMMENT, mComment);
+        map.put(PHOTO_PATH, mPhotoPath);
+        map.put(LOCATION, mLocation);
         return map;
     }
 

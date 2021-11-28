@@ -86,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Sets the header message in the sidebar
      *
-     * @param name The name of the user
+     * @param message The message to add in the header
      */
-    public void setHeaderMessage(String name) {
+    public void setHeaderMessage(String message) {
         // no way to do this with data binding :(
         final TextView helloMessage = (TextView) mBinding.navView.getHeaderView(0)
                 .findViewById(R.id.hello_message);
         if (helloMessage == null) return;
-        helloMessage.setText(String.format("Hello, %s", name));
+        helloMessage.setText(message.isEmpty() ? "Hello Habits" : message);
     }
 
     @Override

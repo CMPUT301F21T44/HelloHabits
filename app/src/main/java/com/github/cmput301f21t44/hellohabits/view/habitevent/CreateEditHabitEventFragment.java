@@ -118,7 +118,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
-        mHabitEventViewModel.insert(habitId, comment,
+        mHabitEventViewModel.insert(habitId, comment, null, null,
                 () -> mNavController.navigate(R.id.ViewHabitFragment),
                 e -> showErrorToast("Failed to add habit", e));
 
@@ -132,6 +132,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void updateHabitEvent(String comment) {
         mHabitEventViewModel.update(mHabitEvent.getId(),
                 mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
+                null, null,
                 (updatedHabitEvent) -> {
                     mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
                     mNavController.navigate(R.id.ViewHabitFragment);

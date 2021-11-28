@@ -185,8 +185,29 @@ public class FirestoreHabitRepository extends FirestoreRepository implements Hab
                        boolean[] daysOfWeek, boolean isPrivate, int index,
                        ResultFunction<Habit> successCallback,
                        CatchFunction failCallback) {
+        update(id, title, reason, dateStarted, daysOfWeek, isPrivate, index, successCallback,
+                failCallback, getEmail());
+    }
+
+    /**
+     * Update a Habit with the given UUID for a user given an email
+     *
+     * @param id              UUID of the Habit
+     * @param title           Title of the Habit
+     * @param reason          Reason for the Habit
+     * @param dateStarted     The starting date for the Habit
+     * @param daysOfWeek      A boolean array of days of when the Habit is scheduled
+     * @param index           Index of the Habit in the user's list
+     * @param successCallback Callback for when the operation succeeds
+     * @param failCallback    Callback for when the operation fails
+     * @param email           The user's email
+     */
+    public void update(String id, String title, String reason, Instant dateStarted,
+                       boolean[] daysOfWeek, boolean isPrivate, int index,
+                       ResultFunction<Habit> successCallback,
+                       CatchFunction failCallback, String email) {
         FSHabit habit = new FSHabit(id, title, reason, dateStarted, daysOfWeek, isPrivate, index);
-        FSDocument.set(habit, failCallback, getHabitCollectionRef())
+        FSDocument.set(habit, failCallback, getHabitCollectionRef(email))
                 .addOnSuccessListener(u -> successCallback.apply(habit));
     }
 

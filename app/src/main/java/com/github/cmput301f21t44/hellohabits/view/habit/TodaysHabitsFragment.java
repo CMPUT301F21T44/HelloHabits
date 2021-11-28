@@ -21,6 +21,11 @@ public class TodaysHabitsFragment extends HabitListFragment {
         super.onStart();
         super.initListeners(R.id.TodaysHabitsFragment,
                 () -> mHabitViewModel.getTodaysHabits(Instant.now()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setHeader();
     }
 
@@ -32,8 +37,9 @@ public class TodaysHabitsFragment extends HabitListFragment {
         MainActivity mainActivity = (MainActivity) requireActivity();
         UserViewModel mUserViewModel = ViewModelFactory.getProvider(mainActivity)
                 .get(UserViewModel.class);
+        mUserViewModel.getCurrentUser().removeObservers(mainActivity);
         mUserViewModel.getCurrentUser().observe(mainActivity, user ->
-                mainActivity.setHeaderMessage(user.getName()));
-
+                mainActivity.setHeaderMessage(user.getName() != null ?
+                        String.format("Hello, %s", user.getName()) : ""));
     }
 }

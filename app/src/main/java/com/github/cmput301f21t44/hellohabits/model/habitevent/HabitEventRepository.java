@@ -18,11 +18,13 @@ public interface HabitEventRepository {
      *
      * @param habitId         UUID of the Habit parent
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    void insert(String habitId, String comment, ThenFunction successCallback,
-                CatchFunction failCallback);
+    void insert(String habitId, String comment, String photoPath, Location location,
+                ThenFunction successCallback, CatchFunction failCallback);
 
     /**
      * Deletes a given HabitEvent
@@ -47,10 +49,12 @@ public interface HabitEventRepository {
      * @param habitId         UUID of the Habit parent
      * @param date            Instant of when the HabitEvent was denoted
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     void update(String id, String habitId, Instant date, String comment,
-                ResultFunction<HabitEvent> successCallback,
+                String photoPath, Location location, ResultFunction<HabitEvent> successCallback,
                 CatchFunction failCallback);
 }

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,7 +26,6 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.ActivityMainBinding;
 import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEventFragment;
-import com.github.cmput301f21t44.hellohabits.view.habitevent.ImageUtil;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
@@ -127,8 +126,12 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // obtain the photo taken
                 try {
+                    Uri uri = mPhotoViewModel.getPhotoUri().getValue();
+                    Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
+                            String.format("uri: %s", uri));
+
                     mPhotoViewModel.setPhotoDone(getContentResolver()
-                            .openInputStream(mPhotoViewModel.getPhotoUri().getValue()));
+                            .openInputStream(uri));
                 } catch (FileNotFoundException e) {
 
                 }

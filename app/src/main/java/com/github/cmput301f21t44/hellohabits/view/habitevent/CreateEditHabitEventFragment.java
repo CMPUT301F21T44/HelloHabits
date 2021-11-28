@@ -136,10 +136,17 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
-        mHabitEventViewModel.insert(habitId, comment, null, null,
-                () -> mNavController.navigate(R.id.ViewHabitFragment),
-                e -> showErrorToast("Failed to add habit", e));
-
+        if (imageUri == null) {
+            mHabitEventViewModel.insert(habitId, comment, null, null,
+                    () -> mNavController.navigate(R.id.ViewHabitFragment),
+                    e -> showErrorToast("Failed to add habit event", e));
+        } else {
+            mPhotoViewModel.uploadPhoto(imageUri, () -> {
+                mHabitEventViewModel.insert(habitId, comment, imageUri.getLastPathSegment(),
+                        null, () -> mNavController.navigate(R.id.ViewHabitFragment),
+                        e -> showErrorToast("Failed to add habit event", e));
+            }, e -> showErrorToast("Failed to upload photo", e));
+        }
     }
 
     /**
@@ -231,12 +238,32 @@ public class CreateEditHabitEventFragment extends Fragment {
         }
         Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", imageUri.getLastPathSegment()));
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+        if (hasStoragePermission(REQUEST_CODE_CAMERA)) {
+            if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+            }
         }
     }
 
+    private boolean hasStoragePermission(int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (requireContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED &&
+                    requireContext().checkSelfPermission(Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        requestCode);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+
+        }
+    }
 
     /**
      * Get a photo to attach to the event by choosing photo from gallery
@@ -301,6 +328,18 @@ public class CreateEditHabitEventFragment extends Fragment {
             // update UI
             mHabitEvent = habitEvent;
             binding.editTextComment.setText(habitEvent.getComment());
+            if (habitEvent.getPhotoPath() != null) {
+                imageUri = Uri.fromFile(new File(habitEvent.getPhotoPath()));
+                Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", imageUri.getLastPathSegment()));
+                mPhotoViewModel.downloadPhoto(imageUri, () -> {
+                    try {
+                        InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
+                        eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
+                    } catch (FileNotFoundException e) {
+                        showErrorToast("Failed to create file for photo", e);
+                    }
+                }, e -> showErrorToast("Failed to download photo", e));
+            }
         }
 
         // Set title to the currently selected Habit
@@ -309,13 +348,16 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.habitTitle.setText(habitTitle);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // we're getting different request codes when using the MainActivity onActivity result :(
+        // so we gotta stick with the deprecated API
         super.onActivityResult(requestCode, resultCode, data);
         Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("request code: %d", requestCode));
         Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("result code: %d", resultCode));
         if (resultCode == RESULT_OK) {
-            if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
+            if (requestCode == REQUEST_CODE_CAMERA) {
                 // obtain the photo taken
                 try {
                     InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
@@ -324,7 +366,7 @@ public class CreateEditHabitEventFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
+        } else if (requestCode == REQUEST_CODE_GALLERY) {
 
 //            if (Build.VERSION.SDK_INT < 19) {
 //                ImageUtil.handleImageBeforeApi19(this, eventImage, data);

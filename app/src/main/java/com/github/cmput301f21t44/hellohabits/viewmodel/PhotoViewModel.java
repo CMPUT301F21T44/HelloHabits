@@ -6,14 +6,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.github.cmput301f21t44.hellohabits.firebase.CatchFunction;
+import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.PhotoRepository;
+
 import java.io.InputStream;
 
 public class PhotoViewModel extends ViewModel {
+    private final PhotoRepository mPhotoRepo;
     private final MutableLiveData<Boolean> mTakePhotoWithCamera = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> mChoosePhotoFromGallery = new MutableLiveData<>(false);
     private final MutableLiveData<InputStream> mPhotoDone = new MutableLiveData<>();
 
     private final MutableLiveData<Uri> mPhotoUri = new MutableLiveData<>();
+
+    public PhotoViewModel(PhotoRepository photoRepo) {
+        this.mPhotoRepo = photoRepo;
+    }
 
     public LiveData<Uri> getPhotoUri() {
         return mPhotoUri;
@@ -47,6 +56,14 @@ public class PhotoViewModel extends ViewModel {
 
     public void setPhotoDone(InputStream inputStream) {
         mPhotoDone.setValue(inputStream);
+    }
+
+    public void uploadPhoto(Uri file, ThenFunction successCallback, CatchFunction failCallback) {
+        mPhotoRepo.uploadPhoto(file, successCallback, failCallback);
+    }
+
+    public void downloadPhoto(Uri file, ThenFunction successCallback, CatchFunction failCallback) {
+        mPhotoRepo.downloadPhoto(file, successCallback, failCallback);
     }
 
 }

@@ -10,10 +10,10 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -45,10 +45,11 @@ public class CreateEditHabitEventFragment extends Fragment {
     private HabitEvent mHabitEvent;
     private boolean isEdit;
     private NavController mNavController;
-    public static final int REQUEST_CODE_CAM = 1;
-    public static final int REQUEST_CODE_GLY = 0;
-    private Uri imageUri;
-    private String imageBase64;
+    public static final int REQUEST_CODE_CAMERA = 1;
+    public static final int REQUEST_CODE_GALLERY = 0;
+    public Uri imageUri;
+    public String imageBase64;
+    public ImageView eventImage = getActivity().findViewById(R.id.eventImage);
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -76,6 +77,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void showErrorToast(String text, Exception error) {
         Toast.makeText(requireActivity(), text + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
     }
+
 
     /**
      * Validates and returns the input from the comment field
@@ -168,41 +170,25 @@ public class CreateEditHabitEventFragment extends Fragment {
     }
 
 
+    private String mPicName;
 
     /**
      * Get a photo to attach to the event by taking a photo from camera
      */
-    private void getFromCamera() {
+    public void getFromCamera() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             // GOTO take photo if has permission
-            doTkPho();
+            doTakePhoto();
         } else {
             // ask for permission
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAM);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
         }
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                doTkPho();
-            } else {
-                Toast.makeText(requireContext(), "We have no permission to camera! (T▽T) ...", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == 0) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                doChsGly();
-            } else {
-                Toast.makeText(requireContext(), "We have no permission to gallery! (T▽T) ...", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
-    private String mPicName = "imageOut.jpeg";
-    private void doTkPho() {
+
+    public void doTakePhoto() {
         File imageTemp = new File(requireActivity().getExternalCacheDir(), mPicName);
         if (imageTemp.exists()){
             imageTemp.delete();
@@ -223,9 +209,10 @@ public class CreateEditHabitEventFragment extends Fragment {
         Intent intent = new Intent();
         intent.setAction("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, REQUEST_CODE_CAM);
-
+        getActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
     }
+
+
 
 
 
@@ -237,7 +224,7 @@ public class CreateEditHabitEventFragment extends Fragment {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
     }
 
-    private void doChsGly(){
+    public void doChsGly(){
 
     }
 

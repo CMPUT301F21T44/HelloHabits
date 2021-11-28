@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -29,8 +28,6 @@ import com.github.cmput301f21t44.hellohabits.view.habitevent.CreateEditHabitEven
 import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PreviousListViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-
-import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setHeaderMessage(String message) {
         // no way to do this with data binding :(
-        final TextView helloMessage = (TextView) mBinding.navView.getHeaderView(0)
+        final TextView helloMessage = mBinding.navView.getHeaderView(0)
                 .findViewById(R.id.hello_message);
         if (helloMessage == null) return;
         helloMessage.setText(message.isEmpty() ? "Hello Habits" : message);
@@ -121,31 +118,49 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
-        if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
-            if (resultCode == RESULT_OK) {
-                // obtain the photo taken
-                try {
-                    Uri uri = mPhotoViewModel.getPhotoUri().getValue();
-                    Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
-                            String.format("uri: %s", uri));
-
-                    mPhotoViewModel.setPhotoDone(getContentResolver()
-                            .openInputStream(uri));
-                } catch (FileNotFoundException e) {
-
-                }
-            }
-        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
-
-//            if (Build.VERSION.SDK_INT < 19) {
-//                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
-//            } else {
-//                ImageUtil.handleImageOnApi19(this, eventImage, data);
-//            }
-
-        }
     }
+
+
+//    @SuppressLint("DefaultLocale")
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
+//        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("request code: %d", requestCode));
+//        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("result code: %d", resultCode));
+//        if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
+//            if (resultCode == RESULT_OK) {
+//                // obtain the photo taken
+//                try {
+//                    if (data == null) {
+//                        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", "INTENT DATA IS NULL");
+//                        return;
+//                    }
+//                    Uri uri = data.getData();
+//                    Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
+//                            String.format("uri: %s", uri));
+//                    if (uri != null) {
+//                        Log.println(Log.ASSERT, "ON ACTIVITY RESULT",
+//                                String.format("uri path: %s", uri.getLastPathSegment()));
+//
+//                    }
+//
+//                    mPhotoViewModel.setPhotoDone(getContentResolver()
+//                            .openInputStream(uri));
+//                } catch (FileNotFoundException e) {
+//
+//                }
+//            }
+//        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
+//
+////            if (Build.VERSION.SDK_INT < 19) {
+////                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
+////            } else {
+////                ImageUtil.handleImageOnApi19(this, eventImage, data);
+////            }
+//
+//        }
+//    }
 
     public String getImagePath(Uri uri, String selection) {
         String path = null;

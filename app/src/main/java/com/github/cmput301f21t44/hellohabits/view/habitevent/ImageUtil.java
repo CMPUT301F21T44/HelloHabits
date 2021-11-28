@@ -40,6 +40,7 @@ public class ImageUtil {
 
     }
 
+
     public static void handleImageBeforeApi19(Activity activity, ImageView imageView, Intent data) {
         Uri uri = data.getData();
         String imagePath = getImagePath(activity, uri, null);
@@ -75,6 +76,7 @@ public class ImageUtil {
 
         displayImage(imageView, imagePath);
     }
+
     public static String getImagePath(Activity activity, Uri uri, String selection) {
         String path = null;
         Cursor cursor = activity.getContentResolver().query(uri, null, selection, null, null);
@@ -119,8 +121,7 @@ public class ImageUtil {
     }
 
 
-
-    public static String displayImage( ImageView imageView, String imagePath) {
+    public static String displayImage(ImageView imageView, String imagePath) {
         // return this to imageBase64 in CreateEditHabitEventFragment.java
         Log.d("tag", "displayImage: ------------" + imagePath);
 
@@ -136,9 +137,6 @@ public class ImageUtil {
         }
         return "";
     }
-
-
-
 
 
 }

@@ -1,6 +1,9 @@
 package com.github.cmput301f21t44.hellohabits.view.habitevent;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -34,7 +39,9 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -46,7 +53,7 @@ import java.util.Objects;
  */
 public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
-    public static final int REQUEST_CODE_CAMERA = 1;
+    public static final int REQUEST_CODE_CAMERA = 123123;
     public static final int REQUEST_CODE_GALLERY = 0;
     public static final String TAG = "tag";
     public Uri imageUri;
@@ -215,15 +222,19 @@ public class CreateEditHabitEventFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT > 24) {
             // contentProvider
-            mPhotoViewModel.setPhotoUri(FileProvider.getUriForFile(requireContext(),
-                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp));
+            imageUri = FileProvider.getUriForFile(requireContext(),
+                    "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp);
+            mPhotoViewModel.setPhotoUri(imageUri);
         } else {
-            mPhotoViewModel.setPhotoUri(Uri.fromFile(imageTemp));
+            imageUri = Uri.fromFile(imageTemp);
+            mPhotoViewModel.setPhotoUri(imageUri);
         }
-        Intent intent = new Intent();
-        intent.setAction("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+        Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", imageUri.getLastPathSegment()));
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+        }
     }
 
 
@@ -242,6 +253,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     /**
      * CreateEditHabitEventFragment's Lifecycle onStart method
      */
+    @SuppressLint("DefaultLocale")
     @Override
     public void onStart() {
         super.onStart();
@@ -257,8 +269,13 @@ public class CreateEditHabitEventFragment extends Fragment {
             }
         });
         mPhotoViewModel.getPhotoDone().observe(requireActivity(), inputStream -> {
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            eventImage.setImageBitmap(bitmap);
+            try {
+                Log.println(Log.ASSERT, "observer", String.format("bytes - %d", inputStream.available()));
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                eventImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -290,5 +307,31 @@ public class CreateEditHabitEventFragment extends Fragment {
         String habitTitle =
                 Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
         binding.habitTitle.setText(habitTitle);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("request code: %d", requestCode));
+        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("result code: %d", resultCode));
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_CAMERA) {
+                // obtain the photo taken
+                try {
+                    InputStream is = requireActivity().getContentResolver().openInputStream(imageUri);
+                    eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (requestCode == CreateEditHabitEventFragment.REQUEST_CODE_GALLERY) {
+
+//            if (Build.VERSION.SDK_INT < 19) {
+//                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
+//            } else {
+//                ImageUtil.handleImageOnApi19(this, eventImage, data);
+//            }
+
+        }
     }
 }

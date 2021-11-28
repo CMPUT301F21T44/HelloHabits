@@ -14,6 +14,7 @@ import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,6 +41,7 @@ public class HabitEventViewModelTest {
     private static final String habitId = "85c92132-3977-4b2e-84e5-f97298a69885";
     private static final String comment = "Test Comment";
     private static final Instant date = Instant.now();
+    private static final String photoPath = "85c92132-3977-4b2e-84e5-f97298a69885_1.jpg";
     private static final ThenFunction thenCallback = () -> {
     };
     private static final ResultFunction<HabitEvent> resultCallback = (h) -> {
@@ -65,6 +67,9 @@ public class HabitEventViewModelTest {
     @Mock
     LiveData<List<HabitEvent>> habitEventListStub;
 
+    @Mock
+    Location location;
+
     /**
      * Argument captors
      */
@@ -74,6 +79,10 @@ public class HabitEventViewModelTest {
     ArgumentCaptor<String> habitIdCaptor;
     @Captor
     ArgumentCaptor<String> commentCaptor;
+    @Captor
+    ArgumentCaptor<String> photoPathCaptor;
+    @Captor
+    ArgumentCaptor<Location> locationCaptor;
     @Captor
     ArgumentCaptor<Instant> dateCaptor;
     @Captor
@@ -117,32 +126,40 @@ public class HabitEventViewModelTest {
     @Test
     public void test_insert() {
         // Call method to test
-        viewModel.insert(habitId, comment, thenCallback, failCallback);
+        viewModel.insert(habitId, comment, photoPath, location, thenCallback, failCallback);
 
         // Capture values passed to the mock object
         verify(mockHabitEventRepo, times(1)).insert(habitIdCaptor.capture(),
-                commentCaptor.capture(), thenCallbackCaptor.capture(),
+                commentCaptor.capture(),
+                photoPathCaptor.capture(),
+                locationCaptor.capture(),
+                thenCallbackCaptor.capture(),
                 failCallbackCaptor.capture());
 
         // Verify that the mock method was called with the right parameters
         assertEquals(habitId, habitIdCaptor.getValue());
         assertEquals(comment, commentCaptor.getValue());
+        assertEquals(photoPath, photoPathCaptor.getValue());
+        assertEquals(location, locationCaptor.getValue());
         assertEquals(thenCallback, thenCallbackCaptor.getValue());
         assertEquals(failCallback, failCallbackCaptor.getValue());
     }
 
     @Test
     public void test_update() {
-        viewModel.update(id, habitId, date, comment, resultCallback, failCallback);
+        viewModel.update(id, habitId, date, comment,photoPath, location, resultCallback, failCallback);
 
         verify(mockHabitEventRepo, times(1)).update(idCaptor.capture(),
                 habitIdCaptor.capture(), dateCaptor.capture(), commentCaptor.capture(),
+                photoPathCaptor.capture(), locationCaptor.capture(),
                 resultCallbackCaptor.capture(), failCallbackCaptor.capture());
 
         assertEquals(id, idCaptor.getValue());
         assertEquals(habitId, habitIdCaptor.getValue());
         assertEquals(date, dateCaptor.getValue());
         assertEquals(comment, commentCaptor.getValue());
+        assertEquals(photoPath, photoPathCaptor.getValue());
+        assertEquals(location, locationCaptor.getValue());
         assertEquals(resultCallback, resultCallbackCaptor.getValue());
         assertEquals(failCallback, failCallbackCaptor.getValue());
     }

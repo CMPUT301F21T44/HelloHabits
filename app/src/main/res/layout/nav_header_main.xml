@@ -24,13 +24,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/caveat"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/hello_habits"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="241dp"
         android:layout_height="wrap_content"
-        android:text="@string/team_str" />
+        android:fontFamily="@font/caveat"
+        android:text="@string/team_str"
+        android:textSize="20sp" />
 </LinearLayout>

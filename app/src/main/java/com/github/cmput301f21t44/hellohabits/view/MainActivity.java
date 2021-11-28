@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,20 +24,20 @@ public class MainActivity extends AppCompatActivity {
     private NavController mNavController;
     private PreviousListViewModel mPreviousListViewModel;
     private boolean mFromViewHabit;
+    private ActivityMainBinding mBinding;
     private Authentication mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        setSupportActionBar(binding.appBarMain.toolbar);
+        setSupportActionBar(mBinding.appBarMain.toolbar);
         mAuth = new Authentication();
 
-        mPreviousListViewModel = ViewModelFactory.getProvider(this)
-                .get(PreviousListViewModel.class);
+        mPreviousListViewModel = ViewModelFactory.getProvider(this).get(PreviousListViewModel.class);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.TodaysHabitsFragment,
@@ -45,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
                 R.id.FollowingFragment,
                 R.id.AllUsersFragment
         )
-                .setOpenableLayout(binding.drawerLayout)
+                .setOpenableLayout(mBinding.drawerLayout)
                 .build();
 
         mNavController = Navigation
                 .findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI
                 .setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, mNavController);
+        NavigationUI.setupWithNavController(mBinding.navView, mNavController);
 
         mPreviousListViewModel.getFromViewHabit()
                 .observe(this, val -> this.mFromViewHabit = val);
@@ -66,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() == null) {
             mNavController.navigate(R.id.LoginFragment);
         }
+    }
+
+    /**
+     * Sets the header message in the sidebar
+     *
+     * @param name The name of the user
+     */
+    public void setHeaderMessage(String name) {
+        // no way to do this with data binding :(
+        final TextView helloMessage = (TextView) mBinding.navView.getHeaderView(0)
+                .findViewById(R.id.hello_message);
+        if (helloMessage == null) return;
+        helloMessage.setText(String.format("Hello, %s", name));
     }
 
     @Override

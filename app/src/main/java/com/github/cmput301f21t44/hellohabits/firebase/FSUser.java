@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.github.cmput301f21t44.hellohabits.model.social.Follow;
 import com.github.cmput301f21t44.hellohabits.model.social.User;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class FSUser implements User, FSDocument {
         this.mName = name;
     }
 
-    public FSUser(QueryDocumentSnapshot doc) {
+    public FSUser(DocumentSnapshot doc) {
         this(doc.getId(), doc.getString(NAME));
     }
 

@@ -24,8 +24,8 @@
 
         <TextView
             android:id="@+id/view_title"
-            android:layout_width="307dp"
-            android:layout_height="45dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textColor="#000000"
             android:textSize="28sp"
@@ -33,8 +33,8 @@
 
         <TextView
             android:id="@+id/view_reason"
-            android:layout_width="365dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textSize="24sp"
             tools:text="Habit Reason" />
@@ -55,7 +55,7 @@
 
         <TextView
             android:id="@+id/view_date_started_label"
-            android:layout_width="106dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
             android:fontFamily="@font/caveat"
@@ -65,7 +65,7 @@
 
         <TextView
             android:id="@+id/view_date_started"
-            android:layout_width="198dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textSize="20sp"
@@ -87,7 +87,7 @@
 
         <TextView
             android:id="@+id/view_reminder_label"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
             android:fontFamily="@font/caveat"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/view_reminder"
-            android:layout_width="259dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textSize="20sp"
@@ -119,7 +119,7 @@
 
         <TextView
             android:id="@+id/view_consistency_label"
-            android:layout_width="98dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
             android:fontFamily="@font/caveat"
@@ -129,7 +129,7 @@
 
         <TextView
             android:id="@+id/view_consistency"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textSize="20sp"
@@ -151,7 +151,7 @@
 
         <TextView
             android:id="@+id/view_privacy_label"
-            android:layout_width="72dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
             android:fontFamily="@font/caveat"
@@ -161,7 +161,7 @@
 
         <TextView
             android:id="@+id/view_privacy"
-            android:layout_width="101dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/caveat"
             android:textSize="20sp"

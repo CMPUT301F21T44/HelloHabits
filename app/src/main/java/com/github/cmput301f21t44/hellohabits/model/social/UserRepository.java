@@ -12,6 +12,13 @@ import java.util.List;
  */
 public interface UserRepository {
     /**
+     * Gets the current user
+     *
+     * @return LiveData of User
+     */
+    LiveData<User> getCurrentUser();
+
+    /**
      * Gets all application users
      *
      * @return List of all users

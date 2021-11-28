@@ -47,9 +47,10 @@ public class CreateEditHabitEventFragment extends Fragment {
     private NavController mNavController;
     public static final int REQUEST_CODE_CAMERA = 1;
     public static final int REQUEST_CODE_GALLERY = 0;
+    public static final String TAG = "tag";
     public Uri imageUri;
     public String imageBase64;
-    public ImageView eventImage = getActivity().findViewById(R.id.eventImage);
+    public ImageView eventImage;
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -64,6 +65,8 @@ public class CreateEditHabitEventFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateEditHabitEventBinding.inflate(inflater, container, false);
+
+        eventImage = binding.eventImage;
         return binding.getRoot();
 
     }

@@ -15,6 +15,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.fragment.app.Fragment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,14 +41,14 @@ public class ImageUtil {
 
     }
 
-    private void handleImageBeforeApi19(Activity activity, Intent data) {
+    public static void handleImageBeforeApi19(Activity activity, ImageView imageView, Intent data) {
         Uri uri = data.getData();
         String imagePath = getImagePath(activity, uri, null);
-        displayImage(activity, imagePath);
+        displayImage(imageView, imagePath);
     }
 
     @TargetApi(19)
-    private void handleImageOnApi19(Activity activity, Intent data) {
+    public static void handleImageOnApi19(Activity activity, ImageView imageView, Intent data) {
         String imagePath = null;
         Uri uri = data.getData();
         if (DocumentsContract.isDocumentUri(activity, uri)) {
@@ -59,24 +61,24 @@ public class ImageUtil {
 
             } else if (TextUtils.equals(uri.getAuthority(), "com.android.providers.downloads.documents")) {
                 if (documentId != null && documentId.startsWith("msf:")) {
-                    resolveMSFContent(uri, documentId);
+                    resolveMSFContent(activity, imageView, uri, documentId);
                     return;
                 }
                 Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(documentId));
-                imagePath = getImagePath(contentUri, null);
+                imagePath = getImagePath(activity, contentUri, null);
             }
 
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            imagePath = getImagePath(uri, null);
+            imagePath = getImagePath(activity, uri, null);
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             imagePath = uri.getPath();
         }
 
-        displayImage(imagePath);
+        displayImage(imageView, imagePath);
     }
 
-    private void resolveMSFContent(Activity activity, ImageView imageView, Uri uri, String documentId) {
-
+    public static String resolveMSFContent(Activity activity, ImageView imageView, Uri uri, String documentId) {
+        // return this function to imageBase64 in CreateEditHabitEventFragment
         File file = new File(activity.getCacheDir(), "temp_file" + activity.getContentResolver().getType(uri).split("/")[1]);
 
         try {
@@ -93,37 +95,40 @@ public class ImageUtil {
 
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             imageView.setImageBitmap(bitmap);
-            imageBase64 = ImageUtil.imageToBase64(bitmap);
+
+            return ImageUtil.imageToBase64(bitmap);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "";
 
     }
 
 
-    private String getImagePath(Activity activity, Uri uri, String selection) {
+    public static String getImagePath(Activity activity, Uri uri, String selection) {
         String path = null;
         Cursor cursor = activity.getContentResolver().query(uri, null, selection, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media."_DATA"));
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
             }
             cursor.close();
         }
         return path;
     }
 
-    private void displayImage(Activity activity, String imagePath) {
-        Log.d(TAG, "displayImage: ------------" + imagePath);
+    public static String displayImage( ImageView imageView, String imagePath) {
+        // return this to imageBase64 in CreateEditHabitEventFragment.java
+        Log.d("tag", "displayImage: ------------" + imagePath);
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            ivAvatar.setImageBitmap(bitmap);
-            String imageToBase64 = ImageUtil.imageToBase64(bitmap);
-            imageBase64 = imageToBase64;
+            imageView.setImageBitmap(bitmap);
+            return ImageUtil.imageToBase64(bitmap);
         }
+        return "";
     }
 
 

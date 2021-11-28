@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -120,26 +121,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         CreateEditHabitEventFragment createEditHabitEventFragment = (CreateEditHabitEventFragment) getSupportFragmentManager().findFragmentById(R.id.EventCreateEditFragment);
-
+        ImageView eventImage = createEditHabitEventFragment.eventImage;
         if (requestCode == createEditHabitEventFragment.REQUEST_CODE_CAMERA) {
             if (resultCode == RESULT_OK) {
                 // obtain the photo taken
                 try {
                     InputStream inputStream = getContentResolver().openInputStream(createEditHabitEventFragment.imageUri);
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    createEditHabitEventFragment.eventImage.setImageBitmap(bitmap);
+                    eventImage.setImageBitmap(bitmap);
                     String imageToBase64 = ImageUtil.imageToBase64(bitmap);
                     createEditHabitEventFragment.imageBase64 = imageToBase64;
                 } catch (FileNotFoundException e) {
 
                 }
             }
-        } else if (requestCode == REQUEST_CODE_CHOOSE) {
+        } else if (requestCode == createEditHabitEventFragment.REQUEST_CODE_GALLERY) {
 
             if (Build.VERSION.SDK_INT < 19) {
-                handleImageBeforeApi19(data);
+                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
             } else {
-                handleImageOnApi19(data);
+                ImageUtil.handleImageOnApi19(this, eventImage, data);
             }
 
         }

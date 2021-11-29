@@ -108,20 +108,6 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
                 doc.getString(COMMENT), doc.getString(PHOTO_PATH), fromDoc(doc));
     }
 
-    @SuppressLint("DefaultLocale")
-    @SuppressWarnings("ConstantConditions")
-    private static Location fromDoc(QueryDocumentSnapshot doc) {
-        if (doc.get(LOCATION) != null) {
-            long latitude = doc.getLong(LOCATION + ".latitude");
-            long longitude = doc.getLong(LOCATION + ".longitude");
-            long accuracy = doc.getLong(LOCATION + ".accuracy");
-            Log.println(Log.ASSERT, "from Doc", String.format("%d %d %d", latitude, longitude, accuracy));
-            return new FSLocation(longitude, latitude, accuracy);
-        }
-
-        return null;
-    }
-
     /**
      * TODO: Update for Location and Photo path
      *
@@ -131,6 +117,19 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
         this(event.getId(), event.getDate(), event.getHabitId(), event.getComment());
     }
 
+    @SuppressLint("DefaultLocale")
+    @SuppressWarnings("ConstantConditions")
+    private static Location fromDoc(QueryDocumentSnapshot doc) {
+        if (doc.get(LOCATION) != null) {
+            double latitude = doc.getDouble(LOCATION + ".latitude");
+            double longitude = doc.getDouble(LOCATION + ".longitude");
+            double accuracy = doc.getDouble(LOCATION + ".accuracy");
+            Log.println(Log.ASSERT, "from Doc", String.format("%f %f %f", latitude, longitude, accuracy));
+            return new FSLocation(longitude, latitude, accuracy);
+        }
+
+        return null;
+    }
 
     @Override
     public String getId() {

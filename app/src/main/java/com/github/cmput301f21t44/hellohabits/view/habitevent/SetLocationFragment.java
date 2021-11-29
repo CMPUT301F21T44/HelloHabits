@@ -103,7 +103,8 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         map.addMarker(new MarkerOptions().position(edmonton).title("Exchange location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(edmonton, 10f));
         Toast.makeText(getContext(), "Tap anywhere to move the marker to your preferred drop off location!", Toast.LENGTH_SHORT).show();
-
+        latitude = 53.5461;
+        latitude = -113.4938;
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {

@@ -124,7 +124,6 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
             double latitude = doc.getDouble(LOCATION + ".latitude");
             double longitude = doc.getDouble(LOCATION + ".longitude");
             double accuracy = doc.getDouble(LOCATION + ".accuracy");
-            Log.println(Log.ASSERT, "from Doc", String.format("%f %f %f", latitude, longitude, accuracy));
             return new FSLocation(longitude, latitude, accuracy);
         }
 

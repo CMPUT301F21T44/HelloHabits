@@ -119,7 +119,7 @@ public class CreateEditHabitEventFragment extends Fragment {
             loc = mlocationviewmodel.getLocation().getValue();
             mlocationviewmodel.setLocation(null);
         } else {
-            loc = mHabitEvent.getLocation();
+            loc = null;
         }
         mHabitEventViewModel.insert(habitId, comment, null, loc,
                 () -> mNavController.navigate(R.id.ViewHabitFragment),
@@ -227,7 +227,6 @@ public class CreateEditHabitEventFragment extends Fragment {
             binding.editTextComment.setText(habitEvent.getComment());
             Location location = habitEvent.getLocation();
             if (location != null) {
-                Log.println(Log.ASSERT, "ISEDIT", String.format("%f %f %f", location.getLongitude(), location.getLatitude(), location.getAccuracy()));
                 this.longitude = location.getLongitude();
                 this.latitude = location.getLatitude();
                 setLocationText();

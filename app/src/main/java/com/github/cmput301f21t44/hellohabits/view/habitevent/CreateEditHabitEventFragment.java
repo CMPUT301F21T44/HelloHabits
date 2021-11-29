@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,12 +114,12 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
-        FSLocation loc;
+        Location loc;
         if (isEventLocationChanged) {
-            loc = new FSLocation(longitude, latitude, 0);
-            mlocationviewmodel.setIsLocationChanged(false);
+            loc = mlocationviewmodel.getLocation().getValue();
+            mlocationviewmodel.setLocation(null);
         } else {
-            loc = null;
+            loc = mHabitEvent.getLocation();
         }
         mHabitEventViewModel.insert(habitId, comment, null, loc,
                 () -> mNavController.navigate(R.id.ViewHabitFragment),
@@ -218,7 +219,7 @@ public class CreateEditHabitEventFragment extends Fragment {
      *
      * @param habitEvent The current HabitEvent to be shown on screen, null for new HabitEvent
      */
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void onHabitEventChanged(HabitEvent habitEvent) {
         isEdit = habitEvent != null;
         if (isEdit) {
@@ -227,12 +228,15 @@ public class CreateEditHabitEventFragment extends Fragment {
             binding.editTextComment.setText(habitEvent.getComment());
             Location location = habitEvent.getLocation();
             if (location != null) {
-                this.latitude = location.getLatitude();
+                Log.println(Log.ASSERT, "ISEDIT", String.format("%f %f %f", location.getLongitude(), location.getLatitude(), location.getAccuracy()));
                 this.longitude = location.getLongitude();
+                this.latitude = location.getLatitude();
                 setLocationText();
             } else {
                 binding.textView3.setText("Location: not set yet");
             }
+        } else {
+            binding.textView3.setText("Location: not set yet");
         }
 
         // Set title to the currently selected Habit
@@ -240,6 +244,12 @@ public class CreateEditHabitEventFragment extends Fragment {
                 Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
         binding.habitTitle.setText(habitTitle);
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mlocationviewmodel.setLocation(null);
     }
 
     @SuppressLint("SetTextI18n")
@@ -250,15 +260,16 @@ public class CreateEditHabitEventFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mlocationviewmodel.getMlongitude().observe(this, longitude -> {
-            this.longitude = longitude;
+        mlocationviewmodel.getLocation().observe(this, location -> {
+            if (location == null) {
+                this.isEventLocationChanged = false;
+                return;
+            }
+            this.isEventLocationChanged = true;
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
             setLocationText();
         });
-        mlocationviewmodel.getMlatitude().observe(this, latitude -> {
-            this.latitude = latitude;
-            setLocationText();
-        });
-        mlocationviewmodel.getIsLocationChanged().observe(this, isEventLocationChanged -> this.isEventLocationChanged = isEventLocationChanged);
     }
 
 }

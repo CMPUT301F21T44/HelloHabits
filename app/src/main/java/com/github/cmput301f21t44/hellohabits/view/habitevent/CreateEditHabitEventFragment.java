@@ -1,6 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.view.habitevent;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -26,7 +26,6 @@ import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.LocationViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.Objects;
 
@@ -35,13 +34,13 @@ import java.util.Objects;
  */
 public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
+    private static final int REQUEST_LOCATION_PERMISSION = 2;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
     private HabitEvent mHabitEvent;
     private boolean isEdit;
     private NavController mNavController;
-    private static final int REQUEST_LOCATION_PERMISSION = 2;
     private LocationViewModel mlocationviewmodel;
     private double latitude;
     private double longitude;
@@ -115,11 +114,10 @@ public class CreateEditHabitEventFragment extends Fragment {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
         FSLocation loc;
-        if(isEventLocationChanged){
-            loc = new FSLocation(longitude,latitude,0);
+        if (isEventLocationChanged) {
+            loc = new FSLocation(longitude, latitude, 0);
             mlocationviewmodel.setIsLocationChanged(false);
-        }
-        else {
+        } else {
             loc = null;
         }
         mHabitEventViewModel.insert(habitId, comment, null, loc,
@@ -135,11 +133,10 @@ public class CreateEditHabitEventFragment extends Fragment {
      */
     private void updateHabitEvent(String comment) {
         Location loc;
-        if(isEventLocationChanged){
-            loc = new FSLocation(longitude,latitude,0);
+        if (isEventLocationChanged) {
+            loc = new FSLocation(longitude, latitude, 0);
             mlocationviewmodel.setIsLocationChanged(false);
-        }
-        else {
+        } else {
             loc = mHabitEvent.getLocation();
         }
         mHabitEventViewModel.update(mHabitEvent.getId(),
@@ -181,8 +178,7 @@ public class CreateEditHabitEventFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new
                     String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-        }
-        else {
+        } else {
             mNavController.navigate(R.id.setLocationFragment);
         }
     }
@@ -222,21 +218,21 @@ public class CreateEditHabitEventFragment extends Fragment {
      *
      * @param habitEvent The current HabitEvent to be shown on screen, null for new HabitEvent
      */
+    @SuppressLint("SetTextI18n")
     private void onHabitEventChanged(HabitEvent habitEvent) {
         isEdit = habitEvent != null;
         if (isEdit) {
             // update UI
             mHabitEvent = habitEvent;
             binding.editTextComment.setText(habitEvent.getComment());
-            String locationText;
-            if(habitEvent.getLocation() == null){
-                locationText = "Location: not set yet";
+            Location location = habitEvent.getLocation();
+            if (location != null) {
+                this.latitude = location.getLatitude();
+                this.longitude = location.getLongitude();
+                setLocationText();
+            } else {
+                binding.textView3.setText("Location: not set yet");
             }
-            else{
-                locationText = "Location: ("+habitEvent.getLocation().getLatitude()+", "+habitEvent.getLocation().getLongitude()+
-                        ")\nWith accuracy of within:"+habitEvent.getLocation().getAccuracy()+" meters";
-            }
-            binding.textView3.setText(locationText);
         }
 
         // Set title to the currently selected Habit
@@ -245,12 +241,24 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.habitTitle.setText(habitTitle);
 
     }
+
+    @SuppressLint("SetTextI18n")
+    private void setLocationText() {
+        binding.textView3.setText("Location: (" + latitude + ", " + longitude + ")\nWith accuracy of within:" + 0 + " meters");
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        mlocationviewmodel.getMlongitude().observe(this, longitude ->this.longitude=longitude);
-        mlocationviewmodel.getMlatitude().observe(this, latitude ->this.latitude=latitude);
-        mlocationviewmodel.getIsLocationChanged().observe(this, isEventLocationChanged ->this.isEventLocationChanged=isEventLocationChanged);
+        mlocationviewmodel.getMlongitude().observe(this, longitude -> {
+            this.longitude = longitude;
+            setLocationText();
+        });
+        mlocationviewmodel.getMlatitude().observe(this, latitude -> {
+            this.latitude = latitude;
+            setLocationText();
+        });
+        mlocationviewmodel.getIsLocationChanged().observe(this, isEventLocationChanged -> this.isEventLocationChanged = isEventLocationChanged);
     }
 
 }

@@ -102,8 +102,19 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
 
     public FSHabitEvent(QueryDocumentSnapshot doc) {
         this(doc.getId(), FSDocument.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
-                doc.getString(COMMENT), doc.getString(PHOTO_PATH),
-                doc.get(LOCATION, FSLocation.class));
+                doc.getString(COMMENT), doc.getString(PHOTO_PATH), fromDoc(doc));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private static Location fromDoc(QueryDocumentSnapshot doc) {
+        if (doc.get(LOCATION) != null) {
+            long latitude = doc.getLong(LOCATION + ".latitude");
+            long longitude = doc.getLong(LOCATION + ".longitude");
+            long accuracy = doc.getLong(LOCATION + ".accuracy");
+            return new FSLocation(longitude, latitude, accuracy);
+        }
+
+        return null;
     }
 
     /**

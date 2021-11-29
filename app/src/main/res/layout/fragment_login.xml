@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE792"
     android:paddingLeft="@dimen/fragment_horizontal_margin"
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
@@ -15,10 +16,13 @@
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/name"
         android:inputType="textPersonName|textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,10 +33,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,12 +49,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,19 +69,22 @@
         android:layout_gravity="start"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
         android:text="@string/action_sign_in_short"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/remember_password" />
 
     <TextView
         android:id="@+id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:focusable="true"
+        android:fontFamily="@font/caveat"
         android:minHeight="48dp"
         android:text="@string/action_register_short"
         android:textColor="@color/teal_200"
@@ -84,22 +95,29 @@
 
     <TextView
         android:id="@+id/guide1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8sp"
+        android:fontFamily="@font/caveat"
+        android:gravity="center_horizontal"
+        android:includeFontPadding="true"
         android:text="@string/no_account_yet"
-        android:textSize="17sp"
+        android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/toggle"
-        app:layout_constraintEnd_toStartOf="@+id/toggle" />
+        app:layout_constraintEnd_toStartOf="@+id/toggle"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/guide2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8sp"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/caveat"
         android:text="@string/now"
-        android:textSize="17sp"
+        android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/guide1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.047"
         app:layout_constraintStart_toEndOf="@+id/toggle" />
 
     <ImageView
@@ -118,8 +136,21 @@
         android:layout_width="177dp"
         android:layout_height="97dp"
         android:layout_marginEnd="4dp"
-        android:src="@drawable/hellohabits_slogan3"
+        android:background="#FFE792"
+        android:src="@drawable/slogan_new"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <CheckBox
+        android:id="@+id/remember_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/caveat"
+        android:text="@string/remember_password"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,9 +108,7 @@ public class UserViewModelTest {
                 thenCallbackCaptor.capture(), failCallbackCaptor.capture());
 
         // Verify that the mock method was called with the right parameters
-        assertEquals(email, emailCaptor.getValue());
-        assertEquals(thenCallback, thenCallbackCaptor.getValue());
-        assertEquals(failCallback, failCallbackCaptor.getValue());
+        assertCaptors();
     }
 
     @Test
@@ -123,9 +121,7 @@ public class UserViewModelTest {
                 thenCallbackCaptor.capture(), failCallbackCaptor.capture());
 
         // Verify that the mock method was called with the right parameters
-        assertEquals(email, emailCaptor.getValue());
-        assertEquals(thenCallback, thenCallbackCaptor.getValue());
-        assertEquals(failCallback, failCallbackCaptor.getValue());
+        assertCaptors();
     }
 
     @Test
@@ -135,9 +131,7 @@ public class UserViewModelTest {
         verify(mockUserRepo, times(1)).acceptFollow(emailCaptor.capture(),
                 thenCallbackCaptor.capture(), failCallbackCaptor.capture());
 
-        assertEquals(email, emailCaptor.getValue());
-        assertEquals(thenCallback, thenCallbackCaptor.getValue());
-        assertEquals(failCallback, failCallbackCaptor.getValue());
+        assertCaptors();
     }
 
     @Test
@@ -147,6 +141,10 @@ public class UserViewModelTest {
         verify(mockUserRepo, times(1)).rejectFollow(emailCaptor.capture(),
                 thenCallbackCaptor.capture(), failCallbackCaptor.capture());
 
+        assertCaptors();
+    }
+
+    private void assertCaptors() {
         assertEquals(email, emailCaptor.getValue());
         assertEquals(thenCallback, thenCallbackCaptor.getValue());
         assertEquals(failCallback, failCallbackCaptor.getValue());

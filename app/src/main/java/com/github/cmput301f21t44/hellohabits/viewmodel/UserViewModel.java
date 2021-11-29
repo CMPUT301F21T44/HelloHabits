@@ -22,6 +22,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<User> mSelectedUser = new MutableLiveData<>();
     private final MediatorLiveData<List<User>> mFollowers;
     private final MediatorLiveData<List<User>> mFollowing;
+    private final MediatorLiveData<User> mUser;
 
     /**
      * Creates a new instance of UserViewModel
@@ -33,6 +34,7 @@ public class UserViewModel extends ViewModel {
         this.mAllUsers = mRepository.getAllUsers();
         this.mFollowers = createUserListMediator(user -> user.getFollowerStatus() != null);
         this.mFollowing = createUserListMediator(user -> user.getFollowingStatus() != null);
+        this.mUser = new MediatorLiveData<>();
     }
 
     /**
@@ -147,6 +149,22 @@ public class UserViewModel extends ViewModel {
     public void rejectFollow(String email, ThenFunction successCallback,
                              CatchFunction failCallback) {
         mRepository.rejectFollow(email, successCallback, failCallback);
+    }
+
+    /**
+     * Gets the current logged in user
+     *
+     * @return LiveData of user
+     */
+    public LiveData<User> getCurrentUser() {
+        if (mUser.getValue() == null) {
+            mUser.addSource(mRepository.getCurrentUser(), user -> {
+                if (user.getName() != null) {
+                    mUser.setValue(user);
+                }
+            });
+        }
+        return mUser;
     }
 
     /**

@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentSetLocationBinding;
 import com.github.cmput301f21t44.hellohabits.R;
+import com.github.cmput301f21t44.hellohabits.firebase.FSLocation;
 import com.github.cmput301f21t44.hellohabits.viewmodel.LocationViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -66,9 +67,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         setLocationButton.setOnClickListener(new View.OnClickListener() {
           @Override
         public void onClick(View v) {
-              mlocationviewmodel.setMlatitude(latitude);
-              mlocationviewmodel.setMlongitude(longitude);
-              mlocationviewmodel.setIsLocationChanged(true);
+              mlocationviewmodel.setLocation(new FSLocation(longitude, latitude, 0));
               mNavController.navigate(R.id.EventCreateEditFragment);
         }
         });

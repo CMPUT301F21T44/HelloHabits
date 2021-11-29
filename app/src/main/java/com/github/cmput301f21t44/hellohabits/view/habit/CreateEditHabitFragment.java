@@ -19,6 +19,7 @@ import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabit
 import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.time.Instant;

@@ -100,6 +100,9 @@
     <string name="no_account_yet">No account yet?</string>
     <string name="now">now!</string>
     <string name="back_to">Back to</string>
+    <string name="get_from_camera">take photo from camera</string>
+    <string name="event_picture">event picture</string>
+    <string name="get_from_gallery">add photo from gallery</string>
     <string name="remember_password">Remember password</string>
     <!-- Resource ID for tags -->
     <id name="priority" />

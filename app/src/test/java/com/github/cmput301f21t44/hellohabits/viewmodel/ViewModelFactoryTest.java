@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.PhotoRepository;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 
 import org.junit.Before;
@@ -39,12 +40,16 @@ public class ViewModelFactoryTest {
     @Mock
     UserRepository mockUserRepo;
 
+    @Mock
+    PhotoRepository mockPhotoRepo;
+
     private ViewModelFactory viewModelFactory;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        viewModelFactory = new ViewModelFactory(mockHabitRepo, mockHabitEventRepo, mockUserRepo);
+        viewModelFactory = new ViewModelFactory(mockHabitRepo, mockHabitEventRepo, mockUserRepo,
+                mockPhotoRepo);
     }
 
     @Test

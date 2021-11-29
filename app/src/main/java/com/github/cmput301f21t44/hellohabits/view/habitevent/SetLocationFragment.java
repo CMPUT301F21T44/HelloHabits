@@ -108,7 +108,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
             @Override
             public void onMapClick(LatLng latLng) {
                 map.clear();
-                // add a marker at the clicked location and move the camera to it
+                // add a marker at the clicked location
                 map.addMarker(new MarkerOptions().position(latLng).title("Event location"));
                 map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 //save the coordinates

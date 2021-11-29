@@ -104,6 +104,7 @@
     <string name="event_picture">event picture</string>
     <string name="get_from_gallery">add photo from gallery</string>
     <string name="remember_password">Remember password</string>
+    <string name="location">Location</string>
     <!-- Resource ID for tags -->
     <id name="priority" />
     <id name="habit_id" />

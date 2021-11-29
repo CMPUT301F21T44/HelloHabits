@@ -102,8 +102,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <ImageView
@@ -125,11 +123,10 @@
         android:id="@+id/textView3"
         android:layout_width="366dp"
         android:layout_height="48dp"
-        android:text="Location"
+        android:text="@string/location"
         app:layout_constraintBottom_toTopOf="@+id/button_add_location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_add_photo" />
-
+        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

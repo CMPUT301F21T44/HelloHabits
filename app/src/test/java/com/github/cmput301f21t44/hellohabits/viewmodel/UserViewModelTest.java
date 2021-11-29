@@ -53,9 +53,6 @@ public class UserViewModelTest {
     @Mock
     User mockUser;
 
-    @Mock
-    LiveData<User> mockUserLiveData;
-
     /**
      * LiveData stub to be returned by UserRepository.getAllUsers
      */
@@ -82,7 +79,6 @@ public class UserViewModelTest {
         MockitoAnnotations.initMocks(this);
         // Provide stub value for getAllHabits
         when(mockUserRepo.getAllUsers()).thenReturn(userListStub);
-        when(mockUserRepo.getCurrentUser()).thenReturn(mockUserLiveData);
         viewModel = new UserViewModel(mockUserRepo);
     }
 
@@ -100,11 +96,6 @@ public class UserViewModelTest {
     @Test
     public void test_getAllUsers() {
         assertEquals(userListStub, viewModel.getAllUsers());
-    }
-
-    @Test
-    public void test_getCurrentUser() {
-        assertEquals(mockUserLiveData, viewModel.getCurrentUser());
     }
 
     @Test

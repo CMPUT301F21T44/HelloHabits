@@ -1,5 +1,8 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -102,8 +105,7 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
 
     public FSHabitEvent(QueryDocumentSnapshot doc) {
         this(doc.getId(), FSDocument.instantFromDoc(doc, DATE), doc.getString(HABIT_ID),
-                doc.getString(COMMENT), doc.getString(PHOTO_PATH),
-                doc.get(LOCATION, FSLocation.class));
+                doc.getString(COMMENT), doc.getString(PHOTO_PATH), fromDoc(doc));
     }
 
     /**
@@ -115,6 +117,18 @@ public class FSHabitEvent implements HabitEvent, FSDocument {
         this(event.getId(), event.getDate(), event.getHabitId(), event.getComment());
     }
 
+    @SuppressLint("DefaultLocale")
+    @SuppressWarnings("ConstantConditions")
+    private static Location fromDoc(QueryDocumentSnapshot doc) {
+        if (doc.get(LOCATION) != null) {
+            double latitude = doc.getDouble(LOCATION + ".latitude");
+            double longitude = doc.getDouble(LOCATION + ".longitude");
+            double accuracy = doc.getDouble(LOCATION + ".accuracy");
+            return new FSLocation(longitude, latitude, accuracy);
+        }
+
+        return null;
+    }
 
     @Override
     public String getId() {

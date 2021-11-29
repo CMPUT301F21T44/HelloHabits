@@ -12,6 +12,13 @@ import java.util.List;
  */
 public interface UserRepository {
     /**
+     * Gets the current user
+     *
+     * @return LiveData of User
+     */
+    LiveData<User> getCurrentUser();
+
+    /**
      * Gets all application users
      *
      * @return List of all users
@@ -53,8 +60,4 @@ public interface UserRepository {
      * @param failCallback    Callback for when the operation fails
      */
     void rejectFollow(String email, ThenFunction successCallback, CatchFunction failCallback);
-
-    LiveData<List<Follow>> getFollowers();
-
-    LiveData<List<Follow>> getFollowing();
 }

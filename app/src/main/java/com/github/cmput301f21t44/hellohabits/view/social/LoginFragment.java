@@ -1,5 +1,10 @@
 package com.github.cmput301f21t44.hellohabits.view.social;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +22,8 @@ import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentLoginBinding;
 import com.github.cmput301f21t44.hellohabits.firebase.Authentication;
 import com.github.cmput301f21t44.hellohabits.view.InputValidator;
-import com.google.firebase.auth.FirebaseAuth;
+import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.util.Objects;
 
@@ -25,22 +31,43 @@ import java.util.Objects;
  * Fragment for logging in or signing up
  */
 public class LoginFragment extends Fragment {
+    public static final String HELLO_HABITS_SHARED_PREFERENCES = "HELLO_HABITS_RECORD";
+    public static final String NAME = "name";
     private static final int LONG_MESSAGE_THRESHOLD = 50;
-    private FragmentLoginBinding binding;
+    private static final String REMEMBER_PASSWORD = "rememberPassword";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+
+    private FragmentLoginBinding mBinding;
     private ActionBar mActionBar;
-    private Authentication auth;
-    private FirebaseAuth mAuth;
+    private Authentication mAuth;
     private NavController mNav;
     private boolean mIsLogin;
+    private boolean mRememberPassword;
+    private SharedPreferences mPreferences;
 
-    /**
-     * This function set the basic creation
-     *
-     * @param savedInstanceState a default Bundle
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void loadPreferences() {
+        mPreferences = requireActivity()
+                .getSharedPreferences(HELLO_HABITS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        mRememberPassword = mPreferences.getBoolean(REMEMBER_PASSWORD, false);
+        String email = mPreferences.getString(EMAIL, "");
+        String password = mPreferences.getString(PASSWORD, "");
+
+        mBinding.email.setText(email);
+        if (mRememberPassword) {
+            mBinding.password.setText(password);
+        }
+        mBinding.rememberPassword.setChecked(mRememberPassword);
+    }
+
+    private void savePreferences(String name, String email, String password) {
+        SharedPreferences.Editor editPreferences = mPreferences.edit();
+        mRememberPassword = mBinding.rememberPassword.isChecked();
+        editPreferences.putBoolean(REMEMBER_PASSWORD, mRememberPassword);
+        editPreferences.putString(NAME, name);
+        editPreferences.putString(EMAIL, email);
+        editPreferences.putString(PASSWORD, mRememberPassword ? password : "");
+        editPreferences.apply();
     }
 
     /**
@@ -54,8 +81,8 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentLoginBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = FragmentLoginBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     /**
@@ -68,26 +95,25 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
         mNav = NavHostFragment.findNavController(this);
-        auth = new Authentication();
+        mAuth = new Authentication();
         mIsLogin = true;
         toggleNameFieldVisibility();
-        binding.submit.setOnClickListener(v -> {
+        mBinding.submit.setOnClickListener(v -> {
             if (mIsLogin) {
                 login();
             } else {
                 signup();
             }
         });
-        binding.toggle.setOnClickListener(v -> toggleFunction());
+        mBinding.toggle.setOnClickListener(v -> toggleFunction());
     }
 
     /**
      * This function sets the visibility of name field by whether the user is login or sign-up
      */
     private void toggleNameFieldVisibility() {
-        binding.name.setVisibility(mIsLogin ? View.INVISIBLE : View.VISIBLE);
+        mBinding.name.setVisibility(mIsLogin ? INVISIBLE : VISIBLE);
     }
 
     /**
@@ -96,15 +122,15 @@ public class LoginFragment extends Fragment {
     private void toggleFunction() {
         mIsLogin = !mIsLogin;
         if (mIsLogin) {
-            binding.toggle.setText(R.string.action_register_short);
-            binding.submit.setText(R.string.action_sign_in_short);
-            binding.guide1.setText("No account yet?");
-            binding.guide2.setVisibility(View.VISIBLE);
+            mBinding.toggle.setText(R.string.action_register_short);
+            mBinding.submit.setText(R.string.action_sign_in_short);
+            mBinding.guide1.setText(R.string.no_account_yet);
+            mBinding.guide2.setVisibility(VISIBLE);
         } else {
-            binding.toggle.setText(R.string.action_sign_in_short);
-            binding.submit.setText(R.string.action_register_short);
-            binding.guide1.setText("          Back to");
-            binding.guide2.setVisibility(View.INVISIBLE);
+            mBinding.toggle.setText(R.string.action_sign_in_short);
+            mBinding.submit.setText(R.string.action_register_short);
+            mBinding.guide1.setText(R.string.back_to);
+            mBinding.guide2.setVisibility(INVISIBLE);
         }
         toggleNameFieldVisibility();
     }
@@ -113,35 +139,40 @@ public class LoginFragment extends Fragment {
      * This function handles the login event
      */
     private void login() {
-        if (InputValidator.hasEmptyInput(binding.email, binding.password)) {
+        if (InputValidator.hasEmptyInput(mBinding.email, mBinding.password)) {
             showErrorToast("Failed to sign in", new Exception("There is an empty field"));
             return;
         }
-        String email = binding.email.getText().toString();
-        String password = binding.password.getText().toString();
+        String email = mBinding.email.getText().toString();
+        String password = mBinding.password.getText().toString();
 
-        auth.signIn(email, password)
-                .addOnSuccessListener(authResult -> finish())
+        mAuth.signIn(email, password)
+                .addOnSuccessListener(authResult -> finish(email, password))
                 .addOnFailureListener(e -> showErrorToast("Failed to sign in", e));
     }
 
-    private void finish() {
-        mActionBar.show();
-        mNav.navigate(R.id.TodaysHabitsFragment);
+    private void finish(String email, String password) {
+        UserViewModel viewModel = ViewModelFactory.getProvider(requireActivity())
+                .get(UserViewModel.class);
+        viewModel.getCurrentUser().observe(requireActivity(), user -> {
+            mActionBar.show();
+            savePreferences(user.getName(), email, password);
+            mNav.navigate(R.id.TodaysHabitsFragment);
+        });
     }
 
     /**
      * This function handles the sign-up event
      */
     private void signup() {
-        if (InputValidator.hasEmptyInput(binding.name, binding.email, binding.password)) {
+        if (InputValidator.hasEmptyInput(mBinding.name, mBinding.email, mBinding.password)) {
             showErrorToast("Failed to sign up", new Exception("There is an empty field"));
             return;
         }
-        String name = binding.name.getText().toString();
-        String email = binding.email.getText().toString();
-        String password = binding.password.getText().toString();
-        auth.signup(name, email, password, this::finish,
+        String name = mBinding.name.getText().toString();
+        String email = mBinding.email.getText().toString();
+        String password = mBinding.password.getText().toString();
+        mAuth.signup(name, email, password, () -> finish(email, password),
                 e -> showErrorToast("Failed to sign up", e));
     }
 
@@ -172,6 +203,8 @@ public class LoginFragment extends Fragment {
                 .getSupportActionBar());
         // Remove action bar on login screen
         mActionBar.hide();
+
+        loadPreferences();
     }
 
     /**
@@ -180,6 +213,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 }

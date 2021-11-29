@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,11 @@ import com.github.cmput301f21t44.hellohabits.databinding.ListHabitItemBinding;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.view.OnItemClickListener;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Adapter class for displaying a Habit in a RecyclerView
@@ -34,6 +40,7 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
     private OnStartDragListener mDragStartListener;
     private HabitViewModel mViewModel;
     private LifecycleOwner mLifeCycleOwner;
+    private GetHabitList mHabitListGetter;
 
     /**
      * Constructor for HabitAdapter
@@ -51,16 +58,20 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
      * @param dragStartListener OnStartDragListener callback for when the Habit item handle is dragged
      * @param viewModel         HabitViewModel for observing reordering state
      * @param lifecycleOwner    LifeCycleOwner of the Fragment that this adapter is instantiated in
+     * @param habitListGetter   Callback for getting the habit list
      * @return A HabitAdapter instance with the listeners
      */
     public static HabitAdapter newInstance(OnItemClickListener<Habit> clickListener,
                                            OnStartDragListener dragStartListener,
-                                           HabitViewModel viewModel, LifecycleOwner lifecycleOwner) {
+                                           HabitViewModel viewModel, LifecycleOwner lifecycleOwner,
+                                           GetHabitList habitListGetter
+    ) {
         HabitAdapter adapter = new HabitAdapter(new HabitDiff());
         adapter.mOnClickListener = clickListener;
         adapter.mDragStartListener = dragStartListener;
         adapter.mViewModel = viewModel;
         adapter.mLifeCycleOwner = lifecycleOwner;
+        adapter.mHabitListGetter = habitListGetter;
         return adapter;
     }
 
@@ -99,8 +110,8 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         // change lock icon depending on the reordering state
         mViewModel.getReordering().observe(mLifeCycleOwner, isReordering -> {
             ImageView handle = holder.mItemBinding.lock;
+            handle.setVisibility(isReordering || current.isPrivate() ? VISIBLE : INVISIBLE);
             if (isReordering) {
-                handle.setVisibility(VISIBLE);
                 handle.setOnTouchListener((v, event) -> {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         mDragStartListener.onStartDrag(holder);
@@ -111,10 +122,34 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
             } else {
                 handle.setOnTouchListener(null);
                 handle.setImageResource(R.drawable.ic_baseline_lock_24);
-                handle.setVisibility(current.isPrivate() ? VISIBLE : INVISIBLE);
             }
         });
+        // for resetting the consistencies
+        mHabitListGetter.getHabits().observe(mLifeCycleOwner, habits -> {
+            Collections.sort(habits, Comparator.comparingInt(Habit::getIndex));
+            for (Habit h : habits) {
+                if (h.getId().equals(current.getId())) {
+                    double consistency = Habit.getConsistency(h);
+                    if (consistency < 0.5) {
+                        holder.mItemBinding.imageView.setColorFilter(COLOUR_RED);
+                    } else if (consistency < 0.75) {
+                        holder.mItemBinding.imageView.setColorFilter(COLOUR_ORANGE);
+                    } else {
+                        holder.mItemBinding.imageView.setColorFilter(COLOUR_GREEN);
+                    }
+                }
+            }
+            submitList(habits);
+        });
+    }
 
+    interface GetHabitList {
+        /**
+         * Called to get the LiveData List of Habits
+         *
+         * @return
+         */
+        LiveData<List<Habit>> getHabits();
     }
 
     interface OnStartDragListener {
@@ -152,11 +187,11 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
         @Override
         public boolean areContentsTheSame(@NonNull Habit oldItem, @NonNull Habit newItem) {
             return oldItem.getReason().equals(newItem.getReason())
-                    && oldItem.getEvents().equals(newItem.getEvents())
+                    && Objects.equals(oldItem.getEvents(), newItem.getEvents())
                     && oldItem.getTitle().equals(newItem.getTitle())
                     && oldItem.getDateStarted().equals(newItem.getDateStarted())
                     && oldItem.getIndex() == newItem.getIndex()
-                    && Habit.getConsistency(oldItem) == Habit.getConsistency(oldItem);
+                    && Habit.getConsistency(oldItem) == Habit.getConsistency(newItem);
         }
     }
 
@@ -182,12 +217,12 @@ public class HabitAdapter extends ListAdapter<Habit, HabitAdapter.ViewHolder> {
          * @param habit    Habit data to bind
          * @param listener Listener callback for when the Habit body is clicked
          */
-        void bind(@NonNull final Habit habit, final OnItemClickListener<Habit> listener) {
+        void bind(@NonNull Habit habit, final OnItemClickListener<Habit> listener) {
             mItemBinding.titleView.setText(habit.getTitle());
             mItemBinding.reasonView.setText(habit.getReason());
+            mItemBinding.lock.setVisibility(INVISIBLE);
             // check level of consistency
             double consistency = Habit.getConsistency(habit);
-
             if (consistency < 0.5) {
                 mItemBinding.imageView.setColorFilter(COLOUR_RED);
             } else if (consistency < 0.75) {

@@ -96,6 +96,11 @@
     <string name="request">Request</string>
     <string name="follow">Follow</string>
     <string name="requested">Requested</string>
+    <string name="reorder_list">Reorder List</string>
+    <string name="no_account_yet">No account yet?</string>
+    <string name="now">now!</string>
+    <string name="back_to">Back to</string>
+    <string name="remember_password">Remember password</string>
     <!-- Resource ID for tags -->
     <id name="priority" />
     <id name="habit_id" />

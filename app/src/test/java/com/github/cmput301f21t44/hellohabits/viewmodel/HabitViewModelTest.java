@@ -1,4 +1,4 @@
-package com.github.cmput301f21t44.hellohabits;
+package com.github.cmput301f21t44.hellohabits.viewmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +17,6 @@ import com.github.cmput301f21t44.hellohabits.model.habit.DaysOfWeek;
 import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.view.habit.HabitIndexChange;
-import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;

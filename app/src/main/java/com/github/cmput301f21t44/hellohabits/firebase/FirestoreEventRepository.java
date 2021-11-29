@@ -2,6 +2,7 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,14 +34,16 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
      *
      * @param habitId         UUID of the Habit parent
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     @Override
-    public void insert(String habitId, String comment, ThenFunction successCallback,
-                       CatchFunction failCallback) {
-        FSDocument.set(new FSHabitEvent(Instant.now(), habitId, comment), failCallback,
-                getEventCollectionRef(habitId))
+    public void insert(String habitId, String comment, String photoPath, Location location,
+                       ThenFunction successCallback, CatchFunction failCallback) {
+        FSDocument.set(new FSHabitEvent(Instant.now(), habitId, comment, photoPath, location),
+                failCallback, getEventCollectionRef(habitId))
                 .addOnSuccessListener(u -> successCallback.apply());
     }
 
@@ -63,14 +66,17 @@ public class FirestoreEventRepository extends FirestoreRepository implements Hab
      * @param habitId         UUID of the Habit parent
      * @param date            Instant of when the HabitEvent was denoted
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     @Override
     public void update(String id, String habitId, Instant date, String comment,
+                       String photoPath, Location location,
                        ResultFunction<HabitEvent> successCallback,
                        CatchFunction failCallback) {
-        FSHabitEvent event = new FSHabitEvent(id, date, habitId, comment);
+        FSHabitEvent event = new FSHabitEvent(id, date, habitId, comment, photoPath, location);
         FSDocument.set(event, failCallback, getEventCollectionRef(habitId))
                 .addOnSuccessListener(u -> successCallback.apply(event));
     }

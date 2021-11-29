@@ -8,15 +8,10 @@ import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment.MAX_TITLE_LEN;
 
-import android.view.Gravity;
-
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -42,9 +37,9 @@ public class HabitTest {
     public static final String HABIT_REASON = "Test Reason";
     public static final String NEW_HABIT_TITLE = "New Test Title";
     public static final String NEW_HABIT_REASON = "New Test Reason";
+    private static final String newHabitTitle = TestUtil.getRealTimeString(NEW_HABIT_TITLE, MAX_TITLE_LEN);
     public static FirebaseAuth sAuth = FirebaseAuth.getInstance();
     public static FirebaseFirestore sDb = FirebaseFirestore.getInstance();
-    private static String newHabitTitle;
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -54,6 +49,7 @@ public class HabitTest {
         TestUtil.initEmulators(sAuth, sDb);
         TestUtil.login(sAuth);
     }
+
 
     @Test
     public void A_test_addHabit() {
@@ -90,7 +86,6 @@ public class HabitTest {
         onView(withText(HABIT_TITLE)).perform(click());
         onView(withId(R.id.button_edit_habit)).perform(click());
 
-        newHabitTitle =TestUtil.getRealTimeString(NEW_HABIT_TITLE, MAX_TITLE_LEN);
         onView(withId(R.id.edit_text_title))
                 .perform(clearText(), typeText(newHabitTitle), closeSoftKeyboard());
         onView(withId(R.id.edit_text_reason))
@@ -114,11 +109,7 @@ public class HabitTest {
 
     @Test
     public void D_test_deleteHabit() {
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.AllHabitsFragment));
+        TestUtil.navigateFromSidebar(R.id.AllHabitsFragment);
 
         // when you're pissed just double click
         onView(withText(newHabitTitle)).perform(doubleClick());

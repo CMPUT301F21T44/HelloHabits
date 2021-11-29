@@ -9,6 +9,7 @@ import com.github.cmput301f21t44.hellohabits.firebase.ResultFunction;
 import com.github.cmput301f21t44.hellohabits.firebase.ThenFunction;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
 import java.time.Instant;
 import java.util.List;
@@ -52,12 +53,14 @@ public class HabitEventViewModel extends ViewModel {
      *
      * @param habitId         UUID of the Habit parent
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
-    public void insert(String habitId, String comment, ThenFunction successCallback,
-                       CatchFunction failCallback) {
-        mRepository.insert(habitId, comment, successCallback, failCallback);
+    public void insert(String habitId, String comment, String photoPath, Location location,
+                       ThenFunction successCallback, CatchFunction failCallback) {
+        mRepository.insert(habitId, comment, photoPath, location, successCallback, failCallback);
     }
 
     /**
@@ -67,13 +70,17 @@ public class HabitEventViewModel extends ViewModel {
      * @param habitId         UUID of the Habit parent
      * @param date            Instant of when the HabitEvent was denoted
      * @param comment         Optional comment
+     * @param photoPath       Optional photo path
+     * @param location        Optional location
      * @param successCallback Callback for when the operation succeeds
      * @param failCallback    Callback for when the operation fails
      */
     public void update(String id, String habitId, Instant date, String comment,
+                       String photoPath, Location location,
                        ResultFunction<HabitEvent> successCallback,
                        CatchFunction failCallback) {
-        mRepository.update(id, habitId, date, comment, successCallback, failCallback);
+        mRepository.update(id, habitId, date, comment, photoPath, location, successCallback,
+                failCallback);
     }
 
     /**

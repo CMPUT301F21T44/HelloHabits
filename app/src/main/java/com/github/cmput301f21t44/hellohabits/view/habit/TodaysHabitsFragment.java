@@ -1,37 +1,16 @@
 package com.github.cmput301f21t44.hellohabits.view.habit;
 
-import android.os.Bundle;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-
 import com.github.cmput301f21t44.hellohabits.R;
-import com.github.cmput301f21t44.hellohabits.model.habit.Habit;
+import com.github.cmput301f21t44.hellohabits.view.MainActivity;
+import com.github.cmput301f21t44.hellohabits.viewmodel.UserViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Fragment for viewing today's habits
  */
 public class TodaysHabitsFragment extends HabitListFragment {
-    /**
-     * TodaysHabitsFragment's Lifecycle onViewCreated method
-     * <p>
-     * Initializes listeners
-     *
-     * @param view               a default view
-     * @param savedInstanceState a default Bundle
-     */
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     /**
      * TodaysHabitsFragment's Lifecycle onStart method
      * <p>
@@ -40,26 +19,27 @@ public class TodaysHabitsFragment extends HabitListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        super.initListeners(R.id.TodaysHabitsFragment);
-        mHabitViewModel.getAllHabits().observe(this, this::onHabitListChanged);
+        super.initListeners(R.id.TodaysHabitsFragment,
+                () -> mHabitViewModel.getTodaysHabits(Instant.now()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setHeader();
     }
 
     /**
-     * Update the UI to reflect changes in the Habit list
-     *
-     * @param habitList updated Habit list
+     * Sets the navigation header message
      */
-    private void onHabitListChanged(List<Habit> habitList) {
-        List<Habit> todaysHabits = new ArrayList<>();
-        ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
-        // traverse all h in habitList, and only masks in those who matches the checkBox
-        // checkBox implementation can be seen in isInDay() from Habit.java
-        for (Habit h : habitList) {
-            if (Habit.isInDay(today, h.getDaysOfWeek())) {
-                todaysHabits.add(h);
-            }
-        }
-        Collections.sort(todaysHabits, Comparator.comparingInt(Habit::getIndex));
-        mAdapter.submitList(todaysHabits);
+    private void setHeader() {
+        // kinda hacky
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        UserViewModel mUserViewModel = ViewModelFactory.getProvider(mainActivity)
+                .get(UserViewModel.class);
+        mUserViewModel.getCurrentUser().removeObservers(mainActivity);
+        mUserViewModel.getCurrentUser().observe(mainActivity, user ->
+                mainActivity.setHeaderMessage(user.getName() != null ?
+                        String.format("Hello, %s", user.getName()) : ""));
     }
 }

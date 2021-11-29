@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE792"
     android:orientation="vertical"
     tools:context=".view.habit.ViewHabitFragment">
 
@@ -24,16 +25,18 @@
         <TextView
             android:id="@+id/view_title"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
             android:textColor="#000000"
-            android:textSize="24sp"
+            android:textSize="28sp"
             tools:text="Habit Title" />
 
         <TextView
             android:id="@+id/view_reason"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/caveat"
+            android:textSize="24sp"
             tools:text="Habit Reason" />
 
     </LinearLayout>
@@ -55,15 +58,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:fontFamily="@font/caveat"
             android:text="@string/date_started"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/view_date_started"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:fontFamily="@font/caveat"
+            android:textSize="20sp"
             tools:text="October 23, 2021" />
 
     </LinearLayout>
@@ -85,15 +90,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:fontFamily="@font/caveat"
             android:text="@string/reminder_label"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
 
         <TextView
             android:id="@+id/view_reminder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:fontFamily="@font/caveat"
+            android:textSize="20sp"
             tools:text="Mon Wed Fri" />
 
     </LinearLayout>
@@ -115,15 +122,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:fontFamily="@font/caveat"
             android:text="@string/consistency"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
 
         <TextView
             android:id="@+id/view_consistency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:fontFamily="@font/caveat"
+            android:textSize="20sp"
             tools:text="87%" />
 
     </LinearLayout>
@@ -145,15 +154,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fragment_horizontal_margin"
+            android:fontFamily="@font/caveat"
             android:text="@string/visibility"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/view_reminder" />
 
         <TextView
             android:id="@+id/view_privacy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:fontFamily="@font/caveat"
+            android:textSize="20sp"
             tools:text="Private" />
 
     </LinearLayout>
@@ -176,7 +187,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
         android:text="@string/new_event"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/button_edit_habit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -188,7 +202,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
         android:text="@string/edit_habit"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/button_delete_habit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -202,15 +219,15 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/caveat"
         android:text="@string/delete"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_edit_habit" />
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

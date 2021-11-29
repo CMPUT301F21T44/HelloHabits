@@ -2,7 +2,7 @@ package com.github.cmput301f21t44.hellohabits.firebase;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,7 +13,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -22,6 +24,11 @@ import java.util.Objects;
 public abstract class FirestoreRepository {
     protected final FirebaseFirestore mDb;
     protected final FirebaseAuth mAuth;
+
+    /**
+     * Map for storing LiveData of Habit events
+     */
+    protected final Map<String, LiveData<List<HabitEvent>>> habitEventLiveDataMap = new HashMap<>();
 
     /**
      * Creates a new FirestoreRepository
@@ -152,8 +159,8 @@ public abstract class FirestoreRepository {
      * @param email   The User's email
      * @return a LiveData List of HabitEvents
      */
-    public LiveData<List<HabitEvent>> getEventsByHabitId(String habitId, String email) {
-        final MutableLiveData<List<HabitEvent>> eventLiveData = new MutableLiveData<>();
+    private LiveData<List<HabitEvent>> newHabitEventLiveData(String habitId, String email) {
+        final MediatorLiveData<List<HabitEvent>> eventLiveData = new MediatorLiveData<>();
         getEventCollectionRef(habitId, email).addSnapshotListener((eventSnapshots, err) -> {
             if (eventSnapshots == null) return;
             final List<HabitEvent> habitEvents = new ArrayList<>();
@@ -163,6 +170,25 @@ public abstract class FirestoreRepository {
             eventLiveData.setValue(habitEvents);
         });
         return eventLiveData;
+    }
+
+    /**
+     * Gets a LiveData list of HabitEvents from the cache map
+     * <p>
+     * Creates a new one if it doesn't exist
+     *
+     * @param habitId UUID of the Habit
+     * @param email   The User's email
+     * @return a LiveData List of HabitEvents
+     */
+    public LiveData<List<HabitEvent>> getEventsByHabitId(String habitId, String email) {
+        String mapKey = String.format("%s/%s", email, habitId);
+        LiveData<List<HabitEvent>> habitEventLiveData = habitEventLiveDataMap.get(mapKey);
+        if (habitEventLiveData != null) return habitEventLiveData;
+
+        habitEventLiveData = newHabitEventLiveData(habitId, email);
+        habitEventLiveDataMap.put(mapKey, habitEventLiveData);
+        return habitEventLiveData;
     }
 
     /**

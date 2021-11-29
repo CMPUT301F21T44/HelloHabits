@@ -62,11 +62,11 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync((OnMapReadyCallback) this);
         setLocationButton.setOnClickListener(new View.OnClickListener() {
-          @Override
-        public void onClick(View v) {
-              mlocationviewmodel.setLocation(new FSLocation(longitude, latitude, 0));
-              mNavController.navigate(R.id.EventCreateEditFragment);
-        }
+            @Override
+            public void onClick(View v) {
+                mlocationviewmodel.setLocation(new FSLocation(longitude, latitude, 0));
+                mNavController.navigate(R.id.EventCreateEditFragment);
+            }
         });
 
     }
@@ -90,6 +90,10 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         map.setMyLocationEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);

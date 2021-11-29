@@ -1,5 +1,6 @@
 package com.github.cmput301f21t44.hellohabits.view.habitevent;
 
+
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
@@ -11,6 +12,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+=======
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +26,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+=======
+import androidx.core.app.ActivityCompat;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -30,12 +41,21 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.R;
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabitEventBinding;
+import com.github.cmput301f21t44.hellohabits.firebase.FSLocation;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
+
 import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
+
+import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
+import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
+import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.LocationViewModel;
+
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
 import java.io.File;
@@ -53,16 +73,28 @@ import java.util.Objects;
  */
 public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
+
     public static final int REQUEST_CODE_CAMERA = 123123;
     public static final int REQUEST_CODE_GALLERY = 0;
     private ImageView eventImage;
+
+    private static final int REQUEST_LOCATION_PERMISSION = 2;
+
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
     private HabitEventViewModel mHabitEventViewModel;
     private HabitEvent mHabitEvent;
     private boolean isEdit;
     private NavController mNavController;
+
     private PhotoViewModel mPhotoViewModel;
+
+    private LocationViewModel mlocationviewmodel;
+    private double latitude;
+    private double longitude;
+    private boolean isEventLocationChanged;
+
+
 
     /**
      * When the view is created, connect the layout to the class using binding
@@ -132,6 +164,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
+
         if (getImageUri() == null) {
             mHabitEventViewModel.insert(habitId, comment, null, null,
                     () -> mNavController.navigate(R.id.ViewHabitFragment),
@@ -142,6 +175,18 @@ public class CreateEditHabitEventFragment extends Fragment {
                     e -> showErrorToast("Failed to add habit event", e)), e -> showErrorToast("Failed to upload photo", e));
         }
     }
+
+        Location loc;
+        if (isEventLocationChanged) {
+            loc = mlocationviewmodel.getLocation().getValue();
+            mlocationviewmodel.setLocation(null);
+        } else {
+            loc = null;
+        }
+        mHabitEventViewModel.insert(habitId, comment, null, loc,
+                () -> mNavController.navigate(R.id.ViewHabitFragment),
+                e -> showErrorToast("Failed to add habit", e));
+
 
     private Uri getImageUri() {
         return ((MainActivity) requireActivity()).getImageUri();
@@ -176,14 +221,20 @@ public class CreateEditHabitEventFragment extends Fragment {
      * @param comment Updated HabitEvent's comment
      */
     private void updateHabitEvent(String comment) {
+        Location loc;
+        if (isEventLocationChanged) {
+            loc = new FSLocation(longitude, latitude, 0);
+        } else {
+            loc = mHabitEvent.getLocation();
+        }
         mHabitEventViewModel.update(mHabitEvent.getId(),
                 mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,
-                null, null,
+                null, loc,
                 (updatedHabitEvent) -> {
                     mHabitEventViewModel.setSelectedEvent(updatedHabitEvent);
                     mNavController.navigate(R.id.ViewHabitFragment);
                 },
-                (e) -> showErrorToast("Failed to update habit", e));
+                (e) -> showErrorToast("Failed to update habit event", e));
     }
 
     /**
@@ -197,6 +248,7 @@ public class CreateEditHabitEventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mlocationviewmodel = provider.get(LocationViewModel.class);
         mHabitViewModel = provider.get(HabitViewModel.class);
         mHabitEventViewModel = provider.get(HabitEventViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
@@ -210,10 +262,14 @@ public class CreateEditHabitEventFragment extends Fragment {
 
     /**
      * Get user's geolocation to attach to the event
-     * TODO: Implement
      */
     private void getLocation() {
-        Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new
+                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        } else {
+            mNavController.navigate(R.id.setLocationFragment);
+        }
     }
 
     /**
@@ -302,25 +358,52 @@ public class CreateEditHabitEventFragment extends Fragment {
      *
      * @param habitEvent The current HabitEvent to be shown on screen, null for new HabitEvent
      */
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void onHabitEventChanged(HabitEvent habitEvent) {
         isEdit = habitEvent != null;
         if (isEdit) {
             // update UI
             mHabitEvent = habitEvent;
             binding.editTextComment.setText(habitEvent.getComment());
+
             if (habitEvent.getPhotoPath() != null) {
                 setImageUri(habitEvent.getPhotoPath());
                 Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", getImageUri().getLastPathSegment()));
                 mPhotoViewModel.downloadPhoto(getImageUri(), this::setImageView,
                         e -> showErrorToast("Failed to download photo", e));
             }
+
+            Location location = habitEvent.getLocation();
+            if (location != null) {
+                this.longitude = location.getLongitude();
+                this.latitude = location.getLatitude();
+                setLocationText();
+            } else {
+                binding.textView3.setText("Location: not set yet");
+            }
+        } else {
+            binding.textView3.setText("Location: not set yet");
+
         }
 
         // Set title to the currently selected Habit
         String habitTitle =
                 Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue()).getTitle();
         binding.habitTitle.setText(habitTitle);
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mlocationviewmodel.setLocation(null);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setLocationText() {
+        binding.textView3.setText("Location: (" + latitude + ", " + longitude + ")\nWith accuracy of within:" + 0 + " meters");
+    }
+
 
     /**
      * Sets the ImageView to the current URI
@@ -358,4 +441,21 @@ public class CreateEditHabitEventFragment extends Fragment {
             }
         }
     }
+}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mlocationviewmodel.getLocation().observe(this, location -> {
+            if (location == null) {
+                this.isEventLocationChanged = false;
+                return;
+            }
+            this.isEventLocationChanged = true;
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+            setLocationText();
+        });
+    }
+
 }

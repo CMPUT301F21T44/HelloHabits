@@ -100,6 +100,12 @@ public class HabitViewModel extends ViewModel {
         return mAllHabits;
     }
 
+    /**
+     * Retrieves Today's habits
+     *
+     * @param now current date
+     * @return returns all habits for today's date
+     */
     public LiveData<List<Habit>> getTodaysHabits(Instant now) {
         mTodaysHabits.removeSource(mAllHabits);
         mTodaysHabits.addSource(mAllHabits, habits -> {

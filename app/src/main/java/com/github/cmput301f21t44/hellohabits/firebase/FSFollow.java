@@ -8,6 +8,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Firestore implementation of Follow
+ */
 public class FSFollow implements Follow, FSDocument {
     public static final FollowCollection FOLLOWER_COLLECTION =
             new FollowCollection("followers");
@@ -18,15 +21,32 @@ public class FSFollow implements Follow, FSDocument {
     private final String mEmail;
     private final Follow.Status mStatus;
 
+    /**
+     * Create a FSFollow
+     *
+     * @param email  User Email
+     * @param status Following Status
+     */
     public FSFollow(String email, Status status) {
         this.mEmail = email;
         this.mStatus = status;
     }
 
+    /**
+     * Create a FSFollow from a DocumentSnapshot
+     *
+     * @param doc Firestore Document
+     */
     public FSFollow(DocumentSnapshot doc) {
         this(doc.getId(), convertStatus(doc.getString(STATUS)));
     }
 
+    /**
+     * Returns the current status of a follow request in status type
+     *
+     * @param status string of current status
+     * @return returns the converted string
+     */
     private static Status convertStatus(String status) {
         // give a default value to status, this totally won't go wrong 🤪
         return status != null ? Status.get(status) : Status.REQUESTED;

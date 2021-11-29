@@ -46,6 +46,9 @@ public class LoginFragment extends Fragment {
     private boolean mRememberPassword;
     private SharedPreferences mPreferences;
 
+    /**
+     * Loads previous preferences
+     */
     private void loadPreferences() {
         mPreferences = requireActivity()
                 .getSharedPreferences(HELLO_HABITS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
@@ -60,6 +63,13 @@ public class LoginFragment extends Fragment {
         mBinding.rememberPassword.setChecked(mRememberPassword);
     }
 
+    /**
+     * Saves current preferences for a specific user
+     *
+     * @param name     user's name
+     * @param email    user's email
+     * @param password user's password
+     */
     private void savePreferences(String name, String email, String password) {
         SharedPreferences.Editor editPreferences = mPreferences.edit();
         mRememberPassword = mBinding.rememberPassword.isChecked();
@@ -151,6 +161,12 @@ public class LoginFragment extends Fragment {
                 .addOnFailureListener(e -> showErrorToast("Failed to sign in", e));
     }
 
+    /**
+     * Finish signing in a user
+     *
+     * @param email    user's email
+     * @param password user's passord
+     */
     private void finish(String email, String password) {
         UserViewModel viewModel = ViewModelFactory.getProvider(requireActivity())
                 .get(UserViewModel.class);

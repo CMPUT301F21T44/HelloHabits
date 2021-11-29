@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Firestore implementation of User
+ */
 public class FSUser implements User, FSDocument {
     public static final String COLLECTION = "users";
     public static final String NAME = "name";
@@ -19,11 +22,22 @@ public class FSUser implements User, FSDocument {
     private Follow.Status mFollowerStatus;
     private Follow.Status mFollowingStatus;
 
+    /**
+     * Create a FSUser
+     *
+     * @param email User's email
+     * @param name  User's Name
+     */
     public FSUser(String email, String name) {
         this.mEmail = email;
         this.mName = name;
     }
 
+    /**
+     * Create a FSUser using a DocumentSnapshot
+     *
+     * @param doc Firestore DocumentSnapshot
+     */
     public FSUser(DocumentSnapshot doc) {
         this(doc.getId(), doc.getString(NAME));
     }

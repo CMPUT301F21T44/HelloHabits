@@ -13,9 +13,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.cmput301f21t44.hellohabits.databinding.FragmentSetLocationBinding;
 import com.github.cmput301f21t44.hellohabits.R;
+import com.github.cmput301f21t44.hellohabits.viewmodel.LocationViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -32,7 +37,8 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
     private double longitude;
     private String eventID;
     private FragmentSetLocationBinding binding;
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private NavController mNavController;
+    private LocationViewModel mlocationviewmodel;
 
     public SetLocationFragment() {
     }
@@ -42,16 +48,13 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSetLocationBinding.inflate(inflater, container, false);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new
-                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-        }
-
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-
+        ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
+        mlocationviewmodel = provider.get(LocationViewModel.class);
+        mNavController = NavHostFragment.findNavController(this);
         //get the ids of all xml elements
         mapView = view.findViewById(R.id.mapView);
         setLocationButton = view.findViewById(R.id.setLocationButton);
@@ -63,7 +66,10 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         setLocationButton.setOnClickListener(new View.OnClickListener() {
           @Override
         public void onClick(View v) {
-          getActivity().finish();
+              mlocationviewmodel.setMlatitude(latitude);
+              mlocationviewmodel.setMlongitude(longitude);
+              mlocationviewmodel.setIsLocationChanged(true);
+              mNavController.navigate(R.id.EventCreateEditFragment);
         }
         });
 
@@ -88,14 +94,7 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new
-                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-        }
-        else {
-            map.setMyLocationEnabled(true);
-        }
-        //map.setMyLocationEnabled(true);
+        map.setMyLocationEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);
         map.getUiSettings().setZoomGesturesEnabled(true);

@@ -18,7 +18,7 @@
         android:fontFamily="@font/caveat"
         android:text="@string/add_photo"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_location"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,8 +56,8 @@
 
     <TextView
         android:id="@+id/habit_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="212dp"
+        android:layout_height="71dp"
         android:fontFamily="@font/caveat"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="48sp"
@@ -80,6 +80,16 @@
         app:layout_constraintBottom_toTopOf="@+id/button_add_habit_event"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="366dp"
+        android:layout_height="48dp"
+        android:text="Location"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_location"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_add_photo" />
 

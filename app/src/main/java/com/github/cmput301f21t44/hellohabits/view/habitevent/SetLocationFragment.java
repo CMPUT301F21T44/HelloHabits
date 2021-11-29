@@ -56,14 +56,11 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         ViewModelProvider provider = ViewModelFactory.getProvider(requireActivity());
         mlocationviewmodel = provider.get(LocationViewModel.class);
         mNavController = NavHostFragment.findNavController(this);
-        //get the ids of all xml elements
         mapView = view.findViewById(R.id.mapView);
         setLocationButton = view.findViewById(R.id.setLocationButton);
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync((OnMapReadyCallback) this);
-
-        //on click listener for set location button
         setLocationButton.setOnClickListener(new View.OnClickListener() {
           @Override
         public void onClick(View v) {

@@ -1,17 +1,33 @@
 package com.github.cmput301f21t44.hellohabits.view.habitevent;
 
+
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -22,12 +38,23 @@ import com.github.cmput301f21t44.hellohabits.databinding.FragmentCreateEditHabit
 import com.github.cmput301f21t44.hellohabits.firebase.FSLocation;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEvent;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
+
+import com.github.cmput301f21t44.hellohabits.view.MainActivity;
 import com.github.cmput301f21t44.hellohabits.view.habit.CreateEditHabitFragment;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitEventViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.HabitViewModel;
+import com.github.cmput301f21t44.hellohabits.viewmodel.PhotoViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.LocationViewModel;
 import com.github.cmput301f21t44.hellohabits.viewmodel.ViewModelFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -35,6 +62,11 @@ import java.util.Objects;
  */
 public class CreateEditHabitEventFragment extends Fragment {
     public static final int MAX_COMMENT_LEN = 20;
+
+    public static final int REQUEST_CODE_CAMERA = 123123;
+    public static final int REQUEST_CODE_GALLERY = 0;
+    private ImageView eventImage;
+
     private static final int REQUEST_LOCATION_PERMISSION = 2;
     private FragmentCreateEditHabitEventBinding binding;
     private HabitViewModel mHabitViewModel;
@@ -42,10 +74,14 @@ public class CreateEditHabitEventFragment extends Fragment {
     private HabitEvent mHabitEvent;
     private boolean isEdit;
     private NavController mNavController;
+
+    private PhotoViewModel mPhotoViewModel;
+
     private LocationViewModel mlocationviewmodel;
     private double latitude;
     private double longitude;
     private boolean isEventLocationChanged;
+
 
 
     /**
@@ -61,6 +97,8 @@ public class CreateEditHabitEventFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateEditHabitEventBinding.inflate(inflater, container, false);
+
+        eventImage = binding.eventImage;
         return binding.getRoot();
 
     }
@@ -114,6 +152,18 @@ public class CreateEditHabitEventFragment extends Fragment {
     private void createHabitEvent(String comment) {
         String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
                 .getId();
+
+        if (getImageUri() == null) {
+            mHabitEventViewModel.insert(habitId, comment, null, null,
+                    () -> mNavController.navigate(R.id.ViewHabitFragment),
+                    e -> showErrorToast("Failed to add habit event", e));
+        } else {
+            mPhotoViewModel.uploadPhoto(getImageUri(), () -> mHabitEventViewModel.insert(habitId, comment, getImageUri().getLastPathSegment(),
+                    null, () -> mNavController.navigate(R.id.ViewHabitFragment),
+                    e -> showErrorToast("Failed to add habit event", e)), e -> showErrorToast("Failed to upload photo", e));
+        }
+
+
         Location loc;
         if (isEventLocationChanged) {
             loc = mlocationviewmodel.getLocation().getValue();
@@ -124,7 +174,33 @@ public class CreateEditHabitEventFragment extends Fragment {
         mHabitEventViewModel.insert(habitId, comment, null, loc,
                 () -> mNavController.navigate(R.id.ViewHabitFragment),
                 e -> showErrorToast("Failed to add habit", e));
+    }
 
+    private Uri getImageUri() {
+        return ((MainActivity) requireActivity()).getImageUri();
+    }
+
+    /**
+     * Sets the image URI for the Habit Event
+     *
+     * @param path File path
+     */
+    private void setImageUri(String path) {
+        File imageTemp = new File(requireActivity().getExternalCacheDir(), path);
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            imageTemp.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT > 24) {
+            // contentProvider
+            ((MainActivity) requireActivity()).setImageUri(
+                    FileProvider.getUriForFile(requireContext(),
+                            "com.github.cmput301f21t44.hellohabits.fileprovider", imageTemp));
+        } else {
+            ((MainActivity) requireActivity()).setImageUri(Uri.fromFile(imageTemp));
+        }
     }
 
     /**
@@ -168,15 +244,16 @@ public class CreateEditHabitEventFragment extends Fragment {
         binding.buttonAddHabitEvent.setOnClickListener(v -> submitHabitEvent());
         binding.buttonAddLocation.setOnClickListener(v -> getLocation());
 
-        binding.buttonAddPhoto.setOnClickListener(v -> getPhoto());
+        binding.buttonCamera.setOnClickListener(v -> getFromCamera());
+        binding.buttonGallery.setOnClickListener(v -> getFromGallery());
     }
 
     /**
      * Get user's geolocation to attach to the event
      */
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new
                     String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
         } else {
             mNavController.navigate(R.id.setLocationFragment);
@@ -184,22 +261,73 @@ public class CreateEditHabitEventFragment extends Fragment {
     }
 
     /**
-     * Get a photo to attach to the event
+     * Get a photo to attach to the event by taking a photo from camera
+     */
+    public void getFromCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // GOTO take photo if has permission
+            doTakePhoto();
+        } else {
+            // ask for permission
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
+        }
+
+    }
+
+    private String getDateString() {
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
+        Instant instant = Instant.now();
+        return formatter.format(instant);
+    }
+
+    /**
+     * Take photo
+     */
+    @SuppressLint("QueryPermissionsNeeded") // Permission is already granted at this point
+    public void doTakePhoto() {
+        String habitId = Objects.requireNonNull(mHabitViewModel.getSelectedHabit().getValue())
+                .getId();
+        String newPicName = String.format("%s_%s.jpg", habitId, getDateString());
+        setImageUri(newPicName);
+        Log.println(Log.ASSERT, "DO TAKE PHOTO", String.format("uri: %s", getImageUri().getLastPathSegment()));
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
+            requireActivity().startActivityFromFragment(this, intent, REQUEST_CODE_CAMERA);
+        }
+    }
+
+    /**
+     * Get a photo to attach to the event by choosing photo from gallery
      * TODO: Implement
      */
-    private void getPhoto() {
+    private void getFromGallery() {
         Toast.makeText(getActivity(), "Not implemented yet!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void doChooseFromGallery() {
+        // TODO
     }
 
     /**
      * CreateEditHabitEventFragment's Lifecycle onStart method
      */
+    @SuppressLint("DefaultLocale")
     @Override
     public void onStart() {
         super.onStart();
         // Observe the current event object being observed
         mHabitEventViewModel.getSelectedEvent().observe(getViewLifecycleOwner(),
                 this::onHabitEventChanged);
+
+        mPhotoViewModel = ViewModelFactory.getProvider(requireActivity()).get(PhotoViewModel.class);
+        mPhotoViewModel.getTakePhoto().observe(requireActivity(), takePhoto -> {
+            if (takePhoto) {
+                doTakePhoto();
+                mPhotoViewModel.setChoosePhoto(false);
+            }
+        });
     }
 
     /**
@@ -225,6 +353,14 @@ public class CreateEditHabitEventFragment extends Fragment {
             // update UI
             mHabitEvent = habitEvent;
             binding.editTextComment.setText(habitEvent.getComment());
+
+            if (habitEvent.getPhotoPath() != null) {
+                setImageUri(habitEvent.getPhotoPath());
+                Log.println(Log.ASSERT, "ON HABIT EVENT CHANGED", String.format("uri: %s", getImageUri().getLastPathSegment()));
+                mPhotoViewModel.downloadPhoto(getImageUri(), this::setImageView,
+                        e -> showErrorToast("Failed to download photo", e));
+            }
+
             Location location = habitEvent.getLocation();
             if (location != null) {
                 this.longitude = location.getLongitude();
@@ -269,5 +405,45 @@ public class CreateEditHabitEventFragment extends Fragment {
             setLocationText();
         });
     }
+
+    /**
+     * Sets the ImageView to the current URI
+     */
+    private void setImageView() {
+        try {
+            InputStream is = requireActivity().getContentResolver().openInputStream(getImageUri());
+            eventImage.setImageBitmap(BitmapFactory.decodeStream(is));
+        } catch (FileNotFoundException e) {
+            showErrorToast("Failed to find photo", e);
+        }
+
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // we're getting different request codes when using the MainActivity onActivity result :(
+        // so we gotta stick with the deprecated API
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("request code: %d", requestCode));
+        Log.println(Log.ASSERT, "ON ACTIVITY RESULT", String.format("result code: %d", resultCode));
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CAMERA) {
+                // obtain the photo taken
+                setImageView();
+            } else if (requestCode == REQUEST_CODE_GALLERY) {
+
+//            if (Build.VERSION.SDK_INT < 19) {
+//                ImageUtil.handleImageBeforeApi19(this, eventImage, data);
+//            } else {
+//                ImageUtil.handleImageOnApi19(this, eventImage, data);
+//            }
+
+            }
+        }
+    }
+
+
+
 
 }

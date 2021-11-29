@@ -134,13 +134,13 @@ public class CreateEditHabitEventFragment extends Fragment {
      * @param comment Updated HabitEvent's comment
      */
     private void updateHabitEvent(String comment) {
-        FSLocation loc;
+        Location loc;
         if(isEventLocationChanged){
             loc = new FSLocation(longitude,latitude,0);
             mlocationviewmodel.setIsLocationChanged(false);
         }
         else {
-            loc = null;
+            loc = mHabitEvent.getLocation();
         }
         mHabitEventViewModel.update(mHabitEvent.getId(),
                 mHabitEvent.getHabitId(), mHabitEvent.getDate(), comment,

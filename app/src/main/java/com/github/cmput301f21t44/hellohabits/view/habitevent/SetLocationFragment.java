@@ -97,12 +97,11 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(true);
         map.getUiSettings().setZoomGesturesEnabled(true);
-        //map.getUiSettings().setMyLocationButtonEnabled(true);
-        // Add an initial marker in Edmonton and move the camera to it
+        // Add an initial marker in Edmonton
         LatLng edmonton = new LatLng(53.5461, -113.4938);
-        map.addMarker(new MarkerOptions().position(edmonton).title("Exchange location"));
+        map.addMarker(new MarkerOptions().position(edmonton).title("Event location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(edmonton, 10f));
-        Toast.makeText(getContext(), "Tap anywhere to move the marker to your preferred drop off location!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Tap anywhere to move the marker to your preferred location!", Toast.LENGTH_SHORT).show();
         latitude = 53.5461;
         latitude = -113.4938;
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -110,9 +109,9 @@ public class SetLocationFragment extends Fragment implements OnMapReadyCallback 
             public void onMapClick(LatLng latLng) {
                 map.clear();
                 // add a marker at the clicked location and move the camera to it
-                map.addMarker(new MarkerOptions().position(latLng).title("Exchange location"));
+                map.addMarker(new MarkerOptions().position(latLng).title("Event location"));
                 map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                //save the coordinates of the clicked location
+                //save the coordinates
                 latitude = latLng.latitude;
                 longitude = latLng.longitude;
             }

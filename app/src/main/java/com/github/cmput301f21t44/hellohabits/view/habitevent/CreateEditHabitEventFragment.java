@@ -136,7 +136,6 @@ public class CreateEditHabitEventFragment extends Fragment {
         Location loc;
         if (isEventLocationChanged) {
             loc = new FSLocation(longitude, latitude, 0);
-            mlocationviewmodel.setIsLocationChanged(false);
         } else {
             loc = mHabitEvent.getLocation();
         }

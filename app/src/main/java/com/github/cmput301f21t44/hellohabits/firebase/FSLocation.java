@@ -4,10 +4,11 @@ import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
 import java.io.Serializable;
 
+
 /**
  * Firestore implementation of Location
  */
-class FSLocation implements Location, Serializable {
+public class FSLocation implements Location, Serializable {
     private double mLongitude;
     private double mLatitude;
     private double mAccuracy;

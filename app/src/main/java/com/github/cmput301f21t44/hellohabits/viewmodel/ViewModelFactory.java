@@ -22,6 +22,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final HabitEventRepository mHabitEventRepository;
     private final UserRepository mUserRepository;
 
+
     /**
      * Used for testing dependency injection
      *
@@ -88,6 +89,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new PreviousListViewModel();
         } else if (modelClass.isAssignableFrom(UserViewModel.class)) {
             return (T) new UserViewModel(mUserRepository);
+        } else if (modelClass.isAssignableFrom(LocationViewModel.class)) {
+            return (T) new LocationViewModel();
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

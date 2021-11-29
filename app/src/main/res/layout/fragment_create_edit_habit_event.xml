@@ -44,7 +44,8 @@
         app:layout_constraintStart_toEndOf="@+id/button_camera"
         app:layout_constraintTop_toBottomOf="@+id/eventImage"
         app:layout_constraintWidth_percent="0.2"
-        android:contentDescription="@string/get_from_gallery" />
+        android:contentDescription="@string/get_from_gallery"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/button_add_habit_event"

@@ -189,6 +189,11 @@ public class ViewHabitFragment extends Fragment {
         binding = null;
     }
 
+    /**
+     * This function deletes a habit event and sends you back to the habit view
+     *
+     * @param habitEvent
+     */
     private void deleteHabitEvent(HabitEvent habitEvent) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Habit Event")
@@ -202,6 +207,11 @@ public class ViewHabitFragment extends Fragment {
                 .setNegativeButton("NO", null).show();
     }
 
+    /**
+     * Creates a diaglog to confirm the Delete Habit request
+     *
+     * @param v
+     */
     private void createDeleteHabitDialog(View v) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Habit")

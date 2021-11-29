@@ -104,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Navigates up when the user selects option
+     *
+     * @return true or false
+     */
     @Override
     public boolean onSupportNavigateUp() {
         if (mFromViewHabit) {

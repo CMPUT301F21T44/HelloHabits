@@ -4,6 +4,10 @@ import com.github.cmput301f21t44.hellohabits.model.habitevent.Location;
 
 import java.io.Serializable;
 
+
+/**
+ * Firestore implementation of Location
+ */
 public class FSLocation implements Location, Serializable {
     private double mLongitude;
     private double mLatitude;
@@ -13,6 +17,13 @@ public class FSLocation implements Location, Serializable {
         // Needed for Firestore conversions
     }
 
+    /**
+     * Create a FSLocation
+     *
+     * @param longitude double value of location longitude
+     * @param latitude  double value of location latitude
+     * @param accuracy  double value of location accuracy
+     */
     public FSLocation(double longitude, double latitude, double accuracy) {
         this.mLongitude = longitude;
         this.mLatitude = latitude;

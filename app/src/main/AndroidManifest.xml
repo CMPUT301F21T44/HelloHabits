@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.cmput301f21t44.hellohabits">
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
     <!-- usesClearTextTraffic is needed for Firebase Emulator testing, remove on release -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HelloHabits"
-        android:usesCleartextTraffic="true">
+        android:theme="@style/Theme.HelloHabits">
+        <!--android:usesCleartextTraffic="true">-->
         <activity
             android:name=".view.MainActivity"
             android:exported="true"
@@ -29,13 +31,13 @@
         </activity>
 
         <provider
-            android:authorities="com.github.cmput301f21t44.hellohabits.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.github.cmput301f21t44.hellohabits.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >            <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/files" />
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files" />
         </provider>
 
         <meta-data

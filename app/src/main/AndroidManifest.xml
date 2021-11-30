@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.cmput301f21t44.hellohabits">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <!-- usesClearTextTraffic is needed for Firebase Emulator testing, remove on release -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -24,9 +27,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.github.cmput301f21t44.hellohabits.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            >            <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/files" />
+        </provider>
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDxQ1R9Ap2l3phrHPxmNq7S4rXaHyIFtjQ" />
+
     </application>
 
 </manifest>

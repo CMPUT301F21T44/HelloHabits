@@ -5,11 +5,13 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.cmput301f21t44.hellohabits.firebase.CloudPhotoRepository;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreEventRepository;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreHabitRepository;
 import com.github.cmput301f21t44.hellohabits.firebase.FirestoreUserRepository;
 import com.github.cmput301f21t44.hellohabits.model.habit.HabitRepository;
 import com.github.cmput301f21t44.hellohabits.model.habitevent.HabitEventRepository;
+import com.github.cmput301f21t44.hellohabits.model.habitevent.PhotoRepository;
 import com.github.cmput301f21t44.hellohabits.model.social.UserRepository;
 
 /**
@@ -19,6 +21,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private static volatile ViewModelFactory sInstance;
 
     private final HabitRepository mHabitRepository;
+    private final PhotoRepository mPhotoRepository;
     private final HabitEventRepository mHabitEventRepository;
     private final UserRepository mUserRepository;
 
@@ -31,10 +34,12 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
      */
     public ViewModelFactory(HabitRepository habitRepository,
                             HabitEventRepository habitEventRepository,
-                            UserRepository userRepository) {
+                            UserRepository userRepository,
+                            PhotoRepository photoRepository) {
         this.mHabitRepository = habitRepository;
         this.mHabitEventRepository = habitEventRepository;
         this.mUserRepository = userRepository;
+        this.mPhotoRepository = photoRepository;
     }
 
     /**
@@ -42,7 +47,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
      */
     private ViewModelFactory() {
         this(new FirestoreHabitRepository(), new FirestoreEventRepository(),
-                new FirestoreUserRepository());
+                new FirestoreUserRepository(), new CloudPhotoRepository());
     }
 
     /**
@@ -87,6 +92,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new HabitEventViewModel(mHabitEventRepository);
         } else if (modelClass.isAssignableFrom(PreviousListViewModel.class)) {
             return (T) new PreviousListViewModel();
+        } else if (modelClass.isAssignableFrom(PhotoViewModel.class)) {
+            return (T) new PhotoViewModel(mPhotoRepository);
         } else if (modelClass.isAssignableFrom(UserViewModel.class)) {
             return (T) new UserViewModel(mUserRepository);
         } else if (modelClass.isAssignableFrom(LocationViewModel.class)) {

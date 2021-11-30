@@ -1,6 +1,7 @@
 package com.github.cmput301f21t44.hellohabits.firebase;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.github.cmput301f21t44.hellohabits.model.habitevent.PhotoRepository;
 import com.google.firebase.storage.FirebaseStorage;
@@ -11,6 +12,10 @@ public class CloudPhotoRepository implements PhotoRepository {
 
     public CloudPhotoRepository(FirebaseStorage storage) {
         this.mRootRef = storage.getReference();
+    }
+
+    public CloudPhotoRepository() {
+        this(FirebaseStorage.getInstance());
     }
 
     @Override
@@ -24,7 +29,10 @@ public class CloudPhotoRepository implements PhotoRepository {
     public void downloadPhoto(Uri file, ThenFunction successCallback, CatchFunction failCallback) {
         mRootRef.child(file.getLastPathSegment()).getFile(file)
                 .addOnSuccessListener(u -> successCallback.apply())
-                .addOnFailureListener(failCallback::apply);
+                .addOnFailureListener(e -> {
+                    Log.println(Log.ASSERT, "DOWNLOAD ERROR", String.format("%s", e.getCause()));
+                    failCallback.apply(e);
+                });
     }
 
     @Override

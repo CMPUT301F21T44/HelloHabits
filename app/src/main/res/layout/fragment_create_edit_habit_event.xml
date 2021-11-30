@@ -9,20 +9,40 @@
     tools:layout_editor_absoluteX="-4dp"
     tools:layout_editor_absoluteY="-16dp">
 
-    <Button
-        android:id="@+id/button_add_photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/button_camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
         android:backgroundTint="@color/teal_200"
-        android:fontFamily="@font/caveat"
-        android:text="@string/add_photo"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/get_from_camera"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_camera"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_location"
+        app:layout_constraintEnd_toStartOf="@+id/button_gallery"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_comment" />
+        app:layout_constraintTop_toBottomOf="@+id/eventImage"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ImageButton
+        android:id="@+id/button_gallery"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/fragment_horizontal_margin"
+        android:backgroundTint="@color/teal_200"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_gallery"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_camera"
+        app:layout_constraintTop_toBottomOf="@+id/eventImage"
+        app:layout_constraintWidth_percent="0.2"
+        android:contentDescription="@string/get_from_gallery"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/button_add_habit_event"
@@ -48,9 +68,7 @@
         android:minHeight="48dp"
         android:textColorHint="#757575"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_photo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habit_title" />
 
@@ -58,10 +76,10 @@
         android:id="@+id/habit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/caveat"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="48sp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_text_comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,14 +101,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+    <ImageView
+        android:id="@+id/eventImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/ic_baseline_photo_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_comment"
+        app:layout_constraintWidth_percent="0.9"
+        android:contentDescription="@string/event_picture" />
+
+
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="366dp"
         android:layout_height="48dp"
-        android:text="Location"
+        android:text="@string/location"
         app:layout_constraintBottom_toTopOf="@+id/button_add_location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_add_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

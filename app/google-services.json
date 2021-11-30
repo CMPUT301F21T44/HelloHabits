@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1013400847926",
+    "project_id": "hellohabits-f21t44",
+    "storage_bucket": "hellohabits-f21t44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013400847926:android:d2872e9da23b4b00147a97",
+        "android_client_info": {
+          "package_name": "com.github.cmput301f21t44.hellohabits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013400847926-5dco4jctoj7hnkr1inmpop1p1iiobrpm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfSHohHxCJf6uTxxIo-C7oyt8TzrjxxFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013400847926-5dco4jctoj7hnkr1inmpop1p1iiobrpm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
